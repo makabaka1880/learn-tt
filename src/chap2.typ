@@ -521,3 +521,45 @@
         "10 T-Abst",
     ),
 )))
+
+// MARK: Q. 2.9 (a)
+#problem(source: "2.9 a")[
+    Give derivations of the following judgement
+    $
+        x : delta -> delta -> alpha, y : gamma -> alpha, z: alpha -> beta tack \
+        lambda u: delta. lambda v: gamma. z (y v) : delta -> gamma -> beta
+    $
+]
+#solution(ded-nat(arr: (
+    (0, $u : delta$, "Bound"),
+    (1, $v : gamma$, "Bound"),
+    (2, $y : gamma -> alpha$, "T-Var"),
+    (2, $v : gamma$, "T-Var"),
+    (2, $y v : alpha$, "3,4 T-App"),
+    (2, $z : alpha -> beta$, "T-Var"),
+    (2, $z (y v) : beta$, "6,5 T-App"),
+    (1, $lambda v: gamma. z (y v) : gamma -> beta$, "7 T-Abst"),
+    (1, $lambda u : delta. lambda v: gamma. z (y v) : delta -> gamma -> beta$, "8 T-Abst"),
+)))
+
+// MARK: Q. 2.9 (b)
+#problem(source: "2.9 b")[
+    Give derivations of the following judgement
+    $
+        x : delta -> delta -> alpha, y : gamma -> alpha, z: alpha -> beta tack \
+        lambda u: delta. lambda v: gamma. z (x u u) : delta -> gamma -> beta
+    $
+]
+
+#solution(ded-nat(arr: (
+    (0, $u : delta$, "Bound"),
+    (1, $v : gamma$, "Bound"),
+    (2, $x : delta -> delta -> alpha$, "T-Var"),
+    (2, $u : delta$, "T-Var"),
+    (2, $x u : delta -> alpha$, "3,4 T-App"),
+    (2, $x u u : alpha$, "5,4 T-App"),
+    (2, $z : alpha -> beta$, "T-Var"),
+    (2, $z (x u u) : beta$, "7,6 T-App"),
+    (1, $lambda v : gamma. z (x u u) : gamma -> beta$, "8 T-Abst"),
+    (1, $lambda u : delta. lambda v : gamma. z (x u u) : delta -> gamma -> beta$, "9 T-Abst"),
+)))
