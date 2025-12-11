@@ -41,7 +41,7 @@
 ]
 
 // MARK: Q. 2.1
-#problem[
+#problem(source: "2.1")[
     Type the following terms
     $ x x y quad x y y quad x y x quad x (x y) quad x (y x) $
 ]
@@ -89,7 +89,7 @@
 ]
 
 // MARK: Q. 2.2
-#problem[
+#problem(source: "2.2")[
     Find types for $"zero"$, $"one"$, and $"two"$
 ]
 
@@ -137,7 +137,7 @@
 ]
 
 // MARK: Q. 2.3
-#problem[
+#problem(source: "2.3")[
     Find types for
     $
         K & := lambda x y. x \
@@ -190,7 +190,7 @@
 ]
 
 // MARK: Q. 2.4
-#problem[
+#problem(source: "2.4")[
     Type the bound variables
     $
         lambda x y z. x (y z) \
@@ -254,7 +254,7 @@
 ]
 
 // MARK: Q. 2.5
-#problem[
+#problem(source: "2.5")[
     Try to type the following terms, and prove if not typable.
     $
         lambda x y. x (lambda z. y) y \
@@ -293,7 +293,7 @@
 ]
 
 // MARK: Q. 2.6
-#problem[
+#problem(source: "2.6")[
     Prove the pretyped term below is legal.
     $ lambda x: ((alpha -> beta) -> alpha). x (lambda z : alpha. y) $
     Using the tree format and the flag format.
@@ -339,7 +339,7 @@
 ]
 
 // MARK: Q. 2.7 (a)
-#problem[
+#problem(source: "2.7 a")[
     Derive $ f : A -> B and g : B -> C => g compose f : A -> C $
     Using the rules
     #align(center, rule-set(
@@ -369,7 +369,8 @@
     ]
 ]
 
-#problem[
+// MARK: Q. 2.7 (b)
+#problem(source: "2.7 b")[
     Give a derivation in natural deduction of the following:
     $ (A => B) => ((B => C) => (A => C)) $
     Using the rules
@@ -383,7 +384,6 @@
     ))
 ]
 
-// MARK: Q. 2.7 (b)
 #solution(proof[
     #ded-nat(arr: (
         (0, $A => B$, "Premise"),
@@ -398,7 +398,7 @@
 ])
 
 // Q. 2.7 (c)
-#problem[
+#problem(source: "2.7 c")[
     Prove the following pre-typed term is legal using flag notation
     $ lambda z : alpha. y (x z) $
 ]
@@ -416,7 +416,7 @@
 ])
 
 // Q. 2.7 (d)
-#problem[
+#problem(source: "2.7 d")[
     State the similarity between Q. 2.7 (a), (b), and (c).
 ]
 #solution[
@@ -428,6 +428,96 @@
         node((0, 1), $C$),
         arr($A$, $B$, $f$),
         arr($B$, $C$, $g$),
-		arr($A$, $C$, $g compose f$)
+        arr($A$, $C$, $g compose f$),
     )
 ]
+
+// MARK: Q. 2.8 (a)
+#problem(source: "2.8 a")[
+    Pre-type the bounding variables for the following term
+    $ lambda x y. y (lambda z. y x) : (gamma -> beta) -> ((gamma -> beta) -> beta) -> beta $
+]
+#solution[
+    $
+        lambda x : (gamma -> beta) . y : ((gamma -> beta) -> beta). y (lambda z: gamma. y x)
+    $
+]
+
+// MARK: Q. 2.8 (b)
+#problem(source: "2.8 b")[Give a derivation in tree format]
+#solution(prooftree(
+    rule(
+        name: "T-Abst",
+        label: "(viii)",
+        rule(
+            name: "T-Abst",
+            label: "(vii)",
+            rule(
+                name: "T-App",
+                label: "(vi)",
+                rule(
+                    label: "(v)",
+                    $y : ((gamma -> beta) -> beta)$,
+                ),
+                rule(
+                    name: "T-Abst",
+                    label: "(iv)",
+                    rule(
+                        name: "T-App",
+                        label: "(iii)",
+                        rule(
+                            label: "(i)",
+                            $x : (gamma -> beta)$,
+                        ),
+                        rule(
+                            label: "(ii)",
+                            $y : (gamma -> beta) -> beta$,
+                        ),
+                        $x : (gamma -> beta), y : ((gamma -> beta) -> beta), z : gamma tack y x : beta$,
+                    ),
+                    $x : (gamma -> beta), y : ((gamma -> beta) -> beta)tack lambda z : gamma . y x : gamma -> beta$,
+                ),
+                $x : (gamma -> beta), y : ((gamma -> beta) -> beta) tack y(lambda z. gamma. y x) : beta$,
+            ),
+            $x : (gamma -> beta) tack lambda y : ((gamma -> beta) -> beta). y(lambda z : gamma. y x) : ((gamma -> beta) -> beta) -> beta$,
+        ),
+        $
+            (lambda x : (gamma -> beta) . y : ((gamma -> beta) -> beta). y (lambda z: gamma. y x))
+            : (gamma -> beta) -> ((gamma -> beta) -> beta) -> beta
+        $,
+    ),
+))
+
+// MARK: Q. 2.8 (c)
+#problem(source: "2.8 c")[Sketch a diagram of tree structure of derivation]
+#solution("Trivial.")
+
+// MARK: Q. 2.8 (d)
+#problem(source: "2.8 d")[
+    Transform the derivation into flag notation
+]
+#solution(ded-nat(arr: (
+    ("", 0, $x : gamma -> beta$, "Bound"),
+    ("", 1, $y : (gamma -> beta) -> beta$, "Bound"),
+    ("", 2, $z : gamma$, "Bound"),
+    ("(ii)", 3, $y : (gamma -> beta) -> beta$, "T-Var"),
+    ("(i)", 3, $x : gamma -> beta$, "T-Var"),
+    ("(iii)", 3, $y x : beta$, "4,5 T-App"),
+    ("(iv)", 2, $lambda z : gamma. y x : gamma -> beta$, "6 T-Abst"),
+    ("(v)", 2, $y : (gamma -> beta) -> beta$, "T-Var"),
+    ("(vi)", 2, $y (lambda z : gamma. y x) : beta$, "8,7 T-App"),
+    (
+        "(vii)",
+        1,
+        $ lambda y : (gamma -> beta) -> beta. y (lambda z : gamma. y x) \ : ((gamma -> beta) -> beta) -> beta $,
+        "9 T-Abst",
+    ),
+    (
+        "(viii)",
+        0,
+        $
+            lambda x: (gamma -> beta). lambda y : (gamma -> beta) -> beta. y (lambda z : gamma. y x) \ : (gamma -> beta) -> ((gamma -> beta) -> beta) -> beta
+        $,
+        "10 T-Abst",
+    ),
+)))
