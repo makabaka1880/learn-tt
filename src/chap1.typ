@@ -3,7 +3,7 @@
 #import "@preview/tdtr:0.4.2": *
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
 
-#let accent = rgb(50, 150, 150)
+#let accent = rgb("#077272")
 #show ref: it => {
     if query(it.target) == ([#str(it.target)],) {
         emph(link(it.target, str(it.target)))
