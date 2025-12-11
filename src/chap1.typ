@@ -24,7 +24,7 @@
 #let mark(content) = text(content, fill: accent)
 
 // MARK: Q. 1.1
-#problem[
+#problem(source: "1.1")[
     Simplify notation of the following terms
     $
         "(a)" & (lambda x. (((x z) y) (x x))) \
@@ -39,7 +39,7 @@
 ]
 
 // MARK: Q. 1.2
-#problem[
+#problem(source: "1.2")[
     Find the alpha equivalent terms to
     $ lambda x. x (lambda x . x) $
     In
@@ -52,7 +52,7 @@
 #solution[Only (a).]
 
 // MARK: Q. 1.3
-#problem[
+#problem(source: "1.3")[
     Prove $ lambda x. x (lambda z .y) =_alpha lambda z. z (lambda z. y) $
 ]
 #solution[
@@ -65,7 +65,7 @@
 ]
 
 // MARK: Q. 1.4
-#problem[
+#problem(source: "1.4")[
     Consider the following term:
     $ U := (lambda z. z x z) ((lambda y. x y) x) $
     1. Find $"Sub" U$
@@ -129,7 +129,7 @@
 ]
 
 // MARK: Q. 1.5
-#problem[
+#problem(source: "1.5")[
     Give the results of the following substitutions
     $
         "(a)" & (lambda x. y (lambda y. x y))[y := lambda z. z x] \
@@ -148,7 +148,7 @@
 ]
 
 // MARK: Q. 1.6
-#problem[
+#problem(source: "1.6")[
     $ not(forall M L N in Lambda, M[x := N, y := L] equiv_alpha M[x := N][y := L]) $
 ]
 #solution[
@@ -158,7 +158,7 @@
 ]
 
 // MARK: Q. 1.7
-#problem[
+#problem(source: "1.7")[
     Find all available redexes in $ U := (lambda z. z x z) ((lambda y. x y) x) $
     And all reduction pathes to the $beta$-normal form.
 ]
@@ -178,7 +178,7 @@
 ]
 
 // MARK: Q. 1.8
-#problem[
+#problem(source: "1.8")[
     Show that $ (lambda x. x x) y !=_beta (lambda x y. y x) x x $
 ]
 #solution[
@@ -193,7 +193,7 @@
 ]
 
 // MARK: Q. 1.9
-#problem[
+#problem(source: "1.9")[
     Define the combinators
     $
         K & := lambda x y. x \
@@ -211,7 +211,7 @@
 ]
 
 // MARK: Q. 1.10
-#problem[
+#problem(source: "1.10")[
     We define the church numerals
     $
          "zero" & := lambda f x. x \
@@ -247,7 +247,7 @@
 ]
 
 // MARK: Q. 1.11
-#problem[
+#problem(source: "1.11")[
     We define
     $ "succ" := lambda m f x. f (m f x) "s.t." forall "num"_n, "succ" "num"_n = "num"_(n + 1) $
     Prove $ "succ" "zero" =_beta "one" \
@@ -272,7 +272,7 @@
 ]
 
 // MARK: Q. 1.12
-#problem[
+#problem(source: "1.12")[
     We define the $lambda$-terms $top_lambda ("true")$ and $bot_lambda ("false")$ and $not_lambda ("not")$ by:
     $
         top_lambda := lambda x y. x quad bot_lambda := lambda x y.y quad \
@@ -303,7 +303,7 @@
 ]
 
 // MARK: Q. 1.13
-#problem[
+#problem(source: "1.13")[
     Define $ "iszero" := lambda m. m (lambda x. bot_lambda) top_lambda $
     Prove $ "iszero" "zero" ->>_beta top_lambda \ forall n in NN^+, "iszero" "num"_n ->>_beta bot_lambda $
 ]
@@ -322,7 +322,7 @@
 ]
 
 // MARK: Q. 1.14
-#problem[
+#problem(source: "1.14")[
     If-else can be modeled as
     $ "ifelse" = lambda x t f. x t f $
     Where when $x$, then $t$, else $f$.
@@ -343,7 +343,7 @@
 
 // MARK: Q. 1.15
 // TODO: In the book it also requires a proof that (lambda x. x x x) does not have a beta-nf, which is not true. Maybe a flaw in the book..?
-#problem[
+#problem(source: "1.15")[
     Prove that $Omega := (lambda x. x x) (lambda x. x x)$ does not have a $beta$-nf.
 ]
 #solution[
@@ -356,7 +356,7 @@
 ]
 
 // MARK: Q. 1.16
-#problem[
+#problem(source: "1.16")[
     Let $M$ be a $lambda$-term with the following properties:
     - $M$ has a $beta$-nf.
     - There exists an infinite reduction path $M equiv M_0 ->_beta M_1 ->_beta ...$ on $M$.
@@ -371,7 +371,7 @@
 ]
 
 // MARK: Q. 1.17
-#problem[
+#problem(source: "1.17")[
     If $M N$ is strongly normalizing, then both $M$ and $N$ are strongly normalizing.
 ]
 #solution[
@@ -379,7 +379,7 @@
 ]
 
 // MARK: Q. 1.18
-#problem[
+#problem(source: "1.18")[
     Let $L, M, N in Lambda$ such that $L =_beta M$ and $L ->>_beta N$. Moreover, $N$ is in $beta$-nf. Prove that $M ->>_beta N$.
 ]
 #solution[
@@ -387,7 +387,7 @@
 ]
 
 // MARK: Q. 1.19
-#problem[
+#problem(source: "1.19")[
     Define
     $ U := lambda z x. x (z z x) quad "and" quad Z := U U $
     Prove $Z$ is a fixed point combinator.
@@ -403,7 +403,7 @@
 ]
 
 // MARK: Q. 1.20
-#problem[
+#problem(source: "1.20")[
     Solve for $M in Lambda$ in each equation:
     $
               M & =_beta lambda x y. x M y \
