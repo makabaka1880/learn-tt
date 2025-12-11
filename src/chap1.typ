@@ -344,7 +344,7 @@
 // MARK: Q. 1.15
 // TODO: In the book it also requires a proof that (lambda x. x x x) does not have a beta-nf, which is not true. Maybe a flaw in the book..?
 #problem[
-    Prove that $Omega := (lambda x. x x) (lambda x. x x)$.
+    Prove that $Omega := (lambda x. x x) (lambda x. x x)$ does not have a $beta$-nf.
 ]
 #solution[
     Firstly let's prove $Omega.$
