@@ -52,8 +52,8 @@
     The second one is typable where $x:tau -> tau -> sigma$ and $y: tau$.
 
     #ded-nat(stcolor: black, arr: (
-        (0, $x:tau -> tau -> sigma$, "ctx"),
-        (0, $y: tau$, "ctx"),
+        (0, $x:tau -> tau -> sigma$, $tack.l Gamma$),
+        (0, $y: tau$, $tack.l Gamma$),
         (0, $x y : tau -> sigma$, "1,2 T-App"),
         (0, $x y y : sigma$, "3,2 T-App"),
     ))
@@ -71,8 +71,8 @@
 
 
     #ded-nat(stcolor: black, arr: (
-        (0, $x: tau -> tau$, "ctx"),
-        (0, $y: tau$, "ctx"),
+        (0, $x: tau -> tau$, $tack.l Gamma$),
+        (0, $y: tau$, $tack.l Gamma$),
         (0, $x y : tau$, "1,2 T-App"),
         (0, $x (x y) : tau$, "1,3 T-App")
     ))
@@ -80,8 +80,8 @@
     The fifth term is typable where $x : (tau -> sigma)$ and $y : (tau -> sigma) -> tau$:
 
     #ded-nat(stcolor: black, arr: (
-        (0, $x : tau->sigma$, "ctx"),
-        (0, $y : (tau -> sigma) -> tau$, "ctx"),
+        (0, $x : tau->sigma$, $tack.l Gamma$),
+        (0, $y : (tau -> sigma) -> tau$, $tack.l Gamma$),
         (0, $y x : tau$, "2,1 T-App"),
         (0, $x (y x) : sigma$, "1,3 T-App"),
     ))
