@@ -2,6 +2,7 @@
 #import "@preview/derive-it:1.1.0": *;
 #import "@preview/tdtr:0.4.2": *
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
+#import "@preview/commute:0.3.0": arr, commutative-diagram, node;
 
 #let accent = rgb(50, 150, 150)
 #show ref: it => {
@@ -32,11 +33,11 @@
         prooftree(
             rule(name: "(T-App)", $Gamma tack M : sigma -> tau$, $Gamma tack N : sigma$, $Gamma tack M N : tau$),
         ),
-		prooftree(
-			rule(name: "(T-Abst)", $Gamma, x : sigma tack M : tau$, $Gamma tack lambda x : sigma. M : sigma -> tau$)
-		)
+        prooftree(
+            rule(name: "(T-Abst)", $Gamma, x : sigma tack M : tau$, $Gamma tack lambda x : sigma. M : sigma -> tau$),
+        ),
     ))
-	In this document, convention is that all type judgements in a proof tree, unless stated otherwise, is derived from a single context per tree.
+    In this document, convention is that all type judgements in a proof tree, unless stated otherwise, is derived from a single context per tree.
 ]
 
 // MARK: Q. 2.1
@@ -74,7 +75,7 @@
         (0, $x: tau -> tau$, $tack.l Gamma$),
         (0, $y: tau$, $tack.l Gamma$),
         (0, $x y : tau$, "1,2 T-App"),
-        (0, $x (x y) : tau$, "1,3 T-App")
+        (0, $x (x y) : tau$, "1,3 T-App"),
     ))
 
     The fifth term is typable where $x : (tau -> sigma)$ and $y : (tau -> sigma) -> tau$:
@@ -168,7 +169,7 @@
         (3, $y : alpha -> beta$, "T-Var"),
         (3, $z : alpha$, "T-Var"),
         (3, $y z : beta$, "4,5 T-App"),
-		(3, $x : alpha -> beta -> delta$, "T-Var"),
+        (3, $x : alpha -> beta -> delta$, "T-Var"),
         (3, $x z : beta -> delta$, "7,5 T-App"),
         (3, $x z (y z) : delta$, "8,6 T-App"),
         (2, $lambda z: alpha. x z (y z) : alpha -> delta$, "9 T-Abstr"),
@@ -179,10 +180,10 @@
         ),
         (
             0,
-            $ 
-			lambda x: alpha -> beta -> delta. lambda y: alpha -> beta. lambda z \
-			: alpha. x z (y z) : (alpha -> beta -> delta) -> (alpha -> beta) -> alpha -> delta
-			$,
+            $
+                lambda x: alpha -> beta -> delta. lambda y: alpha -> beta. lambda z \
+                : alpha. x z (y z) : (alpha -> beta -> delta) -> (alpha -> beta) -> alpha -> delta
+            $,
             "11 T-Abstr",
         ),
     ))
@@ -207,7 +208,7 @@
         (3, $y : alpha -> beta$, "T-Var"),
         (3, $z : alpha$, "T-Var"),
         (3, $y z : beta$, "4,5 T-App"),
-		(3, $x : beta -> delta$, "T-Var"),
+        (3, $x : beta -> delta$, "T-Var"),
         (3, $x (y z) : delta$, "7,6 T-App"),
         (2, $lambda z: alpha. x (y z) : alpha -> delta$, "8 T-Abst"),
         (
@@ -217,7 +218,9 @@
         ),
         (
             0,
-            $ lambda x: beta -> delta. lambda y: alpha -> beta. lambda z: alpha. x (y z) \ : (beta -> delta) -> (alpha -> beta) -> alpha -> delta $,
+            $
+                lambda x: beta -> delta. lambda y: alpha -> beta. lambda z: alpha. x (y z) \ : (beta -> delta) -> (alpha -> beta) -> alpha -> delta
+            $,
             "10 T-Abst",
         ),
     ))
@@ -242,7 +245,9 @@
         ),
         (
             0,
-            $ lambda x : alpha -> beta. lambda y: beta -> alpha -> delta. lambda z. y (x z) z : \ (alpha -> beta) -> (beta -> alpha -> delta) -> alpha -> delta $,
+            $
+                lambda x : alpha -> beta. lambda y: beta -> alpha -> delta. lambda z. y (x z) z : \ (alpha -> beta) -> (beta -> alpha -> delta) -> alpha -> delta
+            $,
             "11 T-Abst",
         ),
     ))
@@ -267,7 +272,7 @@
         (3, $y : alpha$, "T-Var"),
         (2, $lambda z: delta. y : delta -> alpha$, "5 T-Abst"),
         (2, $x (lambda z: delta. y) : alpha -> beta$, "3,6 T-App"),
-		(2, $y : alpha$, "T-Var"),
+        (2, $y : alpha$, "T-Var"),
         (2, $x (lambda z: delta. y) y : beta$, "7,8 T-App"),
         (1, $lambda y: alpha. x (lambda z: delta. y) y : alpha -> beta$, "9 T-Abst"),
         (
@@ -391,3 +396,38 @@
         (0, $(A => B) => ((B => C) => (A => C))$, $"1-7" => I$),
     ))
 ])
+
+// Q. 2.7 (c)
+#problem[
+    Prove the following pre-typed term is legal using flag notation
+    $ lambda z : alpha. y (x z) $
+]
+#solution(proof[
+    Let $Gamma tack x:alpha -> beta, y: beta -> delta$ for some type $beta$ and $delta$.
+    #ded-nat(arr: (
+        (0, $z : alpha$, "Bound"),
+        (1, $x : alpha -> beta$, $tack.l Gamma$),
+        (1, $z : alpha$, "T-Var"),
+        (1, $x z : beta$, "2,3 T-App"),
+        (1, $y : beta -> delta$, $tack.l Gamma$),
+        (1, $y (x z) : delta$, "5,4 T-App"),
+        (0, $lambda z: alpha. y (x z) : alpha -> delta$, "6 T-Abst"),
+    ))
+])
+
+// Q. 2.7 (d)
+#problem[
+    State the similarity between Q. 2.7 (a), (b), and (c).
+]
+#solution[
+    All of these examples requires proving something about composing two maps together as like this:
+
+    #commutative-diagram(
+        node((0, 0), $B$),
+        node((1, 0), $A$),
+        node((0, 1), $C$),
+        arr($A$, $B$, $f$),
+        arr($B$, $C$, $g$),
+		arr($A$, $C$, $g compose f$)
+    )
+]
