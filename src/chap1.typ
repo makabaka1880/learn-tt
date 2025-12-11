@@ -424,15 +424,15 @@
     The second equation can be $eta$-reduced on both sides:
     $
         M x y z & =_beta x y z M \
-              M & =_beta lambda z y x. x y z M
+              M & =_beta lambda x y z. x y z M
     $
     Remodeling equation:
-    $ M = N M "where" M = lambda m z y x. x y z m $
+    $ M = N M "where" M = lambda m x y z. x y z m $
     then
     $
         M & equiv Y N equiv N (Y N) \
           & = (lambda x. N (x x)) (lambda x. N (x x)) \
-          & = (lambda x. (lambda m z y u. u y z m) (x x)) (lambda x. (lambda m z y u. u y z m) (x x)) \
-          & ->>_beta (lambda x. (lambda z y u. u y z (x x))) (lambda x. (lambda z y u. u y z (x x)))
+          & = (lambda x. (lambda m u y z. u y z m) (x x)) (lambda x. (lambda m u y z. u y z m) (x x)) \
+          & ->>_beta (lambda x. (lambda u y z. u y z (x x))) (lambda x. (lambda u y z. u y z (x x)))
     $
 ]
