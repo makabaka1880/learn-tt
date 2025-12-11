@@ -309,14 +309,31 @@
 
 // MARK: Q. 2.7
 #problem[
-    Derive $ f : A -> B and g : B -> C tack g compose f : A -> C $
+    Derive $ f : A -> B and g : B -> C => g compose f : A -> C $
     Using the rules
     #align(center, rule-set(
         prooftree(
-            rule(name: "(F-App)", $f: A -> B, c in A$, $f(c) in B$),
+            rule(name: "(F-App)", $f: A -> B, x in A$, $f(x) in B$),
         ),
         prooftree(
             rule(name: "(F-Abst)", $forall x in A, f(x) in B$, $f: A -> B$),
         ),
     ))
+]
+
+#solution[
+    #proof[
+		#ded-nat(arr: (
+			(0, $f : A -> B and g : B -> C$, "Assumption"),
+			(1, $f : A -> B$, $1 and E$),
+			(1, $g : B -> C$, $1 and E$),
+			(1, $a in A$, ""),
+			(2, $f(a) in B$, "3, 4 F-App"),
+			(2, $g(f(a)) in C$, "5, 4 F-App"),
+			(2, $(g compose f) (a) in C$, "6 Compose Def"),
+			(1, $forall x in A, (g compose f) (x) in C$, $7 forall E$),
+			(1, $g compose f : A -> C$, "8 F-Abst"),
+			(0, $f: A -> B, g: B -> C => g compose f : A -> C$, $9 =>I$)
+		))
+    ]
 ]
