@@ -23,6 +23,22 @@
 
 #let mark(content) = text(content, fill: accent)
 
+#definition[
+    Some rules for reference.
+    #align(center, rule-set(
+        prooftree(
+            rule(name: "(T-Var)", $x : sigma in Gamma$, $Gamma tack x : sigma$),
+        ),
+        prooftree(
+            rule(name: "(T-App)", $Gamma tack M : sigma -> tau$, $Gamma tack N : sigma$, $Gamma tack M N : tau$),
+        ),
+		prooftree(
+			rule(name: "(T-Abst)", $Gamma, x : sigma tack M : tau$, $Gamma tack lambda x : sigma. M : sigma -> tau$)
+		)
+    ))
+	In this document, convention is that all type judgements in a proof tree, unless stated otherwise, is derived from a single context per tree.
+]
+
 // MARK: Q. 2.1
 #problem[
     Type the following terms
@@ -36,10 +52,10 @@
     The second one is typable where $x:tau -> tau -> sigma$ and $y: tau$.
 
     #ded-nat(stcolor: black, arr: (
-        ("a", 0, $x:tau -> tau -> sigma$, "ctx"),
-        ("b", 1, $y: tau$, "ctx"),
-        ("1", 2, $x y : tau -> sigma$, "T-App  (a)"),
-        ("c", 2, $x y y : sigma$, "T-App (1)"),
+        (0, $x:tau -> tau -> sigma$, "ctx"),
+        (0, $y: tau$, "ctx"),
+        (0, $x y : tau -> sigma$, "1,2 T-App"),
+        (0, $x y y : sigma$, "3,2 T-App"),
     ))
 
     The third term is not typable.
@@ -55,19 +71,19 @@
 
 
     #ded-nat(stcolor: black, arr: (
-        ("a", 0, $x: tau -> tau$, "ctx"),
-        ("b", 0, $y: tau$, "ctx"),
-        ("1", 1, $x y : tau$, "T-App (b) on (a)"),
-        ("2", 0, $x (x y) : tau$, "T-App (1) on (a)"),
+        (0, $x: tau -> tau$, "ctx"),
+        (0, $y: tau$, "ctx"),
+        (0, $x y : tau$, "1,2 T-App"),
+        (0, $x (x y) : tau$, "1,3 T-App")
     ))
 
     The fifth term is typable where $x : (tau -> sigma)$ and $y : (tau -> sigma) -> tau$:
 
     #ded-nat(stcolor: black, arr: (
-        ("a", 0, $x : tau->sigma$, "ctx"),
-        ("b", 0, $y : (tau -> sigma) -> tau$, "ctx"),
-        ("1", 1, $y x : tau$, "T-App (a) on (b)"),
-        ("2", 0, $x (y x) : sigma$, "T-App (1) on (a)"),
+        (0, $x : tau->sigma$, "ctx"),
+        (0, $y : (tau -> sigma) -> tau$, "ctx"),
+        (0, $y x : tau$, "2,1 T-App"),
+        (0, $x (y x) : sigma$, "1,3 T-App"),
     ))
 ]
 
@@ -83,11 +99,11 @@
     $ "zero" := lambda f : alpha. lambda x : beta. x $
     Type derivation shown as below:
     #ded-nat(stcolor: black, arr: (
-        ("a", 0, $f : alpha$, "bind"),
-        ("b", 1, $x : beta$, "bind"),
-        ("1", 2, $x : beta$, "T-Var (b)"),
-        ("2", 1, $lambda x. x : beta -> beta$, "T-Abst (1)"),
-        ("3", 0, $lambda f: alpha. x: beta. x : alpha -> beta -> beta$, "T-Abst (2)"),
+        (0, $f : alpha$, "Bound"),
+        (1, $x : beta$, "Bound"),
+        (2, $x : beta$, "T-Var"),
+        (1, $lambda x. x : beta -> beta$, "3 T-Abst"),
+        (0, $lambda f: alpha. x: beta. x : alpha -> beta -> beta$, "4 T-Abst"),
     ))
     Term for $"one"$ is
     $ "one" := lambda f x. f x $
@@ -95,23 +111,27 @@
     $ "one" := lambda f : alpha -> beta. x : alpha. f x $
     Type derivation shown as below
     #ded-nat(stcolor: black, arr: (
-        ("a", 0, $f : alpha -> beta$, "bind"),
-        ("b", 1, $x : alpha$, "bind"),
-        ("1", 2, $f x : beta$, "T-App (b) on a"),
-        ("2", 1, $lambda x. f x : alpha -> beta$, "T-Abst (1)"),
-        ("3", 0, $lambda f: alpha -> beta. x: alpha. f x : (alpha -> beta) -> alpha -> beta$, "T-Abst (2)"),
+        (0, $f : alpha -> beta$, "Bound"),
+        (1, $x : alpha$, "Bound"),
+        (2, $f : alpha -> beta$, "T-Var"),
+        (2, $x : alpha$, "T-Var"),
+        (2, $f x : beta$, "3,4 T-App"),
+        (1, $lambda x. f x : alpha -> beta$, "5 T-Abst"),
+        (0, $lambda f: alpha -> beta. x: alpha. f x : (alpha -> beta) -> alpha -> beta$, "6 T-Abst"),
     ))
 
     Same type signatures can be given to $"two"$
     $ "two" := lambda f : alpha -> beta. lambda x : alpha. f f x $
     Type derivation shown as below
     #ded-nat(stcolor: black, arr: (
-        ("a", 0, $f: alpha -> beta$, "bind"),
-        ("b", 1, $x: alpha$, "bind"),
-        ("1", 2, $f x : beta$, "T-App (b) on (a)"),
-        ("2", 2, $f f x : beta$, "T-App (2) on (b)"),
-        ("3", 1, $lambda x. f f x : alpha -> beta$, "T-Abst (2)"),
-        ("4", 0, $lambda f: alpha -> beta. x: alpha. f f x : (alpha -> beta) -> alpha -> beta$, "T-Abst (3)"),
+        (0, $f: alpha -> beta$, "Bound"),
+        (1, $x: alpha$, "Bound"),
+        (2, $f: alpha -> beta$, "T-Var"),
+        (2, $x: alpha$, "T-Var"),
+        (2, $f x : beta$, "3,4 T-App"),
+        (2, $f f x : beta$, "3,5 T-App"),
+        (1, $lambda x. f f x : alpha -> beta$, "6 T-Abst"),
+        (0, $lambda f: alpha -> beta. x: alpha. f f x : (alpha -> beta) -> alpha -> beta$, "7 T-Abst"),
     ))
 ]
 
@@ -129,11 +149,11 @@
     $ K := lambda x: alpha. lambda y: beta. x $
     Type derivation shown as below
     #ded-nat(stcolor: black, arr: (
-        ("a", 0, $x : alpha$, "bind"),
-        ("b", 1, $y : beta$, "bind"),
-        ("1", 2, $x : alpha$, "T-Var"),
-        ("2", 1, $lambda y: beta. x: beta -> alpha$, "T-Abst on (1)"),
-        ("3", 0, $lambda x: alpha. lambda y: beta. x : alpha -> beta -> alpha$, "T-Abst on (2)"),
+        (0, $x : alpha$, "Bound"),
+        (1, $y : beta$, "Bound"),
+        (2, $x : alpha$, "T-Var"),
+        (1, $lambda y: beta. x: beta -> alpha$, "3 T-Abst"),
+        (0, $lambda x: alpha. lambda y: beta. x : alpha -> beta -> alpha$, "4 T-Abst"),
     ))
     For the $S$ combinator, no term was applied to $z$. Therefore it can be given a simple base type $alpha$. As $z$ was applied to $y$, it implies that $y : alpha -> beta$ for some output type $beta$. As $x$ takes $z$ and $(y z)$, it must be of type $alpha -> beta -> delta$.
 
@@ -142,24 +162,28 @@
     Complete type derivation shown as below:
 
     #ded-nat(arr: (
-        ("a", 0, $x : alpha -> beta -> delta$, "bind"),
-        ("b", 1, $y : alpha -> beta$, "bind"),
-        ("c", 2, $z : alpha$, "bind"),
-        ("1", 3, $y z : beta$, "T-App (c) on (b)"),
-        ("2", 3, $x z : beta -> delta$, "T-App (c) on (a)"),
-        ("3", 3, $x z (y z) : delta$, "T-App (1) on (2)"),
-        ("4", 2, $lambda z: alpha. x z (y z) : alpha -> delta$, "T-Abstr on (3)"),
+        (0, $x : alpha -> beta -> delta$, "Bound"),
+        (1, $y : alpha -> beta$, "Bound"),
+        (2, $z : alpha$, "Bound"),
+        (3, $y : alpha -> beta$, "T-Var"),
+        (3, $z : alpha$, "T-Var"),
+        (3, $y z : beta$, "4,5 T-App"),
+		(3, $x : alpha -> beta -> delta$, "T-Var"),
+        (3, $x z : beta -> delta$, "7,5 T-App"),
+        (3, $x z (y z) : delta$, "8,6 T-App"),
+        (2, $lambda z: alpha. x z (y z) : alpha -> delta$, "9 T-Abstr"),
         (
-            "5",
             1,
             $lambda y: alpha -> beta. lambda z. alpha . x z (y z) : (alpha -> beta) -> alpha -> delta$,
-            "T-Abstr on (4)",
+            "10 T-Abstr",
         ),
         (
-            "6",
             0,
-            $lambda x: alpha -> beta -> delta. lambda y: alpha -> beta. lambda z: alpha. x z (y z) : (alpha -> beta -> delta) -> (alpha -> beta) -> alpha -> delta$,
-            "T-Abstr on (5)",
+            $ 
+			lambda x: alpha -> beta -> delta. lambda y: alpha -> beta. lambda z \
+			: alpha. x z (y z) : (alpha -> beta -> delta) -> (alpha -> beta) -> alpha -> delta
+			$,
+            "11 T-Abstr",
         ),
     ))
 ]
@@ -177,47 +201,49 @@
     $ lambda x : beta -> delta. lambda y : alpha -> beta. lambda z : alpha. x (y z) $
     Complete type derivation shown below
     #ded-nat(arr: (
-        ("a", 0, $x : beta -> delta$, "bind"),
-        ("b", 1, $y : alpha -> beta$, "bind"),
-        ("c", 2, $z : alpha$, "bind"),
-        ("1", 3, $y z : beta$, "T-App (c) on (b)"),
-        ("2", 3, $x (y z) : delta$, "T-App (1) on (a)"),
-        ("3", 2, $lambda z: alpha. x (y z) : alpha -> delta$, "T-Abst on (2)"),
+        (0, $x : beta -> delta$, "Bound"),
+        (1, $y : alpha -> beta$, "Bound"),
+        (2, $z : alpha$, "Bound"),
+        (3, $y : alpha -> beta$, "T-Var"),
+        (3, $z : alpha$, "T-Var"),
+        (3, $y z : beta$, "4,5 T-App"),
+		(3, $x : beta -> delta$, "T-Var"),
+        (3, $x (y z) : delta$, "7,6 T-App"),
+        (2, $lambda z: alpha. x (y z) : alpha -> delta$, "8 T-Abst"),
         (
-            "4",
             1,
-            $lambda y: alpha -> beta. lambda z: alpha. x (y z) : (alpha -> beta) -> alpha -> delta$,
-            "T-Abst on (3)",
+            $ lambda y: alpha -> beta. lambda z: alpha. x (y z) : (alpha -> beta) -> alpha -> delta $,
+            "9 T-Abst",
         ),
         (
-            "5",
             0,
-            $lambda x: beta -> delta. lambda y: alpha -> beta. lambda z: alpha. x (y z) : (beta -> delta) -> (alpha -> beta) -> alpha -> delta$,
-            "T-Abst on (4)",
+            $ lambda x: beta -> delta. lambda y: alpha -> beta. lambda z: alpha. x (y z) \ : (beta -> delta) -> (alpha -> beta) -> alpha -> delta $,
+            "10 T-Abst",
         ),
     ))
     In the second term $z$ could still be given a simple base type $z : alpha$. Therefore $x : alpha -> beta$ for some type $beta$. $y$ takes $x z : beta$ and $z : alpha$, therefore it is of type $y : beta -> alpha -> delta$ for some $delta$.
     $ lambda x: alpha -> beta. lambda y: beta -> alpha -> delta. lambda z: alpha. y (x z) z $.
     Complete type derivation shown below
     #ded-nat(arr: (
-        ("a", 0, $x : alpha -> beta$, "bind"),
-        ("b", 1, $y : beta -> alpha -> delta$, "bind"),
-        ("c", 2, $z : alpha$, "bind"),
-        ("1", 3, $x z : beta$, "T-App (c) on (b)"),
-        ("2", 3, $y (x z) : alpha -> delta$, "T-App (1) on (b)"),
-        ("3", 3, $y (x z) z : delta$, "T-App (c) on (2)"),
-        ("4", 2, $lambda z: alpha. y (x z) z : alpha -> delta$, "T-Abst on (3)"),
+        (0, $x : alpha -> beta$, "Bound"),
+        (1, $y : beta -> alpha -> delta$, "Bound"),
+        (2, $z : alpha$, "Bound"),
+        (3, $x : alpha -> beta$, "T-Var"),
+        (3, $z : alpha$, "T-Var"),
+        (3, $x z : beta$, "4,5 T-App"),
+        (3, $y : beta -> alpha -> delta$, "T-Var"),
+        (3, $y (x z) : alpha -> delta$, "7,6 T-App"),
+        (3, $y (x z) z : delta$, "8,5 T-App"),
+        (2, $lambda z: alpha. y (x z) z : alpha -> delta$, "9 T-Abst"),
         (
-            "5",
             1,
             $lambda y: beta -> alpha -> delta. lambda z. y (x z) z : (beta -> alpha -> delta) -> alpha -> delta$,
-            "T-Abst on (4)",
+            "10 T-Abst",
         ),
         (
-            "6",
             0,
-            $lambda x : alpha -> beta. lambda y: beta -> alpha -> delta. lambda z. y (x z) z : (alpha -> beta) -> (beta -> alpha -> delta) -> alpha -> delta$,
-            "T-Abst on (5)",
+            $ lambda x : alpha -> beta. lambda y: beta -> alpha -> delta. lambda z. y (x z) z : \ (alpha -> beta) -> (beta -> alpha -> delta) -> alpha -> delta $,
+            "11 T-Abst",
         ),
     ))
 ]
@@ -234,22 +260,22 @@
 #solution[
     The first term is trivially typable.
     #ded-nat(arr: (
-        ("a", 0, $x : (delta -> alpha) -> alpha -> beta$, "bind"),
-        ("b", 1, $y : alpha$, "bind"),
-        ("1", 2, $x : (delta -> alpha) -> alpha -> beta$, "T-Var"),
-        ("c", 2, $z : delta$, "bind"),
-        ("2", 3, $y : alpha$, "T-Var"),
-        ("3", 2, $lambda z: delta. y : delta -> alpha$, "T-Abst on (1)"),
-        ("4", 2, $x (lambda z: delta. y) : alpha -> beta$, "T-App (3) on (1)"),
-        ("5", 2, $x (lambda z: delta. y) y : beta$, "T-App (b) on (4)"),
-        ("6", 1, $lambda y: alpha. x (lambda z: delta. y) y : alpha -> beta$, "T-Abst on (5)"),
+        (0, $x : (delta -> alpha) -> alpha -> beta$, "Bound"),
+        (1, $y : alpha$, "Bound"),
+        (2, $x : (delta -> alpha) -> alpha -> beta$, "T-Var"),
+        (2, $z : delta$, "Bound"),
+        (3, $y : alpha$, "T-Var"),
+        (2, $lambda z: delta. y : delta -> alpha$, "5 T-Abst"),
+        (2, $x (lambda z: delta. y) : alpha -> beta$, "3,6 T-App"),
+		(2, $y : alpha$, "T-Var"),
+        (2, $x (lambda z: delta. y) y : beta$, "7,8 T-App"),
+        (1, $lambda y: alpha. x (lambda z: delta. y) y : alpha -> beta$, "9 T-Abst"),
         (
-            "7",
             0,
             $
                 lambda x : ((delta -> alpha) -> alpha -> beta) lambda y: alpha. x (lambda z: delta. y) y \ : ((delta -> alpha) -> alpha -> beta) -> alpha -> beta
             $,
-            "T-Abst on (5)",
+            "10 T-Abst",
         ),
     ))
     The second term is not typable in STLC.
@@ -293,21 +319,21 @@
     ]
     The flag derivation is given below:
     #ded-nat(arr: (
-        ("(a)", 0, $x : (alpha -> beta) -> alpha$, "Bound"),
-        ("(b)", 1, $z : alpha$, "Bound"),
-        ("(1)", 2, $y : beta$, $tack.l Gamma$),
-        ("(2)", 1, $(lambda z: alpha. y) : alpha -> beta$, "T-Abst on (1)"),
-        ("(3)", 1, $x (lambda z: alpha. y) : beta$, "T-App (2) on (a)"),
+        (0, $x : (alpha -> beta) -> alpha$, "Bound"),
+        (1, $z : alpha$, "Bound"),
+        (2, $y : beta$, $tack.l Gamma$),
+        (1, $(lambda z: alpha. y) : alpha -> beta$, "3 T-Abst"),
+        (1, $x : (alpha -> beta) -> alpha$, "T-Var"),
+        (1, $x (lambda z: alpha. y) : beta$, "5,4 T-App"),
         (
-            "(4)",
             0,
             $ lambda x : ((alpha -> beta) -> beta). x (lambda z: alpha. y) \ : (alpha -> beta) -> beta -> alpha $,
-            "T-Abst on (3)",
+            "6 T-Abst",
         ),
     ))
 ]
 
-// MARK: Q. 2.7
+// MARK: Q. 2.7 (a)
 #problem[
     Derive $ f : A -> B and g : B -> C => g compose f : A -> C $
     Using the rules
@@ -323,17 +349,45 @@
 
 #solution[
     #proof[
-		#ded-nat(arr: (
-			(0, $f : A -> B and g : B -> C$, "Assumption"),
-			(1, $f : A -> B$, $1 and E$),
-			(1, $g : B -> C$, $1 and E$),
-			(1, $a in A$, ""),
-			(2, $f(a) in B$, "3, 4 F-App"),
-			(2, $g(f(a)) in C$, "5, 4 F-App"),
-			(2, $(g compose f) (a) in C$, "6 Compose Def"),
-			(1, $forall x in A, (g compose f) (x) in C$, $7 forall E$),
-			(1, $g compose f : A -> C$, "8 F-Abst"),
-			(0, $f: A -> B, g: B -> C => g compose f : A -> C$, $9 =>I$)
-		))
+        #ded-nat(arr: (
+            (0, $f : A -> B and g : B -> C$, "Assumption"),
+            (1, $f : A -> B$, $1 and E$),
+            (1, $g : B -> C$, $1 and E$),
+            (1, $a in A$, ""),
+            (2, $f(a) in B$, "3, 4 F-App"),
+            (2, $g(f(a)) in C$, "5, 4 F-App"),
+            (2, $(g compose f) (a) in C$, "6 Compose Def"),
+            (1, $forall x in A, (g compose f) (x) in C$, $7 forall E$),
+            (1, $g compose f : A -> C$, "8 F-Abst"),
+            (0, $f: A -> B, g: B -> C => g compose f : A -> C$, $9 =>I$),
+        ))
     ]
 ]
+
+#problem[
+    Give a derivation in natural deduction of the following:
+    $ (A => B) => ((B => C) => (A => C)) $
+    Using the rules
+    #align(center, rule-set(
+        prooftree(
+            rule(name: $(=> E)$, $A => B$, $A$, $B$),
+        ),
+        prooftree(
+            rule(name: $(=> I)$, ded-nat(arr: ((0, $A$, "Premise"), (1, $...$, ""), (1, $B$, ""))), $A => B$),
+        ),
+    ))
+]
+
+// MARK: Q. 2.7 (b)
+#solution(proof[
+    #ded-nat(arr: (
+        (0, $A => B$, "Premise"),
+        (1, $B => C$, "Premise"),
+        (2, $A$, "Premise"),
+        (3, $B$, $1, 3 => E$),
+        (3, $C$, $2, 4 => E$),
+        (2, $A => C$, $"3-5" => I$),
+        (1, $(B => C) => (A => C)$, $"2-6" => I$),
+        (0, $(A => B) => ((B => C) => (A => C))$, $"1-7" => I$),
+    ))
+])
