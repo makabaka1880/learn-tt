@@ -1,4 +1,4 @@
-#import "../cyan-report/0.1.0/lib.typ": *;
+#import "./cyan-report/0.1.0/lib.typ": *;
 #import "@preview/derive-it:1.1.0": *;
 #import "@preview/tdtr:0.4.2": *
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
