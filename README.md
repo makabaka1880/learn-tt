@@ -13,3 +13,6 @@ The answers were written in typst (currently 0.14.1). Libs used were:
 - *curryst:0.6.0* - for typesetting derivation trees
 
 The template used (cyan-report) was written by me. I couldn't quite make sense of how to contribute to the typst universe so I just copied the lib into the project dir. It is not recommended to submit PRs to enhance the lib since it is not part of this project. Later on when I complete the template I will have a dedicated repository for it.
+
+## Automation
+I used a precommit hook to compile the typ docs into the ./out directory. Note that I need the cyan-report package inside ./src/ for compilation to work.
