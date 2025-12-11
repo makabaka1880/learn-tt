@@ -1,0 +1,7 @@
+[package]
+name = "cyan-report"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = [ "Makabaka1880 <https://github.com/makabaka1880>" ]
+license = "MIT"
+description = "Simple and elegant report template."
