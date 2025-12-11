@@ -83,12 +83,12 @@
 1. Find $"Sub" U$.
 #solution[
     $
-        "Sub" & U = { \
-              & (lambda z. z x z) ((lambda y. x y) x), (lambda z. z x z), ((lambda y. x y) x), \
-              & (lambda y. y x), (y), (lambda z. x z), (x), \
-              & (lambda y. y), (x), (lambda z. x), (z),
-                (y), (x) \
-            }
+        "Sub" & U = \
+              & {(lambda z. z x z) ((lambda y. x y) x), (lambda z. z x z), ((lambda y. x y) x)} union \
+              & {(lambda y. x y), (y), (lambda z. x z), (x)} union \
+              & {(lambda y. x), (y)} union {(lambda z. x), (z)} union {(y), (x)} \
+            = & {(lambda z. z x z) (lambda y . x y) x, (lambda z. z x z), (lambda y . x y) x , \
+               & (lambda y . x y), (lambda z . x z), (lambda y. x), (lambda z . x), y, x}
     $
 ]
 
@@ -125,7 +125,7 @@
 4. Find an alpha-equivalent term.
 #solution[
     $ (a) =_alpha (c) =_alpha U $
-    (a), (b), and (c) all follow the Barendregt convention. In (d) the free variable $v$ was bound in the first abstraction.
+    Only (a) follows the Barendregt convention.
 ]
 
 // MARK: Q. 1.5
