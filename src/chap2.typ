@@ -703,9 +703,87 @@
         (3, $y : alpha -> gamma$, "T-Var"),
         (3, $x y : alpha$, "4,5 T-App"),
         (3, $y (x y) : gamma$, "5,6 T-App"),
-		(2, $lambda z:beta. x (x y) : beta -> gamma$, "7 T-Abst"),
-		(1, $lambda y : alpha -> gamma. lambda z:beta. x (x y) : (alpha -> gamma) -> beta -> gamma$, "7 T-Abst"),
-		(0, $ lambda x : (alpha -> gamma) -> alpha. lambda y : alpha -> gamma. lambda z : beta. x (x y) \ : ((alpha -> gamma) -> alpha) -> (alpha -> gamma) -> beta -> gamma
-		$, "7 T-Abst")
+        (2, $lambda z:beta. x (x y) : beta -> gamma$, "7 T-Abst"),
+        (1, $lambda y : alpha -> gamma. lambda z:beta. x (x y) : (alpha -> gamma) -> beta -> gamma$, "7 T-Abst"),
+        (
+            0,
+            $
+                lambda x : (alpha -> gamma) -> alpha. lambda y : alpha -> gamma. lambda z : beta. x (x y) \ : ((alpha -> gamma) -> alpha) -> (alpha -> gamma) -> beta -> gamma
+            $,
+            "7 T-Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 2.12 (a)
+#problem(source: "2.12 a")[
+    Construct a term of type
+    $ ((alpha -> beta) -> alpha) -> (alpha -> alpha -> beta) -> alpha $
+]
+#solution[
+    $
+        lambda x : (alpha -> beta) -> alpha.
+        lambda y : alpha -> alpha -> beta.
+        x ( lambda z : alpha. y z z)
+    $
+    #proof(ded-nat(arr: (
+        (0, $x : (alpha -> beta) -> alpha$, "Bound"),
+        (1, $y : alpha -> alpha -> beta$, "Bound"),
+        (2, $x : (alpha -> beta) -> alpha$, "T-Var"),
+        (2, $z : alpha$, "Bound"),
+        (3, $y : alpha -> alpha -> beta$, "T-Var"),
+        (3, $z : alpha$, "Bound"),
+        (3, $y z : alpha -> beta$, "5,6 T-App"),
+        (3, $y z z : beta$, "7,6 T-App"),
+        (2, $lambda z : alpha. y z z : alpha -> beta$, "8 T-Abst"),
+        (2, $x (lambda z : alpha. y z z) : alpha$, "3,9 T-App"),
+        (
+            1,
+            $lambda y : alpha -> alpha -> beta. x (lambda z : alpha. y z z) : (alpha -> alpha -> beta) -> alpha$,
+            "3,9 T-App",
+        ),
+        (
+            0,
+            $
+                lambda x : (alpha -> beta) -> alpha. lambda y : alpha -> alpha -> beta. x (lambda z : alpha. y z z) \
+                : ((alpha -> beta) -> alpha) -> (alpha -> alpha -> beta) -> alpha
+            $,
+            "3,9 T-App",
+        ),
+    )))
+]
+
+// MARK: Q. 2.12 (b)
+#problem(source: "2.12 b")[
+    Construct a term of type
+    $ ((alpha -> beta) -> alpha) -> (alpha -> alpha -> beta) -> beta $
+]
+#solution[
+    $
+        lambda x : (alpha -> beta) -> alpha.
+        lambda y : alpha -> alpha -> beta.
+        (lambda z : alpha. y z z) (x (lambda z : alpha. y z z))
+    $
+    #proof(ded-nat(arr: (
+        (0, $x : (alpha -> beta) -> alpha$, "Bound"),
+        (1, $y : alpha -> alpha -> beta$, "Bound"),
+        (2, $x : (alpha -> beta) -> alpha$, "T-Var"),
+        (2, $z : alpha$, "Bound"),
+        (3, $y : alpha -> alpha -> beta$, "T-Var"),
+        (3, $z : alpha$, "Bound"),
+        (3, $y z : alpha -> beta$, "5,6 T-App"),
+        (3, $y z z : beta$, "7,6 T-App"),
+        (2, $"have" f := lambda z : alpha. y z z : alpha -> beta$, "8 T-Abst"),
+        (2, $x f : alpha$, "3,9 T-App"),
+        (2, $f (x f) : beta$, "9,10 T-App"),
+        (1, $lambda y : alpha -> alpha -> beta. f (x f) : (alpha -> alpha -> beta) -> beta$, "9,10 T-App"),
+        (
+            1,
+            $
+                lambda x : (alpha -> beta) -> alpha. lambda y : alpha -> alpha -> beta. f (x f) \
+                : (alpha -> beta) -> alpha -> (alpha -> alpha -> beta) -> beta
+            $,
+            "9,10 T-App",
+        ),
     )))
 ]
