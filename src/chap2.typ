@@ -563,3 +563,100 @@
     (1, $lambda v : gamma. z (x u u) : gamma -> beta$, "8 T-Abst"),
     (1, $lambda u : delta. lambda v : gamma. z (x u u) : delta -> gamma -> beta$, "9 T-Abst"),
 )))
+
+// MARK: Q. 2.10 (a)
+#problem(source: "2.10 a")[
+    Give derivation for
+    $
+        x z (y z)
+    $
+]
+
+#solution[
+    Assume an context
+    $
+        Gamma & tack x : alpha -> beta -> gamma \
+        Gamma & tack y : alpha -> beta \
+        Gamma & tack z : alpha
+    $
+    #ded-nat(arr: (
+        (0, $x : alpha -> beta -> gamma$, "T-Var"),
+        (0, $y : alpha -> beta$, "T-Var"),
+        (0, $z : alpha$, "T-Var"),
+        (0, $x z : beta -> gamma$, "1,3 T-App"),
+        (0, $y z : beta$, "2,3 T-App"),
+        (0, $x z (y z) : gamma$, "4,5 T-App"),
+    ))
+]
+
+// MARK: Q. 2.10 (b)
+#problem(source: "2.10 b")[
+    Give derivation for
+    $ lambda x : (alpha -> beta) -> beta. x (y z) $
+]
+
+#solution[
+    Assume an context
+    $
+        Gamma & tack y : gamma -> (alpha -> beta) \
+        Gamma & tack z : gamma
+    $
+    #ded-nat(arr: (
+        (0, $x : (alpha -> beta) -> beta$, "Bound"),
+        (1, $x : (alpha -> beta) -> beta$, "T-Var"),
+        (1, $y : gamma -> alpha -> beta$, "T-Var"),
+        (1, $z : gamma$, "T-Var"),
+        (1, $y z : alpha -> beta$, "3,4 T-App"),
+        (1, $x (y z) : beta$, "2,5 T-App"),
+        (0, $lambda x : (alpha -> beta) -> beta. x (y z) : ((alpha -> beta) -> beta) -> beta$, "6 T-Abst"),
+    ))
+]
+
+// MARK: Q. 2.10 (c)
+#problem(source: "2.10 c")[
+    Give derivation for
+    $ lambda y : alpha. lambda z : beta -> gamma. z (x y y) $
+]
+
+#solution[
+    Assume a context
+    $
+        Gamma & tack x : alpha -> alpha -> beta
+    $
+    #ded-nat(arr: (
+        (0, $y : alpha$, "Bound"),
+        (1, $z : beta -> gamma$, "Bound"),
+        (2, $z : beta -> gamma$, "T-Var"),
+        (2, $x : alpha -> alpha -> beta$, "T-Var"),
+        (2, $y : alpha$, "T-Var"),
+        (2, $x y : alpha -> beta$, "4,5 T-App"),
+        (2, $x y y : beta$, "6,5 T-App"),
+        (2, $z (x y y) : gamma$, "3,6 T-App"),
+        (1, $lambda z : beta -> gamma. z (x y y) : (beta -> gamma) -> gamma$, "8 T-Abst"),
+        (0, $lambda y: alpha. lambda z : beta -> gamma. z (x y y) : alpha -> (beta -> gamma) -> gamma$, "8 T-Abst"),
+    ))
+]
+
+// MARK: Q. 2.10 (d)
+#problem(source: "2.10 d")[
+    Give derivation for
+    $ lambda x: alpha -> beta. y (x z) z $
+]
+#solution[
+    Consider a context
+    $
+        Gamma & tack z : alpha \
+        Gamma & tack y : beta -> alpha -> gamma
+    $
+    #ded-nat(arr: (
+        (0, $x : alpha -> beta$, "Bound"),
+        (1, $x : alpha -> beta$, "T-Var"),
+        (1, $z: alpha$, "T-Var"),
+        (1, $x z : beta$, "2,3 T-App"),
+        (1, $y : beta -> alpha -> gamma$, "T-Var"),
+        (1, $y (x z) : alpha -> gamma$, "5,4 T-App"),
+        (1, $y (x z) z : gamma$, "3,5 T-App"),
+        (0, $lambda x : alpha -> beta. y (x z) z : (alpha -> beta) -> gamma$, "7 T-Abst"),
+    ))
+]
+
