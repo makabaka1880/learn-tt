@@ -660,3 +660,52 @@
     ))
 ]
 
+// MARK: Q. 2.11 (a)
+#problem(source: "2.11 a")[
+    Find an inhabitant of type and prove through derivation
+    $ (alpha -> alpha -> gamma) -> alpha -> beta -> gamma $
+]
+
+#solution[
+    $ lambda x : (alpha -> alpha -> gamma). lambda y : (alpha). lambda z: (beta). x y y $
+    #proof(ded-nat(arr: (
+        (0, $x : alpha -> alpha -> gamma$, "Bound"),
+        (1, $y : alpha$, "Bound"),
+        (2, $z : beta$, "Bound"),
+        (3, $x : alpha -> alpha -> gamma$, "T-Var"),
+        (3, $y : alpha$, "Bound"),
+        (3, $x y : alpha -> gamma$, "4,5 T-App"),
+        (3, $x y y : gamma$, "6,5 T-App"),
+        (2, $lambda z: beta. x y y : beta -> gamma$, "7 T-Abst"),
+        (1, $lambda y: alpha. lambda z: beta. x y y : alpha -> beta -> gamma$, "8 T-Abst"),
+        (
+            0,
+            $
+                lambda x : alpha -> alpha -> gamma. lambda y: alpha. lambda z: beta. x y y \ : (alpha -> alpha -> gamma) -> alpha -> beta -> gamma
+            $,
+            "8 T-Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 2.11 (b)
+#problem(source: "2.11 b")[
+    Find an inhabitant of type and prove through derivation
+    $ ((alpha -> gamma) -> alpha) -> (alpha -> gamma) -> beta -> gamma $
+]
+#solution[
+    $ lambda x : (alpha -> gamma) -> alpha. lambda y:(alpha -> gamma). lambda z : beta. y (x y) $
+    #proof(ded-nat(arr: (
+        (0, $x : (alpha -> gamma) -> alpha$, "Bound"),
+        (1, $y : alpha -> gamma$, "Bound"),
+        (2, $z : beta$, "Bound"),
+        (3, $x : (alpha -> gamma) -> alpha$, "T-Var"),
+        (3, $y : alpha -> gamma$, "T-Var"),
+        (3, $x y : alpha$, "4,5 T-App"),
+        (3, $y (x y) : gamma$, "5,6 T-App"),
+		(2, $lambda z:beta. x (x y) : beta -> gamma$, "7 T-Abst"),
+		(1, $lambda y : alpha -> gamma. lambda z:beta. x (x y) : (alpha -> gamma) -> beta -> gamma$, "7 T-Abst"),
+		(0, $ lambda x : (alpha -> gamma) -> alpha. lambda y : alpha -> gamma. lambda z : beta. x (x y) \ : ((alpha -> gamma) -> alpha) -> (alpha -> gamma) -> beta -> gamma
+		$, "7 T-Abst")
+    )))
+]
