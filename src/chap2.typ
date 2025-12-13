@@ -889,3 +889,48 @@
         (0, $lambda u : alpha. lambda v : beta. x (lambda z : gamma. v) u : alpha -> beta -> gamma$, "10 T-Abst"),
     )))
 ]
+
+// MARK: Q. 2.15
+// The original problem only requires a proof of case 1 and case 2,
+// but for completeness I put the entire proof anyways.
+#problem(source: "2.15")[
+    Prove the thinning lemma via induction.
+]
+
+#solution[
+    #lemma[
+        *Thinning Lemma*. Given two contexts $Gamma' subset.eq Gamma$,
+        $ Gamma' tack M : sigma => Gamma tack M : sigma $
+    ]
+    The antecedent is a judgement. Therefore, we can do structural induction over the inference rules that construct the judgement. By the nature of the inference rules, we can deduce the premise from the conclusion via structural decomposition and apply the inductive hypothesis to its immediate premise.
+
+    #proof(prompt: "Case 1 : T-Var")[
+        Therefore the derivation must be of form
+        #align(center, prooftree(rule(
+            name: "T-Var",
+            $M : sigma in Gamma'$,
+            $Gamma' tack M : sigma$,
+        )))
+        Because this rule is invertable therefore $M : sigma in Gamma '$. By the definition of subcontextes, $M : sigma in Gamma$. It follows from the $"T-Var"$ rule that $Gamma tack M : sigma$.
+    ]
+    #proof(prompt: "Case 2 : T-App")[
+        Therefore the derivation must be of form
+        #align(center, prooftree(rule(
+            name: "T-App",
+            $Gamma' tack A : tau -> sigma$,
+            $Gamma' tack B : tau$,
+            $Gamma' tack A B : sigma$,
+        )))
+        Where $M = A B$. By the principle of induction the thinning lemma holds for the terms $A$ and $B$. By plugging in $Gamma tack A : tau -> sigma, B : tau$, the $"T-App"$ rule proves $Gamma tack M : sigma$.
+    ]
+    #proof(prompt: "Case 3 : T-Abst")[
+        Therefore $M$ is a function type. We denote
+        $M$ as a abstraction term $lambda x : alpha. N : alpha -> beta$ where $x in.not "FR" N$. Therefore, type derivation for $M$ must be of form
+        #align(center, prooftree(rule(
+            name: "T-Abst",
+            $Gamma', x : alpha tack N : beta$,
+            $Gamma' tack lambda x : alpha. N : alpha -> beta$,
+        )))
+        By the principle of induction, the thinning lemma already holds for $N : beta$. Because $Gamma', x : alpha subset.eq Gamma, x : alpha$, the thinning lemma proves $Gamma, x : alpha tack N : beta$. By the $"T-Abst"$ rule, $Gamma tack lambda x : alpha. N : alpha -> beta$.
+    ]
+]
