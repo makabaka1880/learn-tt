@@ -787,3 +787,77 @@
         ),
     )))
 ]
+
+// MARK: Q. 2.13 (a)
+#problem(source: "2.13 a")[
+    Find a term of type
+    $ (alpha -> beta) -> alpha -> gamma $
+    in context $Gamma$
+    $ x : alpha -> beta -> gamma in Gamma $
+]
+
+#solution[
+    $ lambda u : alpha -> beta. lambda v: alpha . x v (u v) $
+    #proof(ded-nat(arr: (
+        (0, $u : alpha -> beta$, "Bound"),
+        (1, $v : alpha$, "Bound"),
+        (2, $x : alpha -> beta -> gamma$, "T-Var"),
+        (2, $v : alpha$, "T-Var"),
+        (2, $x v : beta -> gamma$, "3,4 T-App"),
+        (2, $u : alpha -> beta$, "T-Var"),
+        (2, $u v : beta$, "6,4 T-App"),
+        (2, $x v (u v) : gamma$, "5,7 T-App"),
+        (1, $lambda v : alpha. x v (u v) : alpha -> gamma$, "8 T-Abst"),
+        (0, $lambda u : alpha -> beta. lambda v : alpha. x v (u v) : (alpha -> beta) -> alpha -> gamma$, "9 T-Abst"),
+    )))
+]
+
+// MARK: Q. 2.13 (b)
+#problem(source: "2.13 b")[
+    Find a term of type $ alpha -> (alpha -> beta) -> gamma $
+    in context $Gamma$
+    $ x : alpha -> beta -> alpha -> gamma in Gamma $
+]
+
+#solution[
+    $ lambda u: alpha . lambda v : alpha -> beta. x u (v u) u $
+    #proof(ded-nat(arr: (
+        (0, $u : alpha$, "Bound"),
+        (1, $v : alpha -> beta$, "Bound"),
+        (2, $x : alpha -> beta -> alpha -> gamma$, "T-Var"),
+        (2, $u : alpha$, "Bound"),
+        (2, $v : alpha -> beta$, "Bound"),
+        (2, $v u : beta$, "5,4 T-App"),
+        (2, $x u : beta -> alpha -> gamma$, "3,4 T-App"),
+        (2, $x u (v u) : alpha -> gamma$, "7,6 T-App"),
+        (2, $x u (v u) u : gamma$, "8,4 T-App"),
+        (1, $lambda v : alpha -> beta. x u (v u) u : (alpha -> beta) gamma$, "9 T-Abst"),
+        (0, $lambda u : alpha. lambda v : alpha -> beta. x u (v u) u : alpha -> (alpha -> beta) gamma$, "10 T-Abst"),
+    )))
+]
+
+// MARK: Q. 2.13 (c)
+#problem(source: "2.13 c")[
+    Find a term of type $ (alpha -> gamma) -> (beta -> alpha) -> gamma $
+    in context $Gamma$
+    $ x : (beta -> gamma) -> gamma in Gamma $
+]
+
+#solution[
+    $ lambda u : alpha -> gamma. lambda v : beta -> alpha. x (lambda y : beta. u (v y)) $
+	#proof(ded-nat(arr: (
+		(0, $u : alpha -> gamma$, "Bound"),
+		(1, $v : beta -> alpha$, "Bound"),
+		(2, $x : (beta -> gamma) -> gamma$, "T-Var"),
+		(2, $y : beta$, "Bound"),
+		(3, $v : beta -> alpha$, "T-Var"),
+		(3, $y : beta$, "T-Var"),
+		(3, $v y : alpha$, "5,6 T-App"),
+		(3, $u : alpha -> gamma$, "T-Var"),
+		(3, $u (v y) : gamma$, "8,7 T-App"),
+		(2, $lambda y : beta. u (v y) : beta -> gamma$, "9 T-Abst"),
+		(2, $x (lambda y : beta. u (v y)) : gamma$, "10,3 T-App"),
+		(1, $lambda v : beta -> alpha. x (lambda y : beta. u (v y)) : (beta -> alpha) -> gamma$, "11 T-Abst"),
+		(0, $ lambda u : alpha -> gamma. lambda v : beta -> alpha. x (lambda y : beta. u (v y)) \ : (alpha -> gamma) -> (beta -> alpha) -> gamma $, "12 T-Abst"),
+	)))
+]
