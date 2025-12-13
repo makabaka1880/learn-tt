@@ -902,35 +902,20 @@
         *Thinning Lemma*. Given two contexts $Gamma' subset.eq Gamma$,
         $ Gamma' tack M : sigma => Gamma tack M : sigma $
     ]
-    The antecedent is a judgement. Therefore, we can do structural induction over the inference rules that construct the judgement. By the nature of the inference rules, we can deduce the premise from the conclusion via structural decomposition and apply the inductive hypothesis to its immediate premise.
+    We can do structural induction over the structure of $M$ by the finite syntatic constructors of $lambda$ terms.
 
-    #proof(prompt: "Case 1 : T-Var")[
-        Therefore the derivation must be of form
-        #align(center, prooftree(rule(
-            name: "T-Var",
-            $M : sigma in Gamma'$,
-            $Gamma' tack M : sigma$,
-        )))
-        Because this rule is invertable therefore $M : sigma in Gamma '$. By the definition of subcontextes, $M : sigma in Gamma$. It follows from the $"T-Var"$ rule that $Gamma tack M : sigma$.
+    #proof(prompt: "Case 1 : Variable")[
+        By the generation lemma $M : sigma in Gamma '$. By the definition of subcontextes, $M : sigma in Gamma$. It follows from the $"T-Var"$ rule that $Gamma tack M : sigma$.
     ]
-    #proof(prompt: "Case 2 : T-App")[
-        Therefore the derivation must be of form
-        #align(center, prooftree(rule(
-            name: "T-App",
-            $Gamma' tack A : tau -> sigma$,
-            $Gamma' tack B : tau$,
-            $Gamma' tack A B : sigma$,
-        )))
-        Where $M = A B$. By the principle of induction the thinning lemma holds for the terms $A$ and $B$. By plugging in $Gamma tack A : tau -> sigma, B : tau$, the $"T-App"$ rule proves $Gamma tack M : sigma$.
+    #proof(prompt: "Case 2 : Application")[
+        Therefore the judgement must be of form
+        $ Gamma' tack A B : sigma $
+        Where $M = A B$. By the generation lemma, there exists a type $tau$ such that $Gamma' tack A : tau -> sigma$ and $Gamma' tack B : tau$. By the principle of induction the thinning lemma holds for the terms $A$ and $B$. By plugging in $Gamma tack A : tau -> sigma, B : tau$, the $"T-App"$ rule proves $Gamma tack M : sigma$.
     ]
-    #proof(prompt: "Case 3 : T-Abst")[
-        Therefore $M$ is a function type. We denote
-        $M$ as a abstraction term $lambda x : alpha. N : alpha -> beta$ where $x in.not "FR" N$. Therefore, type derivation for $M$ must be of form
-        #align(center, prooftree(rule(
-            name: "T-Abst",
-            $Gamma', x : alpha tack N : beta$,
-            $Gamma' tack lambda x : alpha. N : alpha -> beta$,
-        )))
+    #proof(prompt: "Case 3 : Abstraction")[
+        Therefore $M$ is of a function type. We denote
+        $M$ as a abstraction term $ lambda x : alpha. N : alpha -> beta $ where $x in.not "FR" N$. By the generation lemma, $Gamma', x : alpha tack N : beta$.
+
         By the principle of induction, the thinning lemma already holds for $N : beta$. Because $Gamma', x : alpha subset.eq Gamma, x : alpha$, the thinning lemma proves $Gamma, x : alpha tack N : beta$. By the $"T-Abst"$ rule, $Gamma tack lambda x : alpha. N : alpha -> beta$.
     ]
 ]
@@ -956,7 +941,7 @@
             $Gamma tack B : tau$,
             $Gamma tack A B : sigma$,
         )))
-        Where $M = A B$. From the inference rule, $A$ and $B$ must be typable, thus legal. By the principle of induction, the subterm lemma holds for $A$ and $B$. Denote the lemma as $P(Lambda_TT)$:
+        Where $M = A B$. From the generation lemma, those $A$ and $B$ must exist typable, thus legal. By the principle of induction, the subterm lemma holds for $A$ and $B$. Denote the lemma as $P(Lambda_TT)$:
         $
               & P(A B) and P(A) and P(B) and (forall a in "Sub" A, P(a)) and (forall b in "Sub" B, P(b)) \
             = & forall m in {A B, A, B} union "Sub" A union "Sub" B, P(m) \
@@ -971,12 +956,12 @@
             $Gamma, x : alpha tack N : beta$,
             $Gamma tack lambda x : alpha. N : alpha -> beta$,
         )))
-        Where $M = lambda x : alpha. N$ and $x in.not "FR" N$. Therefore, $N$ is typable under the context $Gamma, x : alpha$, thus valid. By the inductive hypothese, the subterm lemma holds for $N$. Denote the lemma as $P(Lambda_TT)$
+        Where $M = lambda x : alpha. N$ and $x in.not "FR" N$. By the generation lemma, $N$ is typable under the context $Gamma, x : alpha$, thus valid. By the inductive hypothese, the subterm lemma holds for $N$. Denote the lemma as $P(Lambda_TT)$
         $
               & P(lambda x : alpha. N) and (P(N) and forall n in "Sub" N, P(n)) \
             = & forall m in {lambda x : alpha. N, N} union "Sub" N, P(m) \
             = & forall m in {lambda x : alpha. N} union "Sub" N, P(m)
-			= P(lambda x : alpha. N) = P(M)
+                = P(lambda x : alpha. N) = P(M)
         $
     ]
 ]
