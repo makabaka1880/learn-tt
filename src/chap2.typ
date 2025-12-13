@@ -61,7 +61,7 @@
 
     The third term is not typable.
     #proof[
-        Assume $x y x = (x y) x$ is typable. Therefore, $x: tau$ where $tau = sigma -> tau -> alpha$ and $y : sigma$. One can construct an infinite chain of function type by substituting $tau$: $tau = sigma -> (sigma -> (sigma -> ... -> alpha) -> alpha) -> alpha$. By induction, it can be proven that only lambda abstractions can construct function types, meaning that the term is of form
+        Assume $x y x = (x y) x$ is typable. Therefore, $x: tau$ where $tau equiv sigma -> tau -> alpha$ and $y : sigma$. One can construct an infinite chain of function type by substituting $tau$: $tau equiv sigma -> (sigma -> (sigma -> ... -> alpha) -> alpha) -> alpha$. By induction, it can be proven that only lambda abstractions can construct function types, meaning that the term is of form
         $
             (lambda n: tau. lambda m: tau. ... (lambda a: sigma. lambda b:sigma. ...)) y (lambda n: tau. lambda m: tau. ... (lambda a: sigma. lambda b:sigma. ...))
         $
