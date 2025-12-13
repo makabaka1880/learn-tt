@@ -934,3 +934,49 @@
         By the principle of induction, the thinning lemma already holds for $N : beta$. Because $Gamma', x : alpha subset.eq Gamma, x : alpha$, the thinning lemma proves $Gamma, x : alpha tack N : beta$. By the $"T-Abst"$ rule, $Gamma tack lambda x : alpha. N : alpha -> beta$.
     ]
 ]
+
+// MARK: Q. 2.16
+#problem(source: "2.16")[
+    Prove the subterm lemma.
+]
+#solution[
+    #lemma[
+        *Subterm Lemma*. If $M in Lambda_TT$ is legal, then all subterms of $M$ are.
+    ]
+    Let's formalize the lemma. The definition of a legal term is a term $M$ with the existence of a context $Gamma$ and a type $tau$ such that $Gamma tack M : tau$, in other words, $M$ is typable. Because $M$ is typable iff there's an appliable inference rule and each term appearing in the premise of each inference rule is an immediate subterm of $M$ that could construct $M$, structural induction could be done down the typing tree as it is also an induction down the term's structure, inducting over each subterm.
+
+    #proof(prompt: "Case 1 : Variable")[
+        $M$ is the only subterm of $M$ thus is trivially typable and legal.
+    ]
+    #proof(prompt: "Case 2 : Application")[
+        Therefore the derivation must be of form
+        #align(center, prooftree(rule(
+            name: "T-App",
+            $Gamma tack A : tau -> sigma$,
+            $Gamma tack B : tau$,
+            $Gamma tack A B : sigma$,
+        )))
+        Where $M = A B$. From the inference rule, $A$ and $B$ must be typable, thus legal. By the principle of induction, the subterm lemma holds for $A$ and $B$. Denote the lemma as $P(Lambda_TT)$:
+        $
+              & P(A B) and P(A) and P(B) and (forall a in "Sub" A, P(a)) and (forall b in "Sub" B, P(b)) \
+            = & forall m in {A B, A, B} union "Sub" A union "Sub" B, P(m) \
+            = & forall m in {A B} union "Sub" A union "Sub" B, P(m) \
+            = & forall m in "Sub" A B, P(m) = P(A B) = P(M)
+        $
+    ]
+    #proof(prompt: "Case 3 : Abstraction")[
+        Therefore the derivation must be of form
+        #align(center, prooftree(rule(
+            name: "T-Abst",
+            $Gamma, x : alpha tack N : beta$,
+            $Gamma tack lambda x : alpha. N : alpha -> beta$,
+        )))
+        Where $M = lambda x : alpha. N$ and $x in.not "FR" N$. Therefore, $N$ is typable under the context $Gamma, x : alpha$, thus valid. By the inductive hypothese, the subterm lemma holds for $N$. Denote the lemma as $P(Lambda_TT)$
+        $
+              & P(lambda x : alpha. N) and (P(N) and forall n in "Sub" N, P(n)) \
+            = & forall m in {lambda x : alpha. N, N} union "Sub" N, P(m) \
+            = & forall m in {lambda x : alpha. N} union "Sub" N, P(m)
+			= P(lambda x : alpha. N) = P(M)
+        $
+    ]
+]
