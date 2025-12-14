@@ -288,7 +288,7 @@
         By induction on the type inference rule that constructed the type judgement for subterm $x (lambda z. x)$. Because the term is an application, the only rule that applies is the application rule.
 
         We denote the context inside the abstraction as $Gamma'$.
-        Suppose $cal(J) equiv Gamma' tack x (lambda z.x) : tau$. By the inference rule of application, $x$ must be a function type that accepts the type of $(lambda z. x)$. Let $Gamma' tack z:alpha$, and type of $x$ as $tau_x$. Therefore, $Gamma' tack lambda z:alpha . x : alpha -> tau_x$. Therefore, $tau_x = (alpha -> tau_x) -> tau$. This is a recursive type, which is not constructable as it requires infinitely nested lambda abstractions that requires infinite reduction paths to reach a normal form.
+        Suppose $cal(J) equiv Gamma' tack x (lambda z.x) : tau$. By the inference rule of application, $x$ must be a function type that accepts the type of $(lambda z. x)$. Let $Gamma' tack z:alpha$, and type of $x$ as $tau_x$. Therefore, $Gamma' tack lambda z:alpha . x : alpha -> tau_x$. Therefore, $tau_x equiv (alpha -> tau_x) -> tau$. This is a recursive type, which is not constructable as it requires infinitely nested lambda abstractions that requires infinite reduction paths to reach a normal form.
     ]
 ]
 
@@ -963,5 +963,41 @@
             = & forall m in {lambda x : alpha. N} union "Sub" N, P(m)
                 = P(lambda x : alpha. N) = P(M)
         $
+    ]
+]
+
+
+// MARK: Q. 2.17
+#problem(source: "2.17")[
+    Prove the uniqueness of types lemma.
+]
+#solution[
+    #lemma[
+        Assume $Gamma tack M : sigma$ and $Gamma tack M : tau$. Then $sigma = tau$.
+    ]
+    Again do induction on the construction of $M$.
+    #proof(prompt: "Case 1 : Variable")[
+        By the generation lemma, $M : sigma in Gamma$ and $M : tau in Gamma$ By the definition of contexts. Because the context could only provide one judgement per variable, $M$ must have a unique type.
+    ]
+    #proof(prompt: "Case 2 : Application")[
+        $M$ must be of form $A B$. By the generation lemma, two judgements could be obtained where $alpha, beta in TT$:
+        $ Gamma tack A : alpha -> sigma, B : alpha $
+        $ Gamma tack A : beta -> tau, B : beta $
+        By the inductive hypothesis, the uniqueness lemma already holds for $A$ and $B$. Therefore $alpha equiv beta$. Because $A$ is a function type, it could be expanded into two forms:
+        $ Gamma tack (lambda x : alpha. N) : alpha -> sigma $
+        $ Gamma tack (lambda x : beta. N) : beta -> tau $
+        By the generation lemma and the equivalence $alpha equiv beta$, the above further deduce to
+        $ Gamma, x : alpha tack N : sigma $
+        $ Gamma, x : alpha tack N : tau $
+        By the principle of induction, the uniqueness lemma holds for $N$, therefore $sigma equiv tau$. By substituting $tau$ for $sigma$, the final type for $M$ should be the same in the conclusion for both judgements.
+    ]
+    #proof(prompt: "Case 3 : Abstraction")[
+        Because $M$ is a function type, two judgements could be obtained for some $alpha, beta in TT$
+        $ Gamma tack lambda x : gamma. N : sigma "where" sigma equiv gamma -> alpha $
+        $ Gamma tack lambda x : gamma. N : tau "where" tau equiv gamma -> beta $
+		By applying the generation lemma
+		$ Gamma, x : gamma tack N : alpha $
+		$ Gamma, x : gamma tack N : beta $
+		By the principle of induction, $N$ already conform to the lemma, thus $alpha equiv beta$. Therefore, $gamma -> alpha equiv gamma -> beta$.
     ]
 ]
