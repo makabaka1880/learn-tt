@@ -198,17 +198,69 @@
 
 // MARK: Q. 3.3 (b ii)
 #problem(source: "3.3 b.ii")[
-	Prove $lambda x: nat. "even" ("succ" x)$ via derivation in the context provided in 3.3 a.
+    Prove $lambda x: nat. "even" ("succ" x)$ via derivation in the context provided in 3.3 a.
 ]
 #solution[
-	#proof(ded-nat(arr: (
-		(0, $nat, bool : *$, "T-Form"),
-		(0, $x : nat$, "Bound"),
-		(1, $"succ" : nat -> nat$, "T-Var"),
-		(1, $x : nat$, "T-Var"),
-		(1, $"succ" x : nat$, "3,4 T-App"),
-		(1, $"even" : nat -> bool$, "T-Var"),
-		(1, $"even" ("succ" x) : bool$, "6,5 T-App"),
-		(0, $lambda x : nat. "even" ("succ" x) : nat -> bool$, "7 T-Abst"),
-	)))
+    #proof(ded-nat(arr: (
+        (0, $nat, bool : *$, "T-Form"),
+        (0, $x : nat$, "Bound"),
+        (1, $"succ" : nat -> nat$, "T-Var"),
+        (1, $x : nat$, "T-Var"),
+        (1, $"succ" x : nat$, "3,4 T-App"),
+        (1, $"even" : nat -> bool$, "T-Var"),
+        (1, $"even" ("succ" x) : bool$, "6,5 T-App"),
+        (0, $lambda x : nat. "even" ("succ" x) : nat -> bool$, "7 T-Abst"),
+    )))
+]
+
+// MARK: Q. 3.4
+#problem(source: "3.4")[
+    Give a shorthanded (omit T-Var and T-Form) derivation in $lambda 2$ to show the following term is valid in $Gamma equiv nat : *, bool : *$
+    $
+        (lambda alpha, beta: *. lambda f : alpha -> alpha. lambda g : alpha -> beta. lambda x : alpha. g (f (f x))) nat bool
+    $
+]
+#solution[
+    #proof(ded-nat(arr: (
+        (0, $alpha, beta: *$, "Bound"),
+        (1, $f : alpha -> alpha$, "Bound"),
+        (2, $g : alpha -> beta$, "Bound"),
+        (3, $x : alpha$, "Bound"),
+        (4, $f x : alpha$, "*,* T-App"),
+        (4, $f (f x) : alpha$, "*,5 T-App"),
+        (4, $g (f (f x)) : beta$, "*,6 T-App"),
+        (3, $lambda x : alpha. g (f (f x)) : alpha -> beta$, "7 T-Abst"),
+        (2, $lambda g : alpha -> beta. lambda x : alpha. g (f (f x)) : (alpha -> beta) -> alpha -> beta$, "8 T-Abst"),
+        (
+            1,
+            $
+                lambda f : alpha -> alpha. lambda g : alpha -> beta. lambda x : alpha. g (f (f x)) \ : (alpha -> alpha) -> (alpha -> beta) -> alpha -> beta
+            $,
+            "9 T-Abst",
+        ),
+        (
+            0,
+            $
+                lambda alpha, beta : *. lambda f : alpha -> alpha. lambda g : alpha -> beta. lambda x : alpha. g (f (f x)) \
+                : Pi alpha, beta : *.(alpha -> alpha) -> (alpha -> beta) -> alpha -> beta
+            $,
+            "10 T2-Abst",
+        ),
+        (
+            0,
+            $
+                (lambda alpha, beta : *. lambda f : alpha -> alpha. lambda g : alpha -> beta. lambda x : alpha. g (f (f x))) nat \
+                : Pi beta : *.(nat -> nat) -> (nat -> beta) -> nat -> beta
+            $,
+            "*,11 T2-App",
+        ),
+        (
+            0,
+            $
+                (lambda alpha, beta : *. lambda f : alpha -> alpha. lambda g : alpha -> beta. lambda x : alpha. g (f (f x))) nat bool \
+                : Pi beta : *.(nat -> nat) -> (nat -> bool) -> nat -> bool
+            $,
+            "*,12 T2-App",
+        ),
+    )))
 ]
