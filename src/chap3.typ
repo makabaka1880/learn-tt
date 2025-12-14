@@ -102,7 +102,7 @@
 ]
 
 // MARK: Q. 3.2
-#problem[
+#problem(source: "3.2")[
     Give a full derivation in $lambda 2$ to show the following type term is legal:
     $
         M equiv lambda alpha, beta, gamma : *. lambda f : alpha -> beta. lambda g : beta -> gamma. lambda x : alpha. g (f x)
