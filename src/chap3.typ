@@ -264,3 +264,86 @@
         ),
     )))
 ]
+
+// MARK: Q. 3.5 (a)
+#problem(source: "3.5 a")[
+    Let $bot equiv Pi alpha : *. alpha$. Prove $bot$ is legal.
+]
+#solution[
+    Here a notion called kind checking is introduced. This has not yet been discussed in this book (?
+    #proof(ded-nat(arr: (
+        (0, $alpha: *$, "Bound"),
+        (1, $alpha: *$, "T-Form"),
+        (0, $Pi alpha : *. alpha : * -> *$, "T-Form"),
+    )))
+]
+
+// MARK: Q. 3.5 (b)
+#problem(source: "3.5 b")[
+    Consider the context $Gamma equiv beta : *, x : bot$. Find an inhabitant of type $beta$ under $Gamma$.
+]
+#solution[
+    $x beta$ is. Because $x$ is of second-order type, it must be parametric to a type, thus $x$ is of form $lambda alpha : *. M$ where $Gamma, alpha : * tack M : alpha$.
+    #proof(ded-nat(arr: (
+        (0, $x : Pi alpha: *. alpha$, "T-Var"),
+        (0, $beta: *$, "T-Form"),
+        (0, $x beta : beta$, "1,2 T2-App"),
+    )))
+]
+
+// MARK: Q. 3.5 (c)
+#problem(source: "3.5 c")[
+    Give three inhabitants of $beta -> beta$ in $beta$-nf under $Gamma$ in 3.5 b.
+]
+#solution[
+    1. $lambda y : beta. y$.
+    #proof(ded-nat(arr: (
+        (0, $y : beta$, "Bound"),
+        (1, $y : beta$, "T-Var"),
+        (0, $lambda y : beta. y : beta -> beta$, "2 T-Abst"),
+    )))
+    2. $lambda y : beta. x beta$.
+    #proof(ded-nat(arr: (
+        (0, $y : beta$, "Bound"),
+        (1, $x : Pi alpha: *. alpha$, "T-Var"),
+        (1, $beta: *$, "T-Form"),
+        (1, $x beta : beta$, "2,3 T2-App"),
+        (0, $lambda y : beta. x beta : beta -> beta$, "4 T-Abst"),
+    )))
+    3. $lambda y : beta. x (beta -> beta) y$.
+    #proof(ded-nat(arr: (
+        (0, $y : beta$, "Bound"),
+        (1, $x : Pi alpha: *. alpha$, "T-Var"),
+        (1, $beta -> beta: *$, "T-Form"),
+        (1, $x (beta -> beta): beta -> beta$, "2,3 T2-App"),
+        (1, $y : beta$, "T-Var"),
+        (1, $x (beta -> beta) y : beta$, "4,5 T-App"),
+        (0, $lambda y : beta. x (beta -> beta) y : beta -> beta$, "5 T-Abst"),
+    )))
+]
+
+// MARK: Q. 3.5 (d)
+#problem(source: "3.5 d")[
+    Prove that the following terms inhabit the same type in $Gamma$:
+    $ lambda f : beta -> beta -> beta. f (x beta) (x beta) $
+    $ x ((beta -> beta -> beta) -> beta) $
+]
+#solution[
+	We simply derive the types.
+    #proof(prompt: "First Term", ded-nat(arr: (
+        (0, $f : beta -> beta -> beta$, "Bound"),
+        (1, $f : beta -> beta -> beta$, "T-Var"),
+        (1, $x: Pi alpha : *. alpha$, "T-Var"),
+        (1, $beta: *$, "T-Form"),
+        (1, $x beta : beta$, "3,4 T2-App"),
+        (1, $f (x beta): beta -> beta$, "2,5 T-App"),
+        (1, $f (x beta) (x beta) : beta$, "6,5 T-App"),
+		(0, $lambda f : beta -> beta -> beta. f (x beta) (x beta): (beta -> beta -> beta) -> beta$, "6 T-Abst")
+    )))
+	#proof(prompt: "Second Term", ded-nat(arr: (
+		(0, $(beta -> beta -> beta) -> beta : *$, "T-Form"),
+		(0, $x : Pi alpha : *. alpha$, "T-Var"),
+		(0, $x ((beta -> beta -> beta) -> beta): (beta -> beta -> beta) -> beta$, "2,1 T2-App")
+	)))
+	The two terms were shown to both inhabit $(beta -> beta -> beta) -> beta$.
+]
