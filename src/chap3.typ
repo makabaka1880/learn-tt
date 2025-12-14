@@ -19,7 +19,8 @@
     accent: accent,
 );
 #let problem = (..it) => problem(bg: accent, ..it)
-
+#let nat = $mono("nat")$
+#let bool = $mono("bool")$
 #let mark(content) = text(content, fill: accent)
 
 #definition[
@@ -153,4 +154,61 @@
             "17 T2-Abst",
         ),
     ))
+]
+
+// MARK: Q. 3.3 (a)
+#problem(source: "3.3 a")[
+    Given $M$ in 3.2, and a context $Gamma$ such that
+    $ Gamma tack nat : * $
+    $ Gamma tack bool : * $
+    $ Gamma tack "succ" : nat -> nat $
+    $ Gamma tack "even" : nat -> bool $
+    Prove $M nat nat bool "succ" "even"$ is legal.
+]
+#solution[
+    Proof by deriving the term's type.
+    #proof(ded-nat(arr: (
+        (0, $M : Pi alpha, beta, gamma : *. (alpha -> beta) -> (beta -> gamma) -> alpha -> gamma$, "T-Var"),
+        (0, $nat, bool : *$, "T-Form"),
+        (0, $M nat : Pi beta, gamma : *. (nat -> beta) -> (beta -> gamma) -> nat -> gamma$, "2,1 T2-App"),
+        (0, $M nat nat : Pi gamma : *. (nat -> nat) -> (nat -> gamma) -> nat -> gamma$, "2,3 T2-App"),
+        (0, $ M nat nat bool : (nat -> nat) -> (nat -> bool) -> nat -> bool $, "2,3 T2-App"),
+        (0, $"succ": nat -> nat, "even": nat -> bool$, "T-Var"),
+        (0, $M nat nat bool "succ" : (nat -> bool) -> nat -> bool$, "6,5 T-App"),
+        (0, $M nat nat bool "succ" "even": nat -> bool$, "6,7 T-App"),
+    )))
+]
+
+// MARK: Q. 3.3 (b i)
+#problem(source: "3.3 b.i")[
+    Prove $lambda x : nat. "even" ("succ" x)$ via 3.3 a.
+]
+#solution[
+    The result of beta reduction on the term in 3.3 a is what we are proving.
+    #proof[
+        $
+                     & M nat nat bool "succ" "even" \
+               equiv & (lambda alpha, beta, gamma, f, g. lambda x : alpha. g (f x)) nat nat bool "succ" "even" \
+            ->>_beta & (lambda f : nat -> nat. lambda g : nat -> bool. lambda x: nat. g (f (x))) "succ" "even" \
+             ->_beta & (lambda x : nat. "even" ("succ" x))
+        $
+        By the subject reduction lemma, $lambda x:nat. "even" ("succ" x)) : nat -> bool$, thus is legal.
+    ]
+]
+
+// MARK: Q. 3.3 (b ii)
+#problem(source: "3.3 b.ii")[
+	Prove $lambda x: nat. "even" ("succ" x)$ via derivation in the context provided in 3.3 a.
+]
+#solution[
+	#proof(ded-nat(arr: (
+		(0, $nat, bool : *$, "T-Form"),
+		(0, $x : nat$, "Bound"),
+		(1, $"succ" : nat -> nat$, "T-Var"),
+		(1, $x : nat$, "T-Var"),
+		(1, $"succ" x : nat$, "3,4 T-App"),
+		(1, $"even" : nat -> bool$, "T-Var"),
+		(1, $"even" ("succ" x) : bool$, "6,5 T-App"),
+		(0, $lambda x : nat. "even" ("succ" x) : nat -> bool$, "7 T-Abst"),
+	)))
 ]
