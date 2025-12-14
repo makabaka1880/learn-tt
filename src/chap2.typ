@@ -37,7 +37,7 @@
             rule(name: "(T-Abst)", $Gamma, x : sigma tack M : tau$, $Gamma tack lambda x : sigma. M : sigma -> tau$),
         ),
     ))
-    In this document, convention is that all type judgements in a proof tree, unless stated otherwise, is derived from a single context per tree.
+    In this document, convention is that all type judgements in a proof tree, unless stated otherwise, is derived from a single and unique context per tree.
 ]
 
 // MARK: Q. 2.1
