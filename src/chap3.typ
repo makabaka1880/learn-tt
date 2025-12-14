@@ -329,7 +329,7 @@
     $ x ((beta -> beta -> beta) -> beta) $
 ]
 #solution[
-	We simply derive the types.
+    We simply derive the types.
     #proof(prompt: "First Term", ded-nat(arr: (
         (0, $f : beta -> beta -> beta$, "Bound"),
         (1, $f : beta -> beta -> beta$, "T-Var"),
@@ -338,12 +338,150 @@
         (1, $x beta : beta$, "3,4 T2-App"),
         (1, $f (x beta): beta -> beta$, "2,5 T-App"),
         (1, $f (x beta) (x beta) : beta$, "6,5 T-App"),
-		(0, $lambda f : beta -> beta -> beta. f (x beta) (x beta): (beta -> beta -> beta) -> beta$, "6 T-Abst")
+        (0, $lambda f : beta -> beta -> beta. f (x beta) (x beta): (beta -> beta -> beta) -> beta$, "6 T-Abst"),
     )))
-	#proof(prompt: "Second Term", ded-nat(arr: (
-		(0, $(beta -> beta -> beta) -> beta : *$, "T-Form"),
-		(0, $x : Pi alpha : *. alpha$, "T-Var"),
-		(0, $x ((beta -> beta -> beta) -> beta): (beta -> beta -> beta) -> beta$, "2,1 T2-App")
-	)))
-	The two terms were shown to both inhabit $(beta -> beta -> beta) -> beta$.
+    #proof(prompt: "Second Term", ded-nat(arr: (
+        (0, $(beta -> beta -> beta) -> beta : *$, "T-Form"),
+        (0, $x : Pi alpha : *. alpha$, "T-Var"),
+        (0, $x ((beta -> beta -> beta) -> beta): (beta -> beta -> beta) -> beta$, "2,1 T2-App"),
+    )))
+    The two terms were shown to both inhabit $(beta -> beta -> beta) -> beta$.
+]
+
+// MARK: Q. 3.6 (a)
+#problem(source: "3.6 a")[
+    Find inhabitant of type
+    $ Pi alpha , beta: *. (nat -> alpha) -> (alpha -> nat -> beta) -> nat -> beta $
+    In context $Gamma equiv nat: *$.
+]
+#solution[
+    $ lambda alpha, beta: *. lambda x : nat -> alpha. lambda y : (alpha -> nat -> beta). lambda z : nat. y (x z) z $
+    #proof(ded-nat(arr: (
+        (0, $alpha, beta: *$, "Bound"),
+        (0, $nat -> alpha: *$, "T-Form"),
+        (1, $x : nat -> alpha$, "Bound"),
+        (1, $alpha -> nat -> beta: *$, "T-Form"),
+        (2, $y : alpha -> nat -> beta$, "Bound"),
+        (2, $nat : *$, "Bound"),
+        (3, $z : nat$, "Bound"),
+        (4, $y : alpha -> nat -> beta$, "T-Var"),
+        (4, $x : nat -> alpha$, "T-Var"),
+        (4, $z : nat$, "T-Var"),
+        (4, $x z : alpha$, "9,10 T-App"),
+        (4, $y (x z) : nat -> beta$, "8,11 T-App"),
+        (4, $y (x z) z : beta$, "12,10 T-App"),
+        (3, $lambda z : nat. y (x z) z: nat -> beta$, "13 T-Abst"),
+        (
+            2,
+            $
+                lambda y : alpha -> nat -> beta. lambda z
+                : nat. y (x z) z \ : (alpha -> nat -> beta) -> nat -> beta
+            $,
+            "14 T-Abst",
+        ),
+        (
+            1,
+            $
+                lambda & x : nat -> alpha. y : alpha -> nat -> beta. lambda z : nat. y (x z) z \
+                       & : (nat -> alpha) -> (alpha -> nat -> beta) -> nat -> beta
+            $,
+            "15 T-Abst",
+        ),
+        (
+            0,
+            $
+                lambda & alpha, beta: *. x : nat -> alpha. y : alpha -> nat -> beta. lambda z : nat. y (x z) z \
+                       & : Pi alpha, beta: *. (nat -> alpha) ->(alpha -> nat -> beta) -> nat -> beta
+            $,
+            "16 T2-Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 3.6 (b)
+#problem(source: "3.6 b")[
+    Find inhabitant of type
+    $ Pi delta : *. ((alpha -> gamma) -> delta) -> (alpha -> beta) -> (beta -> gamma) -> delta $
+    In context $Gamma equiv alpha: *, beta: *, gamma: *$
+]
+#solution[
+    $
+        lambda delta: *. lambda x : (alpha -> gamma) -> delta. lambda y : alpha -> beta. lambda z : beta -> gamma. x (lambda u : alpha. z (y u))
+    $
+    A derivation in shorthand will be given (omitting T-Form / T-Var)
+    #proof(ded-nat(arr: (
+        (0, $delta: *$, "Bound"),
+        (1, $x : (alpha -> gamma) -> delta$, "Bound"),
+        (2, $y : alpha -> beta$, "Bound"),
+        (3, $z : beta -> gamma$, "Bound"),
+        (4, $u : alpha$, "Bound"),
+        (5, $y u : beta$, "*,* T-App"),
+        (5, $z (y u) : gamma$, "*,6 T-App"),
+        (4, $lambda u : alpha. z (y u) : alpha -> gamma$, "7 T-Abst"),
+        (4, $x (lambda u : alpha. z (y u)) : delta$, "8 T-Abst"),
+        (3, $lambda z : beta -> gamma. x (lambda u : alpha. z (y u)) : (beta -> gamma) -> delta$, "9 T-Abst"),
+        (
+            2,
+            $
+                lambda & y : alpha -> beta. lambda z : beta -> gamma. x (lambda u : alpha. z (y u)) \
+                       & : (alpha -> beta) -> (beta -> gamma) -> delta
+            $,
+            "10 T-Abst",
+        ),
+        (
+            1,
+            $
+                lambda &x : (alpha -> gamma) -> delta. lambda y : alpha -> beta. lambda z : beta -> gamma. x (lambda u : alpha. z (y u)) \
+                & : ((alpha -> gamma) -> beta) -> (alpha -> beta) -> (beta -> gamma) -> delta
+            $,
+            "11 T-Abst",
+        ),
+        (
+            0,
+            $
+                lambda delta: *. lambda &x : (alpha -> gamma) -> delta. lambda y : alpha -> beta. lambda z : beta -> gamma. x (lambda u : alpha. z (y u)) \
+                & : Pi delta : *. ((alpha -> gamma) -> delta) -> (alpha -> beta) -> (beta -> gamma) -> delta
+            $,
+            "12 T-Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 3.6 (c)
+#problem(source: "3.6 c")[
+    Find inhabitant of type
+    $ Pi alpha, beta, gamma: *. (alpha -> (beta -> alpha) -> gamma) -> alpha -> gamma $
+    In the empty context
+]
+#solution[
+    $
+        lambda alpha, beta, gamma: *. lambda f : (alpha -> (beta -> alpha) -> gamma). lambda x : alpha. f x (lambda u. x)
+    $
+    #proof(ded-nat(arr: (
+        (0, $alpha, beta, gamma$, "Bound"),
+        (1, $f : alpha -> (beta -> alpha) -> gamma$, "Bound"),
+        (2, $x : alpha$, "Bound"),
+        (3, $f x : (beta -> alpha) -> gamma$, "*,* T-App"),
+        (3, $u : beta$, "Bound"),
+        (4, $x : alpha$, "T-Var"),
+        (3, $lambda u: beta. x: beta -> alpha$, "6 T-Abst"),
+        (3, $f x (lambda u: beta. x) : gamma$, "4,7 T-App"),
+        (2, $lambda x : alpha. f x (lambda u : beta. x) : alpha -> gamma$, "8 T-Abst"),
+        (
+            1,
+            $
+                lambda & f : alpha -> (beta -> alpha) -> gamma. lambda x : alpha. f x (lambda u : beta. x) \
+                       & : (alpha -> (beta -> alpha) -> gamma) -> alpha -> gamma
+            $,
+            "9 T-Abst",
+        ),
+        (
+            0,
+            $
+                lambda & alpha, beta, gamma: *. lambda f : alpha -> (beta -> alpha) -> gamma. lambda x : alpha. f x (lambda u : beta. x) \
+                & : Pi alpha, beta, gamma: *. (alpha -> (beta -> alpha) -> gamma) -> alpha -> gamma
+            $,
+            "10 T2-Abst",
+        ),
+    )))
 ]
