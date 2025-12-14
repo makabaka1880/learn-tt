@@ -1001,3 +1001,34 @@
 		By the principle of induction, $N$ already conform to the lemma, thus $alpha equiv beta$. Therefore, $gamma -> alpha equiv gamma -> beta$.
     ]
 ]
+
+// MARK: Q. 2.18
+#problem(source: "2.18")[
+	Prove the _Subject Reduction_ lemma.	
+]
+#lemma[
+	If $Gamma tack L : rho$ and $L ->> _beta L'$, then $Gamma tack L' : rho$
+]
+#solution[
+	Proof by generation of $L'$: which is by establishing all possibilities of how $L'$ was derived.
+	#proof(prompt: "Basis : Direct Reduction")[
+		$ L equiv (lambda x : sigma. M) N "and" L' equiv M[x := N] $
+		By the generation lemma and some destructuring we have $M : gamma$ under $Gamma, x : sigma$ and $N : sigma$ under $Gamma$. By applying the $"T-App"$ rule, $L : gamma$. By the uniqueness of types lemma, $gamma equiv rho$. Now we define $Gamma' equiv emptyset$ and $Gamma'' equiv Gamma$, by the substitution lemma we have $Gamma tack M[x := N] : gamma$. We substitue $gamma equiv rho$ back and get $Gamma tack M[x:=N] : rho$.
+	]
+	#proof(prompt: "Case 1 : Left Term Reduction")[
+		$ L equiv M N "and" L' equiv M' N "where" M ->_beta M' $	
+		We type the terms $M : sigma -> rho$ and $N : sigma$. By the inductive hypothesis, $Gamma tack M' : sigma -> rho$. By the $"T-App"$ rule, $Gamma tack M' N : rho$.
+	]
+	#proof(prompt: "Case 2 : Left Term Reduction")[
+		$ L equiv M N "and" L' equiv M N' "where" N ->_beta N' $	
+		We type the terms $M : sigma -> rho$ and $N : sigma$. By the inductive hypothesis, $Gamma tack N' : sigma$. By the $"T-App"$ rule, $Gamma tack M N' : rho$.
+	]
+	#proof(prompt: "Case 3 : Reduction In Body")[
+		$ L equiv (lambda x : tau. M) "and" L' equiv (lambda x : tau. M') "where" M ->_beta M' $	
+		Let $sigma in TT$ where $rho equiv tau -> sigma$. By the generation lemma $Gamma, x : tau tack M : sigma$. By the inductive hypothesis, $Gamma, x : tau tack M' : sigma$, and by the $"T-Abst"$ rule, $Gamma tack (lambda x : tau. M') : tau -> sigma$. Therefore, $Gamma tack L' : rho$ by substituting $tau -> sigma$ for $rho$.
+	]
+]
+
+---
+
+Completed Dec 15 2:24 am.
