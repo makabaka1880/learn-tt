@@ -586,3 +586,40 @@
         ),
     )))
 ]
+
+// MARK: Q. 3.10 (a)
+#problem(source: "3.10 a")[
+    Consider the term $ M equiv lambda x : Pi alpha: *. alpha -> alpha. x (sigma -> sigma) (x sigma) $
+    Prove that $M$ is legal.
+]
+#solution[
+    For a term to be legal there must exist a context so that the term could be typed. Here, a witness context is $Gamma equiv sigma: *$.
+    #proof(ded-nat(arr: (
+        (0, $x : Pi alpha: *. alpha -> alpha$, "Bound"),
+        (1, $x (sigma -> sigma): (sigma -> sigma) -> (sigma -> sigma)$, "*,* T2-App"),
+        (1, $x sigma : sigma -> sigma$, "*,* T2-App"),
+        (1, $x (sigma -> sigma) (x sigma) : sigma -> sigma$, "2,3 T-App"),
+        (
+            0,
+            $lambda x : Pi alpha: *. alpha -> alpha. x (sigma -> sigma) (x sigma) : (Pi alpha : *. alpha -> alpha) -> sigma -> sigma$,
+            "4 T-Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 3.10 (b)
+#problem(source: "3.10 b")[
+    Find a term $N$ such that $M N$ is legal and may be considered to be a way to add type information to $(lambda x. x x) (lambda y. y)$
+]
+#solution[
+    By removing all type information from $M$ we obtain $lambda x. x x$. Therefore, $N$ needs to be a term of form $lambda y. y$. Then
+    $ M sigma N equiv (lambda x : Pi alpha : *. alpha -> alpha. x (sigma -> sigma) (x sigma)) sigma (lambda y : sigma. y) $ Is the same as $(lambda x. x x) (lambda y. y)$ modulo type annotations.
+    #proof(ded-nat(arr: (
+        (0, $M : (Pi alpha: *. alpha -> alpha) -> sigma -> sigma$, "T-Var"),
+        (0, $M sigma : (sigma -> sigma) -> sigma -> sigma$, "1,* T2-App"),
+        (0, $y : sigma$, "Bound"),
+        (1, $y : sigma$, "T-Var"),
+		(0, $"have" N := lambda y: sigma. y : sigma -> sigma$, "4 T-Abst"),
+		(0, $M sigma N : sigma -> sigma$, "2,5 T-Abst")
+    )))
+]
