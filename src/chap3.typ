@@ -650,3 +650,37 @@
         ))
     ],
 )
+
+// MARK: Q. 3.12
+#problem(source: "3.12")[
+    Given the Polymorphic Church Numerals:
+    $
+        nat in TT_2 & := Pi alpha: *. (alpha -> alpha) -> alpha -> alpha \
+        overline(0) & equiv lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x : nat \
+        overline(1) & equiv lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f x : nat \
+        overline(2) & equiv lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f (f x) : nat \
+             "succ" & equiv lambda n : nat. lambda beta: *. lambda f : beta -> beta. lambda x: beta. f (n beta f x)
+    $
+    Prove that
+    $
+        "succ" overline(0) & =_beta overline(1) \
+        "succ" overline(1) & =_beta overline(2)
+    $
+]
+
+#solution[
+    $
+        & "succ" overline(0) \
+        equiv & (lambda n : nat. lambda beta: *. lambda f : beta -> beta. lambda x: beta. f (n beta f x)) (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x) \
+        ->_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x) beta f x)) \
+        ->_(beta_(TT 2)) & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda f : beta -> beta. lambda x : beta. x) f x)) \
+        ->>_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f x) equiv^(beta -> alpha) _(alpha_(TT 2)) overline(1)
+    $
+    $
+        & "succ" overline(1) \
+        equiv & (lambda n : nat. lambda beta: *. lambda f : beta -> beta. lambda x: beta. f (n beta f x)) (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f x) \
+        ->_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f x) beta f x)) \
+        ->_(beta_(TT 2)) & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda f : beta -> beta. lambda x : beta. f x) f x)) \
+        ->>_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta.  f(f x)) equiv^(beta -> alpha) _(alpha_(TT 2)) overline(2)
+    $
+]
