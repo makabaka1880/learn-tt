@@ -786,14 +786,48 @@
         $
             "neg" ltrue & equiv (lambda b : bool. lambda alpha : *. b alpha (lfalse alpha) (ltrue alpha)) ltrue \
                         & ->>_beta lambda alpha: *. (lambda x, y: alpha. x) (lfalse alpha) (ltrue alpha) \
-						& ->_beta lambda alpha: *. lfalse alpha ->_eta lfalse
-	        $
+                        & ->_beta lambda alpha: *. lfalse alpha ->_eta lfalse
+        $
     ]
     #proof(prompt: "Neg False")[
         $
             "neg" lfalse & equiv (lambda b : bool. lambda alpha : *. b alpha (lfalse alpha) (ltrue alpha)) lfalse \
-                        & ->>_beta lambda alpha: *. (lambda x, y: alpha. y) (lfalse alpha) (ltrue alpha) \
-						& ->_beta lambda alpha: *. ltrue alpha ->_eta ltrue
-	        $
+                         & ->>_beta lambda alpha: *. (lambda x, y: alpha. y) (lfalse alpha) (ltrue alpha) \
+                         & ->_beta lambda alpha: *. ltrue alpha ->_eta ltrue
+        $
     ]
+]
+
+// MARK: Q. 3.15
+#problem(source: "3.15")[
+    Define
+    $ M equiv lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta x y) (v beta y y) $
+    And reduce $M ltrue ltrue$, $M ltrue lfalse$, $M lfalse ltrue$, $M lfalse lfalse$, and decide which logical operator is represented by $M$.
+]
+#solution[
+    $
+        M ltrue ltrue &equiv (lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta x y) (v beta y y)) ltrue ltrue \
+        ->>_beta& lambda beta: *. lambda x, y : beta. ltrue beta (ltrue beta x y)(ltrue beta y y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. (ltrue beta x y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. x equiv_alpha ltrue \
+    $
+    $
+        M ltrue lfalse &equiv (lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta x y) (v beta y y)) ltrue lfalse \
+        ->>_beta& lambda beta: *. lambda x, y : beta. ltrue beta (lfalse beta x y)(lfalse beta y y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. (lfalse beta x y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. y equiv_alpha lfalse \
+    $
+    $
+        M lfalse ltrue &equiv (lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta x y) (v beta y y)) lfalse ltrue \
+        ->>_beta& lambda beta: *. lambda x, y : beta. lfalse beta (ltrue beta x y)(ltrue beta y y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. (ltrue beta y y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. y equiv_alpha lfalse \
+    $
+    $
+        M lfalse lfalse &equiv (lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta x y) (v beta y y)) lfalse lfalse \
+        ->>_beta& lambda beta: *. lambda x, y : beta. lfalse beta (lfalse beta x y)(lfalse beta y y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. (lfalse beta y y) \
+        ->>_beta& lambda beta: *. lambda x, y : beta. y equiv_alpha lfalse \
+    $
+    Therefore $M$ is equivalent to logical AND.
 ]
