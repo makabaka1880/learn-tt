@@ -842,5 +842,25 @@
         "XOR" & equiv lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta y x) (v beta x y) \
         "IMP" & equiv lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta x y) x
     $
-	All of them could be checked by finite enumeration over $bool times bool$.
+    All of them could be checked by finite enumeration over $bool times bool$.
+]
+
+// MARK: Q. 3.17
+#problem(source: "3.17")[
+    Find $"isZero" : nat -> bool$ such that $forall n : nat, "isZero" n =_beta lfalse$ except when $n equiv overline(0)$.
+]
+
+#solution[
+    $
+        "isZero" equiv lambda n : nat. n bool (lambda u : bool. lfalse) ltrue
+    $
+	#proof[
+		$
+			"isZero" overline(0) & equiv (lambda n : nat. n bool (lambda u : bool. lfalse) ltrue) overline(0) \
+			& ->>_beta (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x) bool (lambda u : bool. lfalse) ltrue \
+			& ->>_beta (lambda f : bool -> bool. lambda x : bool. x) (lambda u : bool. lfalse) ltrue \
+			& ->>_beta ltrue
+		  $
+	]
+	By induction it could be proven that any other natural numbers must be applied $lambda u : bool. lfalse$ to the body, making the result false, except for $overline(0)$, where the function $f: alpha -> alpha$ never got applied.
 ]
