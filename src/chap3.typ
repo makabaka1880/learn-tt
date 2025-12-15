@@ -21,6 +21,8 @@
 #let problem = (..it) => problem(bg: accent, ..it)
 #let nat = $mono("nat")$
 #let bool = $mono("bool")$
+#let ltrue = $"true"$
+#let lfalse = $"false"$
 #let mark(content) = text(content, fill: accent)
 
 #definition[
@@ -765,5 +767,33 @@
         $
             ->>_beta & lambda alpha : *. lambda f: alpha -> alpha. lambda x : alpha. f^(m n) x equiv overline(m n)
         $
+    ]
+]
+
+// MARK: Q. 3.14
+#problem(source: "3.14")[
+    We present the Church-Encoded Boolean:
+    $
+        bool in TT_2 & := Pi alpha : *. alpha -> alpha -> alpha \
+               ltrue & equiv lambda alpha : *. lambda x, y : alpha. x \
+              lfalse & equiv lambda alpha : *. lambda x, y : alpha. y \
+    $
+    Construct a $lambda 2$ term $"neg"$ such that $"neg" ltrue =_beta lfalse$ and $"neg" lfalse =_beta ltrue$.
+]
+#solution[
+    $ "neg" equiv lambda b : bool. lambda alpha : *. b alpha (lfalse alpha) (ltrue alpha) $
+    #proof(prompt: "Neg True")[
+        $
+            "neg" ltrue & equiv (lambda b : bool. lambda alpha : *. b alpha (lfalse alpha) (ltrue alpha)) ltrue \
+                        & ->>_beta lambda alpha: *. (lambda x, y: alpha. x) (lfalse alpha) (ltrue alpha) \
+						& ->_beta lambda alpha: *. lfalse alpha ->_eta lfalse
+	        $
+    ]
+    #proof(prompt: "Neg False")[
+        $
+            "neg" lfalse & equiv (lambda b : bool. lambda alpha : *. b alpha (lfalse alpha) (ltrue alpha)) lfalse \
+                        & ->>_beta lambda alpha: *. (lambda x, y: alpha. y) (lfalse alpha) (ltrue alpha) \
+						& ->_beta lambda alpha: *. ltrue alpha ->_eta ltrue
+	        $
     ]
 ]
