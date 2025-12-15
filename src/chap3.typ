@@ -385,7 +385,7 @@
                 lambda & x : nat -> alpha. y : alpha -> nat -> beta. lambda z : nat. y (x z) z \
                        & : (nat -> alpha) -> (alpha -> nat -> beta) -> nat -> beta
             $,
-            "15 T-Abst",
+            "15 T2-Abst",
         ),
         (
             0,
@@ -442,7 +442,7 @@
                 lambda delta: *. lambda &x : (alpha -> gamma) -> delta. lambda y : alpha -> beta. lambda z : beta -> gamma. x (lambda u : alpha. z (y u)) \
                 & : Pi delta : *. ((alpha -> gamma) -> delta) -> (alpha -> beta) -> (beta -> gamma) -> delta
             $,
-            "12 T-Abst",
+            "12 T2-Abst",
         ),
     )))
 ]
@@ -503,7 +503,7 @@
         (0, $M : alpha$, "T-Var"),
         (0, $x : alpha -> Pi alpha: *. alpha$, "T-Var"),
         (0, $M x : Pi alpha: *. alpha$, "2,1 T-App"),
-        (0, $M x beta : beta$, "3, * T2-App"),
+        (0, $M x beta : beta$, "3,* T2-App"),
     )))
 ]
 
@@ -529,7 +529,7 @@
         (
             0,
             $lambda alpha, beta : *.lambda x : alpha. lambda y : beta. x : Pi alpha, beta: *. alpha -> beta -> alpha$,
-            "5 T-Abst",
+            "5 T2-Abst",
         ),
     )))
     #proof(prompt: "Second Form", ded-nat(arr: (
@@ -539,12 +539,12 @@
         (3, $y : beta$, "Bound"),
         (4, $x : alpha$, "T-Var"),
         (3, $lambda y : beta. x : beta -> alpha$, "5 T-Abst"),
-        (2, $lambda beta: *. lambda y : beta. x : Pi beta: *. beta -> alpha$, "6 T-Abst"),
+        (2, $lambda beta: *. lambda y : beta. x : Pi beta: *. beta -> alpha$, "6 T2-Abst"),
         (1, $lambda x : alpha. lambda beta: *. lambda y : beta. x : alpha -> (Pi beta: *. beta -> alpha)$, "7 T-Abst"),
         (
             0,
             $lambda alpha: *. lambda x : alpha. lambda beta: *. lambda y : beta. x : Pi alpha : *. alpha -> (Pi beta: *. beta -> alpha)$,
-            "8 T-Abst",
+            "8 T2-Abst",
         ),
     )))
 ]
@@ -582,7 +582,7 @@
                 lambda & alpha, beta, gamma: *. lambda x : alpha -> beta -> gamma. lambda y : alpha -> beta. lambda z : alpha. x z (y x) \
                 & : Pi alpha, beta, gamma:*.(alpha -> beta -> gamma) -> (alpha -> beta) -> alpha -> gamma
             $,
-            "10 T-Abst",
+            "10 T2-Abst",
         ),
     )))
 ]
