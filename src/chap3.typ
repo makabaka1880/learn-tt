@@ -831,3 +831,16 @@
     $
     Therefore $M$ is equivalent to logical AND.
 ]
+
+// MARK: Q. 3.16
+#problem(source: "3.16")[
+    Find $lambda 2$ term representing the logical OR, XOR, IMP.
+]
+#solution[
+    $
+         "OR" & equiv lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta x (v beta x y) \
+        "XOR" & equiv lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta y x) (v beta x y) \
+        "IMP" & equiv lambda u, v : bool. lambda beta: *. lambda x, y : beta. u beta (v beta x y) x
+    $
+	All of them could be checked by finite enumeration over $bool times bool$.
+]
