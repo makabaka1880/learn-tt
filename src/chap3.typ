@@ -612,14 +612,41 @@
     Find a term $N$ such that $M N$ is legal and may be considered to be a way to add type information to $(lambda x. x x) (lambda y. y)$
 ]
 #solution[
-    By removing all type information from $M$ we obtain $lambda x. x x$. Therefore, $N$ needs to be a term of form $lambda y. y$. Then
     $ M sigma N equiv (lambda x : Pi alpha : *. alpha -> alpha. x (sigma -> sigma) (x sigma)) sigma (lambda y : sigma. y) $ Is the same as $(lambda x. x x) (lambda y. y)$ modulo type annotations.
     #proof(ded-nat(arr: (
         (0, $M : (Pi alpha: *. alpha -> alpha) -> sigma -> sigma$, "T-Var"),
         (0, $M sigma : (sigma -> sigma) -> sigma -> sigma$, "1,* T2-App"),
         (0, $y : sigma$, "Bound"),
         (1, $y : sigma$, "T-Var"),
-		(0, $"have" N := lambda y: sigma. y : sigma -> sigma$, "4 T-Abst"),
-		(0, $M sigma N : sigma -> sigma$, "2,5 T-Abst")
+        (0, $"have" N := lambda y: sigma. y : sigma -> sigma$, "4 T-Abst"),
+        (0, $M sigma N : sigma -> sigma$, "2,5 T-Abst"),
     )))
 ]
+
+// MARK: Q. 3.11
+#problem(source: "3.11")[
+    Recall $bot equiv Pi alpha:*. alpha$ from 3.5. Type and prove the following term legal:
+    $ lambda x : bot . x (bot -> bot -> bot) (x (bot -> bot) x) (x (bot -> bot -> bot) x x) $
+]
+
+#solution(
+    proof[
+        The type $bot -> bot$ is closed and well formed. Therefore, the term is legal.
+        #ded-nat(arr: (
+            (0, $bot : * equiv Pi alpha: *. alpha$, "T-Form"),
+            (0, $x : bot$, "Bound"),
+            (1, $x (bot -> bot -> bot) : bot -> bot -> bot$, "*,* T2-App"),
+            (1, $x (bot -> bot) : bot -> bot$, "*,* T2-App"),
+            (1, $x (bot -> bot) x : bot$, "4,* T-App"),
+            (1, $x (bot -> bot -> bot) (x (bot -> bot) x) : bot -> bot$, "3,5 T-App"),
+            (1, $x (bot -> bot -> bot) x : bot -> bot$, "3,* T-App"),
+            (1, $x (bot -> bot -> bot) x x : bot$, "7,* T-App"),
+            (1, $x (bot -> bot -> bot) (x (bot -> bot) x) (x (bot -> bot -> bot) x x): bot$, "6,8 T-App"),
+            (
+                0,
+                $ lambda x : bot. x (bot -> bot -> bot) (x (bot -> bot) x) \ (x (bot -> bot -> bot) x x): bot -> bot $,
+                "9 T-Abst",
+            ),
+        ))
+    ],
+)
