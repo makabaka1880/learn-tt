@@ -674,13 +674,96 @@
         equiv & (lambda n : nat. lambda beta: *. lambda f : beta -> beta. lambda x: beta. f (n beta f x)) (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x) \
         ->_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x) beta f x)) \
         ->_(beta_(TT 2)) & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda f : beta -> beta. lambda x : beta. x) f x)) \
-        ->>_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f x) equiv^(beta -> alpha) _(alpha_(TT 2)) overline(1)
+        ->>_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f x) equiv^(beta -> alpha)_(alpha_(TT 2)) overline(1)
     $
     $
         & "succ" overline(1) \
         equiv & (lambda n : nat. lambda beta: *. lambda f : beta -> beta. lambda x: beta. f (n beta f x)) (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f x) \
         ->_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f x) beta f x)) \
         ->_(beta_(TT 2)) & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f ((lambda f : beta -> beta. lambda x : beta. f x) f x)) \
-        ->>_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta.  f(f x)) equiv^(beta -> alpha) _(alpha_(TT 2)) overline(2)
+        ->>_beta & (lambda beta: *. lambda f : beta -> beta. lambda x: beta. f(f x)) equiv^(beta -> alpha)_(alpha_(TT 2)) overline(2)
     $
+]
+
+// MARK: Q. 3.13 (a)
+// The original problem
+#problem(source: "3.13 a")[
+    We define  addition in Polymorphic Church Numerals as
+    $
+        "add" equiv lambda m, n : nat. lambda alpha: *. lambda f: alpha -> alpha. lambda x : nat. m alpha f (n alpha f x)
+    $
+    Show that $ "add" overline(1) " " overline(1) =_beta overline(2) $
+]
+
+#solution[
+    $
+        & "add" overline(1) " " overline(1) \
+        equiv & (lambda m, n : nat. lambda alpha: *. lambda f: alpha -> alpha. lambda x : alpha. m alpha f (n alpha f x)) overline(1) " " overline(1) \
+        ->>_beta & lambda alpha: *. lambda f: alpha -> alpha. lambda x : alpha. overline(1) alpha f (overline(1) alpha f x) \
+        equiv & lambda alpha: *. lambda f: alpha -> alpha. lambda x : alpha. overline(1) alpha f ((lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f x) alpha f x) \
+        ->>_beta & lambda alpha: *. lambda f: alpha -> alpha. lambda x : alpha. overline(1) alpha f (f x) \
+        equiv & lambda alpha: *. lambda f: alpha -> alpha. lambda x : alpha. (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f x) alpha f (f x) \
+        ->>_beta & lambda alpha: *. lambda f: alpha -> alpha. lambda x : alpha. f (f x) equiv_alpha overline(2)
+    $
+]
+
+// MARK: Q. 3.13 (b)
+#problem(source: "3.13 b")[
+    Find a term $"mul"$ simulates multiplication on $nat$.
+]
+#solution[
+    $
+        "mul" equiv lambda m,n : nat. lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. m alpha (n alpha f) x
+    $
+    #proof[
+        We derive the type first to prove a legal term.
+        #ded-nat(arr: (
+            (0, $m, n : nat$, "Bound"),
+            (1, $alpha : *$, "Bound"),
+            (2, $f : alpha -> alpha$, "Bound"),
+            (3, $x : alpha$, "Bound"),
+            (4, $m alpha : (alpha -> alpha) -> alpha -> alpha$, "*,* T2-App"),
+            (4, $n alpha : (alpha -> alpha) -> alpha -> alpha$, "*,* T2-App"),
+            (4, $n alpha f : alpha -> alpha$, "6,* T-App"),
+            (4, $m alpha (n alpha f) : alpha -> alpha$, "5,7 T-App"),
+            (4, $m alpha (n alpha f) x : alpha$, "8,* T-App"),
+            (3, $lambda x : alpha. m alpha (n alpha f) x : alpha -> alpha$, "9 T-Abst"),
+            (
+                2,
+                $lambda f : alpha -> alpha. lambda x : alpha. m alpha (n alpha f) x : (alpha -> alpha) -> alpha -> alpha$,
+                "10 T-Abst",
+            ),
+            (
+                1,
+                $lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. m alpha (n alpha f) x :nat$,
+                "11 T2-Abst",
+            ),
+            (
+                0,
+                $
+                    lambda & m, n : nat. lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. m alpha (n alpha f) x \
+                           & : nat -> nat -> nat
+                $,
+                "12 T-Abst",
+            ),
+        ))
+        This proves that the term does indeed produce a natural number from two.  Next let's prove that
+        $ forall overline(n), overline(m) : nat quad "mul" overline(n) " " overline(m) = overline(n times m) $
+        It could be proven by induction that
+        $
+            forall overline(a) : nat quad overline(a) equiv lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. f^a x
+        $
+        $
+            "mul" overline(n) " " overline(m)
+            equiv & (lambda m,n : nat. lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. m alpha (n alpha f) x) (overline(n)) (overline(m)) \
+            ->>_beta & lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. overline(n) alpha (overline(m) alpha f) x \
+            ->>_beta & lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. overline(n) alpha (lambda u : alpha. f^m u) x \
+            ->>_beta & lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. (lambda f : alpha -> alpha. lambda x : alpha. f^n x)(lambda u : alpha. f^m u) x \
+            ->>_beta & lambda alpha : *. lambda f : alpha -> alpha. lambda x : alpha. (lambda u : alpha. f^m u)^n x \
+        $
+        By induction this can be further beta-reduced to
+        $
+            ->>_beta & lambda alpha : *. lambda f: alpha -> alpha. lambda x : alpha. f^(m n) x equiv overline(m n)
+        $
+    ]
 ]
