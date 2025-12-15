@@ -518,7 +518,7 @@
 ]
 #solution[
     $ lambda alpha, beta : *. lambda x : alpha. lambda y : beta. x $
-    $ lambda alpha : *. lambda x : alpha. lambda beta : *. lambda y : beta. x  $
+    $ lambda alpha : *. lambda x : alpha. lambda beta : *. lambda y : beta. x $
     #proof(prompt: "First Form", ded-nat(arr: (
         (0, $alpha, beta : *$, "Bound"),
         (1, $x : alpha$, "Bound"),
@@ -545,6 +545,44 @@
             0,
             $lambda alpha: *. lambda x : alpha. lambda beta: *. lambda y : beta. x : Pi alpha : *. alpha -> (Pi beta: *. beta -> alpha)$,
             "8 T-Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 3.9
+#problem(source: "3.9")[
+    Pretype the combinator $ S equiv lambda x y z. x z (y z) $
+    In closed form (typable in an empty context) in $Lambda_(TT 2)$.
+]
+#solution[
+    $
+        S equiv lambda alpha, beta, gamma : *. lambda x : alpha -> beta -> gamma. lambda y : alpha -> beta. lambda z : alpha. x z (y z)
+    $
+    #proof(ded-nat(arr: (
+        (0, $alpha, beta, gamma : *$, "Bound"),
+        (1, $x : alpha -> beta -> gamma$, "Bound"),
+        (2, $y : alpha -> beta$, "Bound"),
+        (3, $z : alpha$, "Bound"),
+        (4, $x z : beta -> gamma$, "*,* T-App"),
+        (4, $y x : beta$, "*,* T-App"),
+        (4, $x z (y x) : gamma$, "5,6 T-App"),
+        (3, $lambda z : alpha. x z (y x) : alpha -> gamma$, "7 T-Abst"),
+        (2, $lambda y : alpha -> beta. lambda z : alpha. x z (y x) : (alpha -> beta) -> alpha -> gamma$, "8 T-Abst"),
+        (
+            1,
+            $
+                lambda & x : alpha -> beta -> gamma. lambda y : alpha -> beta. lambda z : alpha. x z (y x) \
+                       & : (alpha -> beta -> gamma) -> (alpha -> beta) -> alpha -> gamma
+            $,
+            "9 T-Abst",
+        ),
+        (
+            0,
+            $
+                lambda & alpha, beta, gamma: *. lambda x : alpha -> beta -> gamma. lambda y : alpha -> beta. lambda z : alpha. x z (y x) \
+                & : Pi alpha, beta, gamma:*.(alpha -> beta -> gamma) -> (alpha -> beta) -> alpha -> gamma
+            $,
+            "10 T-Abst",
         ),
     )))
 ]
