@@ -455,7 +455,7 @@
 ]
 #solution[
     $
-        lambda alpha, beta, gamma: *. lambda f : (alpha -> (beta -> alpha) -> gamma). lambda x : alpha. f x (lambda u. x)
+        lambda alpha, beta, gamma: *. lambda f : (alpha -> (beta -> alpha) -> gamma). lambda x : alpha. f x (lambda u : beta. x)
     $
     #proof(ded-nat(arr: (
         (0, $alpha, beta, gamma$, "Bound"),
@@ -484,4 +484,25 @@
             "10 T2-Abst",
         ),
     )))
+]
+
+// MARK: Q. 3.7
+#problem(source: "3.7")[
+    Let $bot equiv Pi alpha: *. alpha$ and context $Gamma equiv alpha: *, beta: *, x : alpha -> bot, f : (alpha -> alpha) -> alpha$. Give a derivation that succesively calculate an inhabitant of $alpha$ and $beta$, both in context $Gamma$.
+]
+#solution[
+    Have $M : alpha := f (lambda n : alpha. n)$. Then $Gamma tack x M beta : beta$.
+    #proof(prompt: "Typing M", ded-nat(arr: (
+        (0, $f : (alpha -> alpha) -> alpha$, "T-Var"),
+        (0, $n : alpha$, "Bound"),
+        (1, $n : alpha$, "T-Var"),
+        (0, $lambda n : alpha. n : alpha -> alpha$, "3 T-Abst"),
+		(0, $f (lambda n : alpha. n) : alpha$, "1,4 T-App")
+    )))
+	#proof(prompt: [Typing $x M beta$], ded-nat(arr: (
+		(0, $M : alpha$, "T-Var"),
+		(0, $x : alpha -> Pi alpha: *. alpha$, "T-Var"),
+		(0, $M x : Pi alpha: *. alpha$, "2,1 T-App"),
+		(0, $M x beta : beta$, "3, * T2-App")
+	)))
 ]
