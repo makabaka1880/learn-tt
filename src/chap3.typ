@@ -497,12 +497,54 @@
         (0, $n : alpha$, "Bound"),
         (1, $n : alpha$, "T-Var"),
         (0, $lambda n : alpha. n : alpha -> alpha$, "3 T-Abst"),
-		(0, $f (lambda n : alpha. n) : alpha$, "1,4 T-App")
+        (0, $f (lambda n : alpha. n) : alpha$, "1,4 T-App"),
     )))
-	#proof(prompt: [Typing $x M beta$], ded-nat(arr: (
-		(0, $M : alpha$, "T-Var"),
-		(0, $x : alpha -> Pi alpha: *. alpha$, "T-Var"),
-		(0, $M x : Pi alpha: *. alpha$, "2,1 T-App"),
-		(0, $M x beta : beta$, "3, * T2-App")
-	)))
+    #proof(prompt: [Typing $x M beta$], ded-nat(arr: (
+        (0, $M : alpha$, "T-Var"),
+        (0, $x : alpha -> Pi alpha: *. alpha$, "T-Var"),
+        (0, $M x : Pi alpha: *. alpha$, "2,1 T-App"),
+        (0, $M x beta : beta$, "3, * T2-App"),
+    )))
+]
+
+// MARK: Q 3.8
+#problem(source: "3.8")[
+    Recall $K equiv lambda x y. x in Lambda$ from untyped lambda calculus.
+    Consider the following types
+    $
+        T_1 equiv Pi alpha, beta: *. alpha -> beta -> alpha quad T_2 equiv Pi alpha : *. alpha -> (Pi beta : *. beta -> alpha)
+    $
+    Find inhabitants of both type $t_1 : T_1$ and $t_2 : T_2$ under the empty context, which may be considered the closed $lambda 2$ form of $K in Lambda_(TT 2)$.
+]
+#solution[
+    $ lambda alpha, beta : *. lambda x : alpha. lambda y : beta. x $
+    $ lambda alpha : *. lambda x : alpha. lambda beta : *. lambda y : beta. x  $
+    #proof(prompt: "First Form", ded-nat(arr: (
+        (0, $alpha, beta : *$, "Bound"),
+        (1, $x : alpha$, "Bound"),
+        (2, $y : beta$, "Bound"),
+        (3, $x : alpha$, "T-Var"),
+        (2, $lambda y : beta. x : beta -> alpha$, "4 T-Abst"),
+        (1, $lambda x : alpha. lambda y : beta. x : alpha -> beta -> alpha$, "5 T-Abst"),
+        (
+            0,
+            $lambda alpha, beta : *.lambda x : alpha. lambda y : beta. x : Pi alpha, beta: *. alpha -> beta -> alpha$,
+            "5 T-Abst",
+        ),
+    )))
+    #proof(prompt: "Second Form", ded-nat(arr: (
+        (0, $alpha: *$, "Bound"),
+        (1, $x : alpha$, "Bound"),
+        (2, $beta: *$, "Bound"),
+        (3, $y : beta$, "Bound"),
+        (4, $x : alpha$, "T-Var"),
+        (3, $lambda y : beta. x : beta -> alpha$, "5 T-Abst"),
+        (2, $lambda beta: *. lambda y : beta. x : Pi beta: *. beta -> alpha$, "6 T-Abst"),
+        (1, $lambda x : alpha. lambda beta: *. lambda y : beta. x : alpha -> (Pi beta: *. beta -> alpha)$, "7 T-Abst"),
+        (
+            0,
+            $lambda alpha: *. lambda x : alpha. lambda beta: *. lambda y : beta. x : Pi alpha : *. alpha -> (Pi beta: *. beta -> alpha)$,
+            "8 T-Abst",
+        ),
+    )))
 ]
