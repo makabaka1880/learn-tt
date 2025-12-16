@@ -980,3 +980,35 @@
         $
     ]
 ]
+
+// MARK: Q. 3.19
+#problem(source: "3.19")[
+    If $Gamma tack L : sigma$, then $Gamma$ is a valid $lambda 2$ context.
+]
+#solution[
+    The definition of "valid" here would be taken as relative to a judgement as the fact to be able to derive the judgement. Thus, it meant a complete inference path could be made using only statements and judgements derived from the context. Now proof by induction on inference rule that deducted $L : sigma$.
+    #proof(prompt: "Case 1 : T-Var")[
+        The premise is that $Gamma$ is a $lambda$2 context.
+    ]
+    #proof(prompt: "Case 2 : T-App")[
+        Therefore $L equiv M N$ for some $M, N in Lambda_(TT 2)$. Therefore, $ Gamma tack M : tau -> sigma wide Gamma tack N : tau $  for some $tau in TT_2$. By the inductive hypothesis on any premise $Gamma$ is a valid $lambda$2 context.
+    ]
+    #proof(prompt: "Case 3 : T-Abst")[
+        Therefore $L equiv lambda x : alpha. N$ such that
+        $ Gamma, x : alpha tack N : beta $
+        for some $alpha, beta in TT_2$ such that $sigma equiv alpha -> beta$. By the inductive hypothesis, $Gamma, x : alpha$. By the recursive definition of $lambda$2 contexts, for some valid context $Delta$, $forall n in "dom" Delta$, $n$ could not depende on statement declared after $n$ in the context. Therefore, no statement in $Gamma$ could depend on $x : alpha$. Therefore, $Gamma$ is a valid context.
+    ]
+    #proof(prompt: "Case 4 : T-Form")[
+        The premise is that $Gamma$ is a valid $lambda$2 context.
+    ]
+    #proof(prompt: "Case 5 : T2-App")[
+        Therefore $L equiv N B$ for some $N, B in VV_2$ such that
+        $ Gamma tack N : Pi alpha : *. beta wide Gamma tack A : * $
+        By the inductive hypothesis on the any premise $Gamma$ is a valid $lambda 2$ context.
+    ]
+    #proof(prompt: "Case 6 : T2-Abst")[
+        Therefore $L equiv lambda alpha : *. M$ for some $M in Lambda_(TT 2)$ such that
+        $ Gamma, alpha : * tack M : beta $
+        and $sigma equiv Pi alpha : *. beta$. By reasoning in _Case 3_ no statement in the context could depend on any statement before the latter's declaration. Therefore no statement in $Gamma$ could depend on $alpha : *$, making it a valid context.
+    ]
+]
