@@ -75,7 +75,7 @@
             rule(
                 name: "(T-Form)",
                 $alpha in TT_2$,
-                $forall tau in "FV" alpha, Gamma tack tau : *$,
+                $"FV" alpha subset.eq "dom" Gamma $,
                 $alpha : * in Gamma$,
             ),
         ),
@@ -1003,7 +1003,7 @@
     ]
     #proof(prompt: "Case 5 : T2-App")[
         Therefore $L equiv N B$ for some $N, B in VV_2$ such that
-        $ Gamma tack N : Pi alpha : *. beta wide Gamma tack A : * $
+        $ Gamma tack N : Pi alpha : *. sigma wide Gamma tack B : * $
         By the inductive hypothesis on the any premise $Gamma$ is a valid $lambda 2$ context.
     ]
     #proof(prompt: "Case 6 : T2-Abst")[
