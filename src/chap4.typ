@@ -162,6 +162,53 @@
         (2, $alpha : *$, "3,4 Weak"),
         (2, $beta : *$, "4 Var"),
         (2, $alpha -> beta : *$, "6,7 Form"),
-		(2, $(alpha -> beta) -> alpha : *$, "8,6 Form")
+        (2, $(alpha -> beta) -> alpha : *$, "8,6 Form"),
+    ))
+]
+
+// MARK: Q. 4.3 (a)
+#problem(source: "4.3 a")[
+    Give a complete #lwo derivation in flag format of
+    $ alpha, beta : *, x : alpha, y : alpha -> beta tack y x : beta $
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $* : kind$, "Sort"),
+        (0, $alpha : *$, ""),
+        (1, $alpha : *$, "1 Var"),
+        (1, $* : kind$, "1,1 Weak"),
+        (1, $beta : *$, ""),
+        (2, $beta : *$, "4 Var"),
+        (2, $alpha : *$, "3,4 Weak"),
+        (2, $* : kind$, "4,4 Weak"),
+        (2, $x : alpha$, ""),
+        (3, $x : alpha$, "7 Var"),
+        (3, $alpha : *$, "7,7 Weak"),
+        (3, $beta : *$, "6,7 Weak"),
+        (3, $alpha -> beta : *$, "11,12 Form"),
+        (3, $y : alpha -> beta$, ""),
+        (4, $y : alpha -> beta$, "13 Var"),
+        (4, $x : alpha$, "10,13 Weak"),
+        (4, $y x : beta$, "15,16 App"),
+    ))
+]
+
+// MARK: Q. 4.3 (b)
+#problem(source: "4.3 b")[
+    Give a shortened #lwo derivation in flag format of
+    $ alpha, beta : *, x : alpha, y : alpha -> beta, z : beta -> alpha tack z (y x) : alpha $
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $alpha : *$, ""),
+        (1, $beta : *$, ""),
+        (2, $x : alpha$, ""),
+        (3, $y : alpha -> beta$, ""),
+        (4, $x : alpha$, "3 Weak"),
+        (4, $z : beta -> alpha$, ""),
+        (5, $x : alpha$, "5 Weak"),
+        (5, $y : alpha -> beta$, "4 Weak"),
+        (5, $y x : beta$, "8,7 App"),
+        (5, $z (y x) : alpha$, "6,9 App"),
     ))
 ]
