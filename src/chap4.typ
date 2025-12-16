@@ -44,6 +44,7 @@
     show symbol: set-symbol
     it
 }
+#let lwo = $lambda underline(omega)$
 #let kind = $square$
 
 #definition[
@@ -106,7 +107,7 @@
             ),
         ),
     ))
-	Previously an alternative version of the flag derivation was used, only putting up a flag for a local premise (abstraction unwrapping) to save horizontal space. Currently, the standard flag derivation format will be used since now single lines will not be as long.
+    Previously an alternative version of the flag derivation was used, only putting up a flag for a local premise (abstraction unwrapping) to save horizontal space. Currently, the standard flag derivation format will be used since now single lines will not be as long.
 ]
 #pagebreak()
 
@@ -132,4 +133,35 @@
     ]
 ]
 
+// MARK: Q. 4.2 (a)
+#problem(source: "4.2 a")[
+    Give a complete #lwo derivation in flag format of
+    $ emptyset tack (* -> *) -> * : kind $
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $* : kind$, "Sort"),
+        (0, $* -> * : kind$, "1,1 Form"),
+        (0, $(* -> *) -> * : kind$, "2,1 Form"),
+    ))
+]
 
+// MARK: Q. 4.2 (b)
+#problem(source: "4.2 b")[
+    Give a complete #lwo derivation in flag format of
+    $ alpha : *, beta : * tack (alpha -> beta) -> alpha : * $
+]
+#pagebreak()
+#solution[
+    #ded-nat(arr: (
+        (0, $emptyset tack * : kind$, "Sort"),
+        (0, $alpha : *$, ""),
+        (1, $alpha : *$, "1 Var"),
+        (1, $* : kind$, "1,1 Weak"),
+        (1, $beta : *$, ""),
+        (2, $alpha : *$, "3,4 Weak"),
+        (2, $beta : *$, "4 Var"),
+        (2, $alpha -> beta : *$, "6,7 Form"),
+		(2, $(alpha -> beta) -> alpha : *$, "8,6 Form")
+    ))
+]
