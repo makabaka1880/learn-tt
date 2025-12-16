@@ -1070,3 +1070,7 @@
         [$"FTV" (lambda alpha:*. M)$], [$"FTV"(M) \\ {alpha}$],
     )
 ]
+
+---
+
+Completed Dec 16 10:11 pm.
