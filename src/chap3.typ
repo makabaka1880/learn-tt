@@ -623,7 +623,9 @@
         (1, $x (sigma -> sigma) (x sigma) : sigma -> sigma$, "2,3 T-App"),
         (
             0,
-            $ lambda x : Pi alpha: *. alpha -> alpha. x (sigma -> sigma) (x sigma) \ : (Pi alpha : *. alpha -> alpha) -> sigma -> sigma $,
+            $
+                lambda x : Pi alpha: *. alpha -> alpha. x (sigma -> sigma) (x sigma) \ : (Pi alpha : *. alpha -> alpha) -> sigma -> sigma
+            $,
             "4 T-Abst",
         ),
     )))
@@ -883,4 +885,98 @@
         $
     ]
     By induction it could be proven that any other natural numbers must be applied $lambda u : bool. lfalse$ to the body, making the result false, except for $overline(0)$, where the function $f: alpha -> alpha$ never got applied.
+]
+
+
+// MARK: Q. 3.18 a
+#problem(source: "3.18 a")[
+    Define type
+    $ mono("tree") equiv Pi alpha: *. (bool -> alpha) -> (bool -> alpha -> alpha -> alpha) -> alpha $
+    Then we construct an inhabitant
+    $ lambda alpha. *. lambda u : bool -> alpha. lambda v : bool -> alpha -> alpha -> alpha. M $
+    Is a node of a binary tree.
+    Sketch graphs of trees where $M$ is
+    $
+        u lfalse \
+        v ltrue (u lfalse) (u ltrue) \
+        v ltrue (u ltrue) (v lfalse (u ltrue) (u lfalse))
+    $
+]
+#solution[
+    A binary tree is usually defined as this:
+    ```lean
+    inductive Tree (α : Type) where
+      | leaf (value : α) : Tree α
+      | node (left right : Tree α) : Tree α
+    ```
+    With two constructors: a leaf or a node. Here $alpha$ is the type of the payload at each node. There are two constructors: $u$ is the left constructor, taking a $bool$ value for the direction of the node. The $v$ term is the node constructor, taking a $bool$ as the direction, two $alpha$-typed terms as it's children.
+
+
+    #align(center + bottom, grid(
+        columns: 3,
+        tidy-tree-graph[
+            - ROOT
+                + $<-$
+                - $u lfalse$
+        ],
+        tidy-tree-graph[
+            - ROOT
+                + $->$
+                - $v ltrue$
+                    + $<-$
+                    - $u lfalse$
+                    + $->$
+                    - $u ltrue$
+        ],
+        tidy-tree-graph[
+            - ROOT
+                + $->$
+                - $v ltrue$
+                    + $<-$
+                    - $v lfalse$
+                        + $<-$
+                        - $u ltrue$
+                        + $->$
+                        - $u lfalse$
+                    + $->$
+                    - $u ltrue$
+        ],
+
+        column-gutter: 10%,
+    ))
+]
+
+// MARK: Q. 3.18 (b)
+#problem(source: "3.18 b")[
+    Give a $lambda 2$ term, which, given input a polymorphic boolean $p$ and two trees $s$ and $t$, delivers the combined tree with $p$ on top, left subtree $s$ and right subtree $t$.
+]
+#solution[
+    $
+        "leaf" := & lambda p : bool. lambda s, t : mono("tree"). \
+                  & wide lambda alpha. lambda u. bool -> alpha. lambda v: bool -> alpha -> alpha -> alpha. \
+                  & wide wide v p (s alpha u v) (t alpha u v)
+    $
+    #proof[
+        We suppose
+        $
+            s equiv lambda beta : *. lambda u_s : bool -> beta. lambda v_s : bool -> beta -> beta -> beta. S \
+            t equiv lambda gamma : *. lambda u_t : bool -> gamma. lambda v_t : bool -> gamma -> gamma -> gamma. T \
+        $
+        We want
+        $
+            "leaf" p s t =_beta lambda alpha: *. lambda u : bool -> alpha. lambda v : bool -> alpha -> alpha -> alpha. v p S T
+        $
+        For compactness we denote
+        $
+            alpha : * tack tau_"mkleaf" & equiv bool -> alpha \
+            alpha : * tack tau_"mknode" & equiv bool -> alpha -> alpha -> alpha
+        $
+        By beta reduction we have
+        $
+            "leaf" p s t & equiv (lambda p : bool. lambda s, t : mono("tree"). ...) p s t \
+            &->>_beta (lambda alpha : *. lambda u. tau_"mkleaf". lambda v : tau_"mknode". v p (s alpha u v) (t alpha u v)) \
+            &->>_beta (lambda alpha : *. lambda u. tau_"mkleaf". lambda v : tau_"mknode" . v p (s alpha u v) (t alpha u v)) \
+            &->>_beta lambda alpha : *. lambda u. tau_"mkleaf". lambda v : tau_"mknode" . v p S T \
+        $
+    ]
 ]
