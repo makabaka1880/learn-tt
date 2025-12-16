@@ -23,6 +23,24 @@
 
 #let mark(content) = text(content, fill: accent)
 
+
+// Scripts for correctly spacing juxtaposed applications
+#let operators = ($exists$.body, $lambda$.body)
+#let isalpha(x) = x.match(regex("[A-Za-z]+")) != none
+#let set-symbol(x) = {
+    if isalpha(x.text) {
+        math.class("binary", x)
+    } else if x in operators {
+        x + h(0em)
+    } else {
+        x
+    }
+}; #let symbol = $x$.body.func()
+#show math.equation: it => {
+    show symbol: set-symbol
+    it
+}
+
 // MARK: Q. 1.1
 #problem(source: "1.1")[
     Simplify notation of the following terms

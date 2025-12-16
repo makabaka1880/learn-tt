@@ -1,6 +1,7 @@
 #import "./cyan-report/0.1.0/lib.typ": *;
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
 #import "@preview/derive-it:1.1.0": *;
+#import "@preview/tdtr:0.4.3": *;
 
 #let accent = rgb(50, 150, 150)
 #show ref: it => {
@@ -10,6 +11,8 @@
         it
     }
 }
+
+
 #show: cyan-report.with(
     title: "Excercises",
     subtitle: "Chapter 3",
@@ -24,6 +27,23 @@
 #let ltrue = $"true"$
 #let lfalse = $"false"$
 #let mark(content) = text(content, fill: accent)
+
+// Scripts for correctly spacing juxtaposed applications
+#let operators = ($exists$.body, $lambda$.body)
+#let isalpha(x) = x.match(regex("[A-Za-z]+")) != none
+#let set-symbol(x) = {
+    if isalpha(x.text) {
+        math.class("binary", x)
+    } else if x in operators {
+        x + h(0em)
+    } else {
+        x
+    }
+}; #let symbol = $x$.body.func()
+#show math.equation: it => {
+    show symbol: set-symbol
+    it
+}
 
 #definition[
     Some rules for reference.
@@ -603,7 +623,7 @@
         (1, $x (sigma -> sigma) (x sigma) : sigma -> sigma$, "2,3 T-App"),
         (
             0,
-            $lambda x : Pi alpha: *. alpha -> alpha. x (sigma -> sigma) (x sigma) : (Pi alpha : *. alpha -> alpha) -> sigma -> sigma$,
+            $ lambda x : Pi alpha: *. alpha -> alpha. x (sigma -> sigma) (x sigma) \ : (Pi alpha : *. alpha -> alpha) -> sigma -> sigma $,
             "4 T-Abst",
         ),
     )))
@@ -854,13 +874,13 @@
     $
         "isZero" equiv lambda n : nat. n bool (lambda u : bool. lfalse) ltrue
     $
-	#proof[
-		$
-			"isZero" overline(0) & equiv (lambda n : nat. n bool (lambda u : bool. lfalse) ltrue) overline(0) \
-			& ->>_beta (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x) bool (lambda u : bool. lfalse) ltrue \
-			& ->>_beta (lambda f : bool -> bool. lambda x : bool. x) (lambda u : bool. lfalse) ltrue \
-			& ->>_beta ltrue
-		  $
-	]
-	By induction it could be proven that any other natural numbers must be applied $lambda u : bool. lfalse$ to the body, making the result false, except for $overline(0)$, where the function $f: alpha -> alpha$ never got applied.
+    #proof[
+        $
+            "isZero" overline(0) & equiv (lambda n : nat. n bool (lambda u : bool. lfalse) ltrue) overline(0) \
+            & ->>_beta (lambda alpha: *. lambda f : alpha -> alpha. lambda x : alpha. x) bool (lambda u : bool. lfalse) ltrue \
+            & ->>_beta (lambda f : bool -> bool. lambda x : bool. x) (lambda u : bool. lfalse) ltrue \
+            & ->>_beta ltrue
+        $
+    ]
+    By induction it could be proven that any other natural numbers must be applied $lambda u : bool. lfalse$ to the body, making the result false, except for $overline(0)$, where the function $f: alpha -> alpha$ never got applied.
 ]
