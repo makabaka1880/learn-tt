@@ -1012,3 +1012,39 @@
         and $sigma equiv Pi alpha : *. beta$. By reasoning in _Case 3_ no statement in the context could depend on any statement before the latter's declaration. Therefore no statement in $Gamma$ could depend on $alpha : *$, making it a valid context.
     ]
 ]
+
+// MARK: Q. 3.20
+// I reckon that this problem won't account for free type variables
+// because 3.21 introduced a dedicated function for finding them.
+// That's why T-Form rule is not considered; it only introduces type 
+// variables.
+#problem(source: "3.20")[
+    Prove the free variable lemma for $lambda 2$.
+    $ Gamma tack L : sigma => "FV" L subset.eq "dom" Gamma $
+]
+#solution[
+    Proof by induction on inference rules that deduced $L : sigma$. The only rule not considered is $"T-Form"$ since all terms apparent in $TT_2$.
+    #proof(prompt: "Case 1 : T-Var")[
+        Therefore $L$ is the only free variable in $L$. By the generation lemma $L : sigma in Gamma$, so ${L} subset.eq "dom" Gamma$
+    ]
+    #proof(prompt: "Case 2 : T-App")[
+        Therefore by the generation lemma $L equiv M N$ for some $M, N in Lambda_(TT 2)$ such that
+        $ Gamma tack M : tau -> sigma wide Gamma tack N : tau $
+        For some type $tau$. By the inductive hypothesis $"FV" M subset.eq Gamma$ and $"FV" N subset.eq "dom" Gamma$. Therefore $"FV" L = ("FV" M) union ("FV" N) subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "Case 3 : T-Abst")[
+        Therefore by the generation lemma $L equiv lambda x : alpha. M$ for some $M in Lambda_(TT 2)$ such that 
+        $ Gamma, x : alpha tack M : beta $ and $sigma equiv alpha -> beta$.
+        By the inductive hypothesis $"FV" M subset.eq "dom" Gamma union {x}$. Therefore 
+        $ "FV" L = "FV" M \\ {x} subset.eq ("dom" Gamma union {x}) \\ {x} = "dom" Gamma $
+    ]
+    #proof(prompt: "Case 4 : T2-App")[
+        Therefore $L equiv  B$ for some $N, B in VV_2 $ such that
+        $ Gamma tack N : Pi alpha : *. sigma wide Gamma tack B : * $
+        By the inductive hypothesis $"FV" N subset.eq "dom" Gamma$. Since $B in TT_2$ then $"FV" B = emptyset$. Therefore $"FV" L = "FV" N subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "Case 5 : T2-Abst")[
+        Therefore $L equiv lambda alpha: *. M$ for some $M in Lambda_(TT 2)$ such that 
+        $ Gamma, alpha : * tack M : beta $ and $sigma equiv Pi alpha: *. beta$. Because $alpha in TT_2$ so $alpha in.not "FV" M$ and $"FV" L = "FV" M$, thus $"FV" M = "FV" L  subset.eq Gamma$.
+    ]
+]
