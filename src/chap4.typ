@@ -29,7 +29,7 @@
 #let mark(content) = text(content, fill: accent)
 
 // Scripts for correctly spacing juxtaposed applications
-#let operators = ($exists$.body, $lambda$.body)
+#let operators = ($exists$.body, $lambda$.body, $tack$.body)
 #let isalpha(x) = x.match(regex("[A-Za-z]+")) != none
 #let set-symbol(x) = {
     if isalpha(x.text) {
@@ -39,7 +39,8 @@
     } else {
         x
     }
-}; #let symbol = $x$.body.func()
+};
+#let symbol = $x$.body.func()
 #show math.equation: it => {
     show symbol: set-symbol
     it
@@ -210,5 +211,75 @@
         (5, $y : alpha -> beta$, "4 Weak"),
         (5, $y x : beta$, "8,7 App"),
         (5, $z (y x) : alpha$, "6,9 App"),
+    ))
+]
+
+// MARK: Q. 4.4 (a)
+#problem(source: "4.4 a")[
+    Give a shortened #lwo derivation in flag format of
+    $ alpha : *, beta : * -> * tack beta (beta alpha) : * $
+]
+
+#solution[
+    #ded-nat(arr: (
+        (0, $alpha : *$, ""),
+        (1, $beta : * -> *$, ""),
+        (2, $beta alpha : *$, "2,1 App"),
+        (2, $beta (beta alpha) : *$, "2,4 App"),
+    ))
+]
+
+// MARK: Q. 4.4 (b)
+#problem(source: "4.4 b")[
+    Give a shortened #lwo derivation in flag format of
+    $ alpha : *, beta : * -> *, x : beta (beta alpha) tack lambda y : alpha. x : alpha -> beta (beta alpha) $
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $alpha : *$, ""),
+        (1, $beta : * -> *$, ""),
+        (3, $x : beta (beta alpha)$, ""),
+        (4, $y : alpha$, ""),
+        (5, $x : beta (beta alpha)$, "3 Var"),
+        (4, $lambda y : alpha. x : alpha -> beta (beta alpha)$, "5 Abst"),
+    ))
+]
+
+// MARK: Q. 4.4 (c)
+#problem(source: "4.4 c")[
+    Give a shortened #lwo derivation in flag format of
+    $ emptyset tack lambda alpha : *. lambda beta : * -> *. beta (beta alpha) : * -> (* -> *) -> * $
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $alpha : *$, ""),
+        (1, $beta : * -> *$, ""),
+        (2, $beta alpha : *$, "2,1 App"),
+        (2, $beta (beta alpha) : *$, "2,3 App"),
+        (1, $lambda beta : * -> *. beta (beta alpha) : (* -> *) -> *$, "4 Abst"),
+        (0, $lambda alpha: *. lambda beta : * -> *. beta (beta alpha) : * -> (* -> *) -> *$, "5 Abst"),
+    ))
+]
+
+// MARK: Q. 4.4 (d)
+#problem(source: "4.4 d")[
+    Give a shortened #lwo derivation in flag format of
+    $ nat : * tack (lambda alpha : *. lambda beta : * -> *. beta (beta alpha)) nat (lambda gamma : *. gamma) : * $
+]
+
+#solution[
+    #ded-nat(arr: (
+        (0, $nat : *$, ""),
+        (1, $alpha : *$, ""),
+        (2, $beta : * -> *$, ""),
+        (3, $beta alpha : *$, "3,2 App"),
+        (3, $beta (beta alpha) : *$, "3,4 App"),
+        (2, $lambda beta : * -> *. beta (beta alpha) : (* -> *) -> *$, "5 Abst"),
+        (1, $lambda alpha: *. lambda beta : * -> *. beta (beta alpha) : * -> (* -> *) -> *$, "6 Abst"),
+        (1, $(lambda alpha: *. lambda beta : * -> *. beta (beta alpha)) nat : (* -> *) -> *$, "7,1 App"),
+        (1, $gamma : *$, ""),
+        (2, $gamma : *$, "9 Var"),
+        (1, $lambda gamma : *. gamma : * -> *$, "10 Abst"),
+        (1, $(lambda alpha: *. lambda beta : * -> *. beta (beta alpha)) nat (lambda gamma:*.gamma): *$, "8,11 App"),
     ))
 ]
