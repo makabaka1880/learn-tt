@@ -75,7 +75,7 @@
             rule(
                 name: "(T-Form)",
                 $alpha in TT_2$,
-                $"FV" alpha subset.eq "dom" Gamma $,
+                $"FV" alpha subset.eq "dom" Gamma$,
                 $alpha : * in Gamma$,
             ),
         ),
@@ -296,7 +296,7 @@
     #proof(ded-nat(arr: (
         (0, $alpha: *$, "Bound"),
         (1, $alpha: *$, "T-Form"),
-        (0, $Pi alpha : *. alpha : * -> *$, "T-Form"),
+        (0, $Pi alpha : *. alpha : * -> *$, "T2-Abst"),
     )))
 ]
 
@@ -1016,7 +1016,7 @@
 // MARK: Q. 3.20
 // I reckon that this problem won't account for free type variables
 // because 3.21 introduced a dedicated function for finding them.
-// That's why T-Form rule is not considered; it only introduces type 
+// That's why T-Form rule is not considered; it only introduces type
 // variables.
 #problem(source: "3.20")[
     Prove the free variable lemma for $lambda 2$.
@@ -1033,18 +1033,40 @@
         For some type $tau$. By the inductive hypothesis $"FV" M subset.eq Gamma$ and $"FV" N subset.eq "dom" Gamma$. Therefore $"FV" L = ("FV" M) union ("FV" N) subset.eq "dom" Gamma$.
     ]
     #proof(prompt: "Case 3 : T-Abst")[
-        Therefore by the generation lemma $L equiv lambda x : alpha. M$ for some $M in Lambda_(TT 2)$ such that 
+        Therefore by the generation lemma $L equiv lambda x : alpha. M$ for some $M in Lambda_(TT 2)$ such that
         $ Gamma, x : alpha tack M : beta $ and $sigma equiv alpha -> beta$.
-        By the inductive hypothesis $"FV" M subset.eq "dom" Gamma union {x}$. Therefore 
+        By the inductive hypothesis $"FV" M subset.eq "dom" Gamma union {x}$. Therefore
         $ "FV" L = "FV" M \\ {x} subset.eq ("dom" Gamma union {x}) \\ {x} = "dom" Gamma $
     ]
     #proof(prompt: "Case 4 : T2-App")[
-        Therefore $L equiv  B$ for some $N, B in VV_2 $ such that
+        Therefore $L equiv B$ for some $N, B in VV_2$ such that
         $ Gamma tack N : Pi alpha : *. sigma wide Gamma tack B : * $
         By the inductive hypothesis $"FV" N subset.eq "dom" Gamma$. Since $B in TT_2$ then $"FV" B = emptyset$. Therefore $"FV" L = "FV" N subset.eq "dom" Gamma$.
     ]
     #proof(prompt: "Case 5 : T2-Abst")[
-        Therefore $L equiv lambda alpha: *. M$ for some $M in Lambda_(TT 2)$ such that 
-        $ Gamma, alpha : * tack M : beta $ and $sigma equiv Pi alpha: *. beta$. Because $alpha in TT_2$ so $alpha in.not "FV" M$ and $"FV" L = "FV" M$, thus $"FV" M = "FV" L  subset.eq Gamma$.
+        Therefore $L equiv lambda alpha: *. M$ for some $M in Lambda_(TT 2)$ such that
+        $ Gamma, alpha : * tack M : beta $ and $sigma equiv Pi alpha: *. beta$. Because $alpha in TT_2$ so $alpha in.not "FV" M$ and $"FV" L = "FV" M$, thus $"FV" M = "FV" L subset.eq Gamma$.
     ]
+]
+
+// MARK: Q. 3.21
+#problem(source: "3.21")[
+    Give a recursive definition for $"FTV" : TT_2 union Lambda_(TT 2) -> VV_2$
+]
+
+#solution[
+    Here $alpha in VV_2$, $A, B in TT_2$, $x, M in Lambda_(TT 2)$ where $x$ is a variable.
+    #table(
+        columns: (1.2fr, 0.8fr),
+        stroke: none,
+        [*Form*], [*Value*],
+        [$"FTV" alpha$], [${alpha}$],
+        [$"FTV" x$], [$emptyset$],
+        [$"FTV" (A -> B)$], [$"FTV"(A) union "FTV"(B)$],
+        [$"FTV" (Pi alpha:*. A)$], [$"FTV"(A) \\ {alpha}$],
+        [$"FTV" (M N)$], [$"FTV"(M) union "FTV"(N)$],
+        [$"FTV" (lambda x:A. M)$], [$"FTV"(A) union "FTV"(M)$],
+        [$"FTV" (M B)$], [$"FV"(M) union "FTV"(B)$],
+        [$"FTV" (lambda alpha:*. M)$], [$"FTV"(M) \\ {alpha}$],
+    )
 ]
