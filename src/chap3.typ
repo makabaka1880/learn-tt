@@ -1055,7 +1055,7 @@
 ]
 
 #solution[
-    Here $alpha in VV_2$, $A, B in TT_2$, $x, M in Lambda_(TT 2)$ where $x$ is a variable.
+    Here $alpha in VV_2$, $A, B in TT_2$, $x in V$ and $M in Lambda_(TT 2)$.
     #table(
         columns: (1.2fr, 0.8fr),
         stroke: none,
