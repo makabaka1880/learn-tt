@@ -29,7 +29,7 @@
 #let mark(content) = text(content, fill: accent)
 
 // Scripts for correctly spacing juxtaposed applications
-#let operators = ($exists$.body, $lambda$.body, $tack$.body)
+#let operators = ($exists$.body, $lambda$.body)
 #let isalpha(x) = x.match(regex("[A-Za-z]+")) != none
 #let set-symbol(x) = {
     if isalpha(x.text) {
@@ -281,5 +281,26 @@
         (2, $gamma : *$, "9 Var"),
         (1, $lambda gamma : *. gamma : * -> *$, "10 Abst"),
         (1, $(lambda alpha: *. lambda beta : * -> *. beta (beta alpha)) nat (lambda gamma:*.gamma): *$, "8,11 App"),
+    ))
+]
+
+// MARK: Q. 4.5
+#problem(source: "4.5")[
+    Give a shortened #lwo derivation in flag format of
+    $ alpha : *. x : alpha tack lambda y : alpha. x : (lambda beta : *. beta -> beta) alpha $
+]
+
+#solution[
+    #ded-nat(arr: (
+        (0, $alpha : *$, ""),
+        (1, $x : alpha$, ""),
+        (2, $y : alpha$, ""),
+        (3, $x : alpha$, "2 Weak"),
+        (2, $lambda y : alpha. x : alpha -> alpha$, "4 Abst"),
+        (2, $beta : *$, ""),
+        (3, $beta -> beta: *$, "6,6 Form"),
+        (2, $lambda beta : *. beta -> beta: * -> *$, "7 Abst"),
+        (2, $(lambda beta : *. beta -> beta) alpha : *$, "8,1 App"),
+        (2, $lambda y : alpha. x : (lambda beta : *. beta -> beta) alpha$, "5,9 Conv"),
     ))
 ]
