@@ -23,9 +23,6 @@
 );
 #let problem = (..it) => problem(bg: accent, ..it)
 #let nat = $mono("nat")$
-#let bool = $mono("bool")$
-#let ltrue = $"true"$
-#let lfalse = $"false"$
 #let mark(content) = text(content, fill: accent)
 
 // Scripts for correctly spacing juxtaposed applications
