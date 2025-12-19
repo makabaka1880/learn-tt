@@ -382,3 +382,7 @@
         $ Gamma, Gamma', Gamma'' tack M[x := N] : A $
     ]
 ]
+
+---
+
+Completed Dec 20 1:23 am.
