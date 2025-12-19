@@ -304,3 +304,39 @@
         (2, $lambda y : alpha. x : (lambda beta : *. beta -> beta) alpha$, "5,9 Conv"),
     ))
 ]
+
+// MARK: Q. 4.6 (a)
+#problem(source: "4.6 a")[
+    Show that no such context $Gamma$ and term $M$ in #lwo such that
+    $ Gamma tack kind : M $
+    is derivable.
+]
+#solution[
+    Proof by induction on inference rules. Rules like $"Sort"$, $"Var"$, $"Form"$, $"Abst"$, $"App"$ has syntatically or semantic different conclusions than $kind : M$.
+    #proof(prompt: "Case 1 : Rule Weak")[
+        Let $Gamma', C : s equiv Gamma$. Therefore this derivation requries a premise $Gamma' tack kind: M$. By the inductive hypothesis this is impossible.
+    ]
+    #proof(prompt: "Case 2 : Rule Conv")[
+        This derivation requires a premise $Gamma tack kind: M'$ such that $M =_beta M'$. By the inductive hypothesis this is impossible.
+    ]
+    By the principle of induction this proves that there's no derivation that could give $Gamma tack kind : M$.
+]
+
+// MARK: Q. 4.6 (b)
+#problem(source: "4.6 b")[
+    Prove there are no such context $Gamma$ and terms $M$ and $N$ in #lwo such that
+    $ Gamma tack M -> kind : N $
+]
+#solution[
+    Proof by induction on inference rules. Rules like $"Sort"$, $"Var"$, $"Abst"$, $"App"$ has syntatically or semantically conclusions than $M -> kind : N$.
+    #proof(prompt: "Case 1 : Rule Weak")[
+        Let $Gamma', C : s equiv Gamma$. The derivation requires a premise $Gamma' tack M -> kind : N$. By the inductive hypothesis this is impossible.
+    ]
+    #proof(prompt: "Case 2 : Rule Form")[
+        This requires a derivation with premise $Gamma tack kind : N$, which by 4.6 a is not possible.
+    ]
+    #proof(prompt: "Case 3 : Rule Conv")[
+        This requires a premise $Gamma tack M -> kind : N'$ such that $N equiv N'$. By the inductive hypothesis this is impossible.
+    ]
+    By the principle of induction this proves there's no derivation that could give $Gamma tack M -> kind: N$.
+]
