@@ -340,3 +340,45 @@
     ]
     By the principle of induction this proves there's no derivation that could give $Gamma tack M -> kind: N$.
 ]
+
+// MARK: Q. 4.7 (a)
+#problem(source: "4.7 a")[
+    Give #lwo definition of the notion legal term, #lwo context and domain.
+]
+#solution[
+    #definition(id: "Legal Term")[
+        are typable terms. That is, a term $M$ is legal iff there exists a context $Gamma$ and a legal higher-sorted term $alpha$ under $Gamma$ such that $Gamma tack M : alpha$.
+    ]
+    #definition(id: [#lwo Context.])[
+        1. $emptyset$ is a #lwo context.
+        2. When $Gamma$ is a valid #lwo context, $alpha$ is valid under $Gamma$, and type of $x$ is $alpha$, and $x in.not "dom" Gamma$, then the context $Gamma, x : alpha$ is valid in $lwo.$
+    ]
+    #definition(id: "Domain")[
+        1. $"dom" emptyset = {}$
+        2. $"dom" Gamma, x : s = "dom" Gamma union {x}$
+    ]
+]
+
+// MARK: Q. 4.7 (b)
+#problem(source: "4.7 b")[
+    Formulate the Free Variables Lemma, Thinning Lemma, and Subtitution Lemma for #lwo.
+]
+#solution[
+    #lemma[
+        *FV Lemma (#lwo)*.
+        For any legal term $M$ under $Gamma$, $"FV" M subset.eq "dom "Gamma$.
+
+        More specifically,
+        $
+            forall M, alpha in Lambda_(underline(omega)), Gamma tack alpha : s, Gamma tack M : alpha quad &==> quad "FV" M &&subset.eq "dom" Gamma \
+            M equiv kind quad &==> quad "FV" M equiv emptyset &&subset.eq "dom" Gamma
+        $
+    ]
+    #lemma[
+        *Thinning Lemma (#lwo)*. For any legal term $M$ in $Gamma'$ and $Gamma' subset.eq Gamma$, $M$ is legal under $Gamma$.
+    ]
+    #lemma[
+        *Substitution Lemma (#lwo)*. Assume term $kappa : s$ under context $Gamma'$. Under another context $Gamma''$ given a term $Gamma'' tack N : kappa$ and another context $Gamma$ such that $Gamma, x : kappa, Gamma' tack M : A$ for some type $A : s$ under $Gamma$. Then
+        $ Gamma, Gamma', Gamma'' tack M[x := N] : A $
+    ]
+]
