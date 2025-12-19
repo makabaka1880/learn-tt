@@ -71,7 +71,7 @@
         prooftree(
             rule(
                 name: "Form",
-                $Gamma tack A : s$,
+                $Gamma tack A : *$,
                 $Gamma, x : A tack B : s$,
                 $Gamma tack Pi x : A. B : s$,
             ),
@@ -142,5 +142,69 @@
             - Form (15)
                 - Weak (7)
                 - Form (14)
+    ]
+]
+
+// MARK: Q. 5.2
+#problem(source: "5.2")[
+    Give a complete $lambda P$ derivation of
+    $ S : * tack S -> S -> * : kind $
+    In tree format and flag format.
+]
+#solution[
+    #proof(prompt: "Tree Derivation")[
+        #prooftree(
+            rule(
+                label: "(7)",
+                $(3) S : * tack S : *$,
+                rule(
+                    label: "(6)",
+                    name: "Weak",
+                    rule(
+                        label: "(4)",
+                        name: "Weak",
+                        $tack * : kind$,
+                        $tack * : kind$,
+                        $S : * tack * : kind$,
+                    ),
+                    $(3) S : * tack S : *$,
+                    $S : *, x : S tack * : kind$,
+                ),
+                $S : * tack S -> * : kind$,
+            ),
+        )
+        #prooftree(
+            rule(
+                name: "Form",
+                rule(
+                    label: "(3)",
+                    name: "Var",
+                    $tack * : kind$,
+                    $S : * tack S : *$,
+                ),
+                rule(
+                    label: "(9)",
+                    name: "Weak",
+                    $(7) S : * tack S ->* : kind$,
+                    $(3) S : * tack S : *$,
+                    $S : *, x : S tack S -> * : kind$,
+                ),
+                $S : * tack S -> S -> * : kind$,
+            ),
+        )
+    ]
+    #proof(prompt: "Flag Derivation")[
+        #ded-nat(arr: (
+            (0, $* : kind$, "Sort"),
+            (0, $S : *$, ""),
+            (1, $S : *$, "1 Var"),
+            (1, $* : kind$, "1,1 Weak"),
+            (1, $x : S$, ""),
+            (2, $* : kind$, "4,3 Weak"),
+            (1, $S -> * : kind$, "3,6 Form"),
+            (1, $x : S$, ""),
+            (2, $S -> * : kind$, "7,3 Weak"),
+            (1, $S -> S -> * : kind$, "3,9 Form"),
+        ))
     ]
 ]
