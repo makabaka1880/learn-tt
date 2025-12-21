@@ -266,3 +266,22 @@
         One could only construct new kinds with kinds, which requires $A : kind$ and $B : kind$. This contradicts with $A : *$.
     ]
 ]
+
+// MARK: Q. 5.5
+#problem(source: "5.5")[
+    Prove that $A => ((A => B) => B)$ is a tautology by given a shorthand $lambda P$ derivation.
+]
+#solution[
+    By the principle of PAT, this proposition is equivalent to the type
+    $ A, B : * tack A -> (A -> B) -> B $
+    And finding an inhabitant in a context only with definition of $A$ and $B$ is equivalent to a proof of tautologousness.
+    #proof(ded-nat(arr: (
+        (0, $A : *$, ""),
+        (1, $B : *$, ""),
+        (2, $x : A$, ""),
+        (3, $y : A -> B$, ""),
+        (4, $y x : B$, "4,3 App"),
+        (3, $lambda y : A -> B. y x : (A -> B) -> B$, "5 Abst"),
+        (2, $lambda x : A. lambda y : A -> B. y x : A -> (A -> B) -> B$, "5 Abst"),
+    )))
+]
