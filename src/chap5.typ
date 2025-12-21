@@ -208,3 +208,41 @@
         ))
     ]
 ]
+
+// MARK: Q. 5.3
+#problem(source: "5.3")[
+    Derive
+    $ S : *, Q : S -> S -> * tack Pi x : S. Pi y : S . Q x y : * $
+]
+
+#solution[
+    #ded-nat(arr: (
+        (0, $* : kind$, "Sort"),
+        (0, $S : *$, ""),
+        (1, $S : *$, "1 Var"),
+        (1, $* : kind$, "1,1 Weak"),
+        (1, $x : S$, ""),
+        (2, $* : kind$, "4,3 Weak"),
+        (1, $S -> * : kind$, "3,6 Form"),
+        (1, $x : S$, ""),
+        (2, $S -> * : kind$, "7,3 Weak"),
+        (1, $S -> S -> * : kind$, "3,9 Form"),
+        (1, $Q : S -> S -> *$, ""),
+        (2, $Q : S -> S -> *$, "10 Var"),
+        (2, $S : *$, "3,10 Weak"),
+        (2, $* : kind$, "4,10 Weak"),
+        (2, $x : S$, ""),
+        (3, $* : kind$, "14,13 Weak"),
+        (3, $S : *$, "13,13 Weak"),
+        (3, $x : S$, "13 Var"),
+        (3, $Q : S -> S -> *$, "12,13 Weak"),
+        (3, $y : S$, ""),
+        (4, $y : S$, "17 Var"),
+        (4, $Q : S -> S -> *$, "19,17 Weak"),
+        (4, $x : S$, "18,17 Weak"),
+        (4, $Q x : S -> *$, "22,23 App"),
+        (4, $Q x y : *$, "24,21 App"),
+        (3, $Pi y : S. Q x y : *$, "17,25 Form"),
+        (2, $Pi x : S. Pi y : S. Q x y : *$, "13,26 Form"),
+    ))
+]
