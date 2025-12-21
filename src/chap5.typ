@@ -246,3 +246,23 @@
         (2, $Pi x : S. Pi y : S. Q x y : *$, "13,26 Form"),
     ))
 ]
+
+// MARK: Q. 5.4
+#problem(source: "5.4")[
+    Prove that $ast$ is the only valid kind in $lambda P$.
+]
+#solution[
+    #proof[
+        The only possible way to construct a new kind is through the $"Form"$ rule and the $"Sort"$ axiom. Because we are trying to construct a kind, $s$ here stands for $kind$.
+
+        #prooftree(
+            rule(
+                name: "Form",
+                $Gamma tack A : *$,
+                $Gamma, x : A tack B : kind$,
+                $Gamma tack Pi x : A. B : kind$,
+            ),
+        )
+        One could only construct new kinds with kinds, which requires $A : kind$ and $B : kind$. This contradicts with $A : *$.
+    ]
+]
