@@ -404,3 +404,49 @@
         ),
     )))
 ]
+
+// MARK: Q. 5.8 (a)
+#problem(source: "5.8 a")[
+    Let $Gamma equiv S : *, P : S -> *, Q : S -> *$, find an inhabitant of
+    $ Pi x : S. P x -> Q x -> P x $
+    with respect to $Gamma$ and give a shorthand $lambda P$ derivation
+]
+#solution(ded-nat(arr: (
+    (0, $S : *$, ""),
+    (1, $P : S -> *$, ""),
+    (2, $Q : S -> *$, ""),
+    (3, $x : S$, ""),
+    (4, $a : P x$, ""),
+    (5, $b : Q x$, ""),
+    (6, $a : P x$, "2,4 App"),
+    (5, $lambda b : Q x. S : Q x -> P x$, "7 Abst"),
+    (4, $lambda a : P x. lambda b : Q x. a : P x -> Q x -> P x$, "8 Abst"),
+    (3, $ lambda x : S. lambda a : P x. lambda b : Q x. a \ : Pi x : S. P x -> Q x -> P x $, "9 Abst"),
+)))
+
+// MARK: Q. 5.8 (b)
+#problem(source: "5.8 b")[
+    Let $Gamma equiv S : *, P : S -> *, Q : S -> *$, find an inhabitant of
+    $ Pi x : S. P x -> Q x -> P x $
+    By proving the corresponding proposition in natural deduction.
+]
+#solution[
+    The corresponding proposition and premises are
+    #prooftree(
+        rule(
+            $S in "Set"$,
+            $P : S -> "Prop"$,
+            $Q : S -> "Prop"$,
+            $forall a in S, P(a) => (Q(a) => P(a))$,
+        ),
+    )
+    #proof(ded-nat(arr: (
+        (0, [Let $a in S$], ""),
+        (1, [Assume $P(a)$], ""),
+        (2, [Assume $Q(a)$], ""),
+        (3, $P(a)$, ""),
+        (2, $Q(a) => P(a)$, [3,4 $=>$I]),
+        (1, $P(a) => (Q(a) => P(a))$, [2,5 $=>$I]),
+        (0, $forall a in S, P(a) => (Q(a) => P(a))$, [1,6 $forall$I]),
+    )))
+]
