@@ -285,3 +285,41 @@
         (2, $lambda x : A. lambda y : A -> B. y x : A -> (A -> B) -> B$, "5 Abst"),
     )))
 ]
+
+// MARK: Q. 5.6 (a)
+#problem(source: "5.6 a")[
+    Prove $(A => (A => B)) => (A => B)$ a tautology using natural deduction.
+]
+#solution[
+    #proof(ded-nat(arr: (
+        (0, [Assume $A => (A => B)$], ""),
+        (1, $A => (A => B)$, ""),
+        (1, [Assume $A$], ""),
+        (2, $A$, ""),
+        (2, $A => B$, [2,4 $=>$E ]),
+        (2, $B$, [5,4 $=>$E]),
+        (1, $A => B$, [3,6 $=>$I]),
+        (0, $(A => (A => B)) => (A => B)$, [1,7 $=>$I]),
+    )))
+]
+
+// MARK: Q. 5.6 (b)
+#problem(source: "5.6 b")[
+    Prove $(A => (A => B)) => (A => B)$ using a shorthand $lambda P$ derivation
+]
+#solution[
+    By the principle of PAT, this proposition is equivalent to the type
+    $ A, B : * tack (A -> A -> B) -> A -> B $
+    And finding an inhabitant in a context only with definition of $A$ and $B$ is equivalent to a proof of tautologousness.
+
+    #proof(ded-nat(arr: (
+        (0, $A : *$, ""),
+        (1, $B : *$, ""),
+        (2, $x : A -> A -> B$, ""),
+        (3, $y : A$, ""),
+        (4, $x y : A -> B$, "3,4 App"),
+        (4, $x y y : B$, "5,4 App"),
+        (3, $lambda y : A. x y y : A -> B$, "6 Abst"),
+        (2, $lambda x : A -> A -> B. lambda y : A. x y y : (A -> A -> B) -> A -> B$, "7 Abst"),
+    )))
+]
