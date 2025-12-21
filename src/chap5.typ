@@ -46,6 +46,8 @@
 
 #definition[
     Some rules for reference.
+
+    *$lambda P$ Calculus Rules*
     #align(center, rule-set(
         prooftree(
             rule(
@@ -101,6 +103,43 @@
                 $Gamma tack A : B'$,
             ),
         ),
+    ))
+    *Predicate Logic*
+    #align(center, rule-set(
+        prooftree(
+            rule(
+                name: [$=>$I],
+                ded-nat(arr: (
+                    (0, [Assume $A$], ""),
+                    (1, $...$, ""),
+                    (1, $B$, ""),
+                )),
+                $A => B$,
+            ),
+        ),
+        prooftree(
+            rule(
+                name: [$=>$E],
+                $A => B$,
+                $A$,
+                $B$,
+            ),
+        ),
+        prooftree(rule(
+            name: [$forall$I],
+            ded-nat(arr: (
+                (0, [Let $a in S$], ""),
+                (1, $...$, ""),
+                (1, $P(a)$, ""),
+            )),
+            $forall a in S, P(a)$,
+        )),
+        prooftree(rule(
+            name: [$forall$E],
+            $forall a in S$,
+            $N in S$,
+            $P(N)$,
+        )),
     ))
 ]
 
