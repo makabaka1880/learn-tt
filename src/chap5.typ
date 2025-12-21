@@ -323,3 +323,84 @@
         (2, $lambda x : A -> A -> B. lambda y : A. x y y : (A -> A -> B) -> A -> B$, "7 Abst"),
     )))
 ]
+
+// MARK: Q. 5.7 a
+#problem(source: "5.7 a")[
+    Proof $(A => B) => ((B => C) => (A => C))$ using a shorthand $lambda P$ derivation.
+]
+
+#solution[
+    By the principle of PAT, this proposition is equivalent to the type
+    $ A, B, C : * tack (A -> B) -> (B -> C) -> A -> C $
+    And finding an inhabitant in a context only with definition of $A$, $B$, and $C$ is equivalent to a proof of tautologousness.
+    #proof(ded-nat(arr: (
+        (0, $A : *$, ""),
+        (1, $B : *$, ""),
+        (2, $C : *$, ""),
+        (3, $x : A -> B$, ""),
+        (4, $y : B -> C$, ""),
+        (5, $a : A$, ""),
+        (6, $x a : B$, "4,6 App"),
+        (6, $y (x a) : C$, "5,7 App"),
+        (5, $lambda a : A. y (x z) : A -> C$, "8 Abst"),
+        (4, $lambda y : B -> C. lambda a : A. y (x z) : (B -> C) -> A -> C$, "9 Abst"),
+        (
+            2,
+            $ lambda x : A -> B. lambda y : B -> C. lambda a : A. y (x z) \ : (A -> B) -> (B -> C) -> A -> C $,
+            "10 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 5.7 b
+#problem(source: "5.7 b")[
+    Proof $((A => B) => A) => ((A => B) => B)$ using a shorthand $lambda P$ derivation.
+]
+
+#solution[
+    By the principle of PAT, this proposition is equivalent to the type
+    $ A, B : * tack ((A -> B) -> A) -> (A -> B) -> B $
+    And finding an inhabitant in a context only with definition of $A$ and $B$ is equivalent to a proof of tautologousness.
+    #proof(ded-nat(arr: (
+        (0, $A : *$, ""),
+        (1, $B : *$, ""),
+        (2, $x : (A -> B) -> A$, ""),
+        (3, $y : A -> B$, ""),
+        (4, $x y : A$, "3,4 App"),
+        (4, $y (x y) : B$, "4,5 App"),
+        (3, $lambda y : A -> B. y (x y) : (A -> B) -> B$, "6 Abst"),
+        (2, $ lambda x : (A -> B) -> A. lambda y : A -> B. y (x y) \ : ((A -> B) -> A) -> (A -> B) -> B $, "7 Abst"),
+    )))
+]
+
+// MARK: Q. 5.7 c
+#problem(source: "5.7 c")[
+    Proof $(A => (B => C)) => ((A => B) => (A => C))$ using a shorthand $lambda P$ derivation.
+]
+
+
+#solution[
+    By the principle of PAT, this proposition is equivalent to the type
+    $ A, B, C : * tack (A -> B -> C) -> (A -> B) -> A -> C $
+    And finding an inhabitant in a context only with definition of $A$, $B$, and $C$ is equivalent to a proof of tautologousness.
+    #proof(ded-nat(arr: (
+        (0, $A : *$, ""),
+        (1, $B : *$, ""),
+        (2, $C : *$, ""),
+        (3, $x : A -> B -> C$, ""),
+        (4, $y : A -> B$, ""),
+        (5, $a : A$, ""),
+        (6, $x a : B -> C$, "4,6 App"),
+        (6, $y a : B$, "5,6 App"),
+        (6, $x a (y a) : C$, "7,8 App"),
+        (5, $lambda a : A. x a (y a) : A -> C$, "9 Abst"),
+        (4, $lambda y : A -> B. lambda a : A. x a (y a) : (A -> B) -> A -> C$, "10 Abst"),
+        (
+            3,
+            $
+                lambda x : A -> B -> C. lambda y : A -> B. lambda a : A. x a (y a) \ : (A -> B -> C) -> (A -> B) -> A -> C
+            $,
+            "10 Abst",
+        ),
+    )))
+]
