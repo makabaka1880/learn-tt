@@ -157,3 +157,34 @@
 #solution[
     The set of $(s_1, s_2)$ pairs in formation rules of the derivation of $bot$ is ${(sort, *)}$. The minimal system corresponding is $lambda 2$. The same for $bot -> bot$. Therefore $bot$ and $bot -> bot$ belongs to $lambda 2$, $lambda omega$, $lambda P$ and $lambda C$.
 ]
+
+// MARK: Q. 6.2
+#problem(source: "6.2")[
+    Given context $Gamma equiv S : *, P : S -> *, A : *$. Prove by means of a flag derivation that the following expression is inhabited in $lambda C$ with respect to $Gamma$:
+    $ (Pi x : S. (A -> P x)) -> A -> Pi y : S. P y $
+]
+
+#solution[
+    The inhabitant is
+    $
+        M equiv lambda u : (Pi x : S. (A -> P x)). lambda v : A. lambda y : S. u y v
+    $
+    #proof(ded-nat(arr: (
+        (0, $S : *, P : S -> *, A : *$, ""),
+        (1, $u : Pi x : S. (A -> P x)$, ""),
+        (2, $v : A$, ""),
+        (3, $y : S$, ""),
+        (4, $u y : A -> P y$, "2,4 App"),
+        (4, $u y v : P y$, "5,3 App"),
+        (3, $lambda y : S. u y v : Pi y : S. P y$, "6 Abst"),
+        (2, $lambda v : A.lambda y : S. u y v : A -> Pi y : S. P y$, "7 Abst"),
+        (
+            1,
+            $
+                & lambda u : Pi x : S. (A -> P x). lambda v : A.lambda y : S. u y v \
+                & quad : Pi x : S. (A -> P x) -> A -> Pi y : S. P y
+            $,
+            "8 Abst",
+        ),
+    )))
+]
