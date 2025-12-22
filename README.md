@@ -1,20 +1,54 @@
-# Answers
-## Type Theory & Formal Proof - An Introduction
+# Type Theory & Formal Proof - Exercise Solutions
 
-Excercises I did while learning type theory. **These answers have not been checked by anyone** so should only be used as an reference.
-
-Issues on pointing out mistakes are welcomed.
-
+Exercise solutions from **Type Theory & Formal Proof: An Introduction**. **These answers have not been formally verified** and should only be used as a reference. Issues pointing out mistakes are welcomed.
 
 ## Dependencies
-The answers were written in typst (currently 0.14.1). Libs used were:
-- *derive-it:1.1.0* - for typesetting fitch derivations
-- *tdtr:0.4.2* - for drawing trees
-- *curryst:0.6.0* - for typesetting derivation trees
-- *commute:0.3.0* - for drawing diagrams
-- *cetz:0.4.2* - for drawing advanced diagrams
 
-The template used (cyan-report) was written by me. I couldn't quite make sense of how to contribute to the typst universe so I just copied the lib into the project dir. It is not recommended to submit PRs to enhance the lib since it is not part of this project. Later on when I complete the template I will have a dedicated repository for it.
+Written in [Typst](https://typst.app/) v0.14.1 with the following packages:
 
-## Automation
-I used a precommit hook to compile the typ docs into the ./out directory. Note that I need the cyan-report package inside ./src/ for compilation to work.
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `derive-it` | 1.1.0 | Fitch-style natural deduction derivations |
+| `tdtr` | 0.4.2 | Tree structures |
+| `curryst` | 0.6.0 | Derivation trees and proof trees |
+| `commute` | 0.3.0 | Commutative diagrams |
+| `cetz` | 0.4.2 | Advanced diagrams |
+
+### Custom Template
+
+Uses a custom `cyan-report` template (included in project). This template will have its own repository once completed - PRs to enhance it here are not recommended as it's outside this project's scope.
+
+## Building
+
+### Manual Build
+```bash
+typst compile src/<filename>.typ out/<filename>.pdf
+```
+
+### Automated Build
+Run `./build.sh` to compile all `.typ` files to the `./out` directory. This script can also be used as a git pre-commit hook:
+```bash
+ln -s ../../build.sh .git/hooks/pre-commit
+```
+
+**Note**: The `cyan-report` template must be present in `./src/` for compilation to work.
+
+## Project Structure
+```
+.
+├── src/           # Source typst files
+├── out/           # Compiled PDFs (generated)
+├── build.sh       # Build script
+└── README.md
+```
+
+## Contributing
+
+Found a mistake? Open an issue or submit a PR with:
+- Chapter/exercise number
+- Clear description of the issue
+- Reference or explanation for the correction
+
+---
+
+**Note**: Please respect the original textbook's copyright when using these materials.
