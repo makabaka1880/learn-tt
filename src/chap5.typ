@@ -576,3 +576,30 @@
         ))
     ]
 ]
+
+// MARK: Q. 5.10
+#problem(source: "5.10")[
+    Given a context
+    $
+        Gamma equiv & S : *, P : S -> *, f : S -> S, g : S -> S, \
+                    & u : Pi x : S. (P (f x) -> P (g x)), \
+                    & v : Pi x, y : S. ((P x -> P y) -> P (f x))
+    $
+    Let $ M equiv lambda x : S. v (f x) (g x) (u x) $
+    Type $M$ under $Gamma$.
+]
+
+#solution(ded-nat(arr: (
+    (0, $x : S$, ""),
+    (1, $f : S -> S$, ""),
+    (1, $f x : S$, "2,1 App"),
+    (1, $g : S -> S$, ""),
+    (1, $g x : S$, "4,1 App"),
+    (1, $u : Pi x : S. (P (f x) -> P (g x))$, ""),
+    (1, $u x : P (f x) -> P (g x)$, "6,1 App"),
+    (1, $v : Pi x, y : S. ((P x -> P y) -> P (f x))$, ""),
+    (1, $v (f x) : Pi y : S. ((P (f x) -> P y) -> P (f (f x)))$, "8,3 App"),
+    (1, $v (f x) (g x) : (P (f x) -> P (g x)) -> P (f (f x))$, "9,5 App"),
+    (1, $v (f x) (g x) (u x) : P (f (f x))$, "10,7 App"),
+    (0, $lambda x : S. v (f x) (g x) (u x) : S -> P (f (f x))$, "11 Abst"),
+)))
