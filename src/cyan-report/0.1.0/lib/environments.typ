@@ -129,10 +129,10 @@
 
 #let io-problem(content, bg: none, source: none) = problem(content, bg: bg, source: source)
 
-#let definition(content, id: none) = context {
+#let definition(content, id: none, prompt: "Definition") = context {
     block(breakable: false, [
         #line(length: 100%)
-        #text([*Definition* _#(id)_])
+        #text([*#(prompt)* _#(id)_])
         #content
         #line(length: 100%)
     ])

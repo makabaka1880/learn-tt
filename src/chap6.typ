@@ -1,6 +1,7 @@
 #import "./cyan-report/0.1.0/lib.typ": *;
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
 #import "@preview/derive-it:1.1.0": *;
+#import "@preview/cetz:0.4.2" as cc: *;
 #import "@preview/tdtr:0.4.3": *;
 
 #let accent = rgb(50, 150, 150)
@@ -44,10 +45,7 @@
 }
 #let sort = $square$
 
-#definition[
-    Some rules for reference.
-
-    *$lambda C$ Calculus Rules*
+#definition(prompt: "Reference - Calculus of Constructions")[
     #align(center, rule-set(
         prooftree(
             rule(
@@ -104,6 +102,48 @@
             ),
         ),
     ))
+    *The $lambda$-Cube*
+    #grid(
+        columns: 2,
+        column-gutter: 1.25cm,
+        cc.canvas({
+            import cc.draw: *
+            let s = 2.4
+            content((0, 0, 0), $lambda ->$, name: "stlc", padding: 0.1)
+            content((s, 0, 0), $lambda P$, name: "lp", padding: 0.1)
+            content((0, s, 0), $lambda 2$, name: "l2", padding: 0.1)
+            content((s, s, 0), $lambda "P2"$, name: "lp2", padding: 0.1)
+            content((0, 0, s), $lambda underline(omega)$, name: "lwo", padding: 0.1)
+            content((s, 0, s), $lambda P underline(omega)$, name: "lpo", padding: 0.1)
+            content((0, s, s), $lambda omega$, name: "lo", padding: 0.1)
+            content((s, s, s), $lambda C$, name: "cc", padding: 0.1)
+            line("stlc", "lp")
+            line("stlc", "lwo")
+            line("stlc", "l2")
+            line("cc", "lp2")
+            line("cc", "lpo")
+            line("cc", "lo")
+            line("lwo", "lpo")
+            line("lpo", "lp")
+            line("lo", "lwo")
+            line("lo", "l2")
+            line("l2", "lp2")
+            line("lp2", "lp")
+        }),
+        table(
+            stroke: none,
+            columns: (.5fr, .5fr, .5fr, .5fr, .5fr),
+            row-gutter: -1.2mm,
+            [*$lambda ->$*], $(*, *)$, $$, $$, $$,
+            [*$lambda 2$*], $(*, *)$, $(sort, *)$, $$, $$,
+            [*$lambda underline(omega)$*], $(*, *)$, $$, $(sort, sort)$, $$,
+            [*$lambda P$*], $(*, *)$, $$, $$, $(*, sort)$,
+            [*$lambda omega$*], $(*, *)$, $(sort, *)$, $(sort, sort)$, $$,
+            [*$lambda 2$*], $(*, *)$, $(sort, *)$, $$, $(*, sort)$,
+            [*$lambda underline(omega)$*], $(*, *)$, $$, $(sort, sort)$, $(*, sort)$,
+            [*$lambda P$*], $(*, *)$, $(sort, *)$, $(sort, sort)$, $(*, sort)$,
+        ),
+    )
 ]
 
 // MARK: Q. 6.1 (a)
