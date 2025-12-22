@@ -139,9 +139,9 @@
             [*$lambda underline(omega)$*], $(*, *)$, $$, $(sort, sort)$, $$,
             [*$lambda P$*], $(*, *)$, $$, $$, $(*, sort)$,
             [*$lambda omega$*], $(*, *)$, $(sort, *)$, $(sort, sort)$, $$,
-            [*$lambda 2$*], $(*, *)$, $(sort, *)$, $$, $(*, sort)$,
-            [*$lambda underline(omega)$*], $(*, *)$, $$, $(sort, sort)$, $(*, sort)$,
-            [*$lambda P$*], $(*, *)$, $(sort, *)$, $(sort, sort)$, $(*, sort)$,
+            [*$lambda "2P"$*], $(*, *)$, $(sort, *)$, $$, $(*, sort)$,
+            [*$lambda "P" underline(omega)$*], $(*, *)$, $$, $(sort, sort)$, $(*, sort)$,
+            [*$lambda C$*], $(*, *)$, $(sort, *)$, $(sort, sort)$, $(*, sort)$,
         ),
     )
 ]
@@ -375,3 +375,40 @@
     $ M equiv forall x, y in S, (Q (x, y) => not Q(y, x)) => forall z in S, (not Q(z,z)) $
     It expresses the fact if $Q$ is asymmetric then it is irreflective.
 ]
+
+// MARK: Q. 6.5 (a)
+#problem(source: "5.6 a")[
+    Let
+    $ cal(J) equiv S : * tack lambda Q : S -> S -> *. lambda x : S. Q x x : (S -> S -> *) -> S -> * $
+    Give a shorthand derivation of $cal(J)$ and determine the smallest subsystem to which $cal(J)$ belongs.
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $S : *$, ""),
+        (1, $Q : S -> S -> *$, ""),
+        (2, $x : S$, ""),
+        (3, $Q x : S -> *$, "2,3 App"),
+        (3, $Q x x : *$, "4,3 App"),
+        (2, $lambda x : S. Q x x : S -> *$, "5 Abst"),
+        (1, $lambda Q : S -> S -> *. lambda x : S. Q x x : (S -> S -> *) -> S -> *$, "6 Abst"),
+    ))
+
+    #table(
+        columns: (.7fr, .6fr, .2fr),
+        stroke: gray.lighten(80%),
+        [*Abstraction*], [*Line Number*], [*$(s_1, s_2)$*],
+        $S -> *$, [2 / 4 / 6 / 7], $(*, sort)$,
+        $S -> S -> *$, [2 / 7], $(*, sort)$,
+        $(S -> S -> *) -> (S -> *)$, [7], $(sort, sort)$,
+    )
+    The judgement contains $(*, sort)$ -- $lambda P$ pairs and $(sort, sort)$ -- $lambda underline(omega)$ pairs. Therefore the minimal system $cal(J)$ belongs to is $lambda "P" underline(omega)$.
+]
+
+// MARK: Q. 6.5 (b)
+#problem(source: "6.5 b")[
+    In $cal(J)$ of 6.5 a, we may consider the variable $Q$ as expressing a relation on set $S$. How could you describe the subexpression $lambda x : S. Q x x$ in this settings? And what is then the interpretation of the judgement $cal(J)$?
+]
+#solution[
+    By a informal translation, the term meant "Given a relation $Q$ over set $S$ and an arbitrary element of $S$, return whether if $Q(x, x)$ holds".
+]
+
