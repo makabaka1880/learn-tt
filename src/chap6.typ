@@ -269,3 +269,109 @@
 #solution[
     There are  $(*, *)$ -- $lambda ->$ pairs, $(*, sort)$ -- $lambda P$ pairs, and $(sort, *)$ -- $lambda 2$. Therefore the minimal system $cal(J)$ belongs to is $lambda "P"2$.
 ]
+
+// MARK: Q. 6.4 (a)
+#problem(source: "6.4 a")[
+    Let $Gamma equiv S : *, Q : S -> S -> *$ and
+    $ M equiv (Pi x, y : S. (Q x y -> Q y x -> bot)) -> Pi z : S. (Q z z -> bot) $
+    Derive $Gamma tack M : *$ and determine the smallest subsystemm to which this judgement belongs.
+]
+#pagebreak()
+#solution[
+    #ded-nat(arr: (
+        (0, $S : *, Q : S -> S -> *$, ""),
+        (1, $x : S$, ""),
+        (2, $y : S$, ""),
+        (3, $Q x : S -> *$, "1,2 App"),
+        (3, $Q x y : *$, "4,3 App"),
+        (3, $z : Q x y$, ""),
+        (4, $Q y : S -> *$, "1,3 App"),
+        (4, $Q y x : *$, "7,2 App"),
+        (4, $t : Q y x$, ""),
+        (5, $bot : *$, "Weak from 6.1 a"),
+        (4, $Q y x -> bot : *$, "8,10 Form"),
+        (3, $Q x y -> Q y x -> bot : *$, "5,11 Form"),
+        (2, $Pi y : S. Q x y -> Q y x -> bot : *$, "1,12 Form"),
+        (1, $Pi x,y : S. Q x y -> Q y x -> bot : *$, "1,13 Form"),
+        (1, $a : (Pi x, y : S. (Q x y -> Q y x -> bot))$, ""),
+        (2, $z : S$, ""),
+        (3, $Q z : S -> *$, "1,16 App"),
+        (3, $Q z z : *$, "17,16 App"),
+        (3, $b : Q z z$, ""),
+        (4, $bot : *$, "Weak from 6.1 a"),
+        (3, $Q z z -> bot : *$, "18,20 Form"),
+        (2, $Pi z : S. Q z z -> bot : *$, "1,21 Form"),
+        (
+            1,
+            $
+                & Pi x,y : S. (Q x y -> Q y x -> bot) \
+                & quad -> Pi z : S. Q z z -> bot : *
+            $,
+            "14,22 Form",
+        ),
+    ))
+    Here's a table of all $Pi$s that appeared
+    #table(
+        columns: (.7fr, .6fr, .2fr),
+        stroke: gray.lighten(80%),
+        [*Abstraction*], [*Line Number*], [*$(s_1, s_2)$*],
+        $S -> *$, [1 / 4 / 7 / 17], $(*, sort)$,
+        $S -> S -> *$, [1], $(*, sort)$,
+        $bot$, [10 / 11 / 12 / 13 / 14 / 15 / 20 / 21 / 22 / 23], $(sort, *)$,
+        $Q y x -> bot$, [11 / 12 / 13 / 14 / 15 / 23], $(*, *)$,
+        $Q x y -> Q y x -> bot$, [12 / 13 / 14 / 15 / 23], $(*, *)$,
+        $Pi y : S. Q x y -> Q y x -> bot$, [13 / 14 / 23], $(*, *)$,
+        $Pi x,y : S. Q x y -> Q y x -> bot$, [14 / 23], $(*, *)$,
+        $Q z z -> bot$, [21 / 22 / 23], $(*, *)$,
+        $Pi z : S. Q z z -> bot$, [22 / 23], $(*, *)$,
+        $
+            & Pi x,y : S. Q x y -> Q y x -> bot -> \
+            & quad Pi z : S. Q z z -> bot
+        $,
+        [23],
+        $(*, *)$,
+    )
+    There are $(*, *)$ -- $lambda ->$ pairs, $(*, sort)$ -- $lambda P$ pairs, and $(sort, *)$ -- $lambda 2$ pairs. Therefore the mimimal system available is $lambda "P2"$.
+]
+
+// MARK: Q. 6.4 (b)
+#problem(source: "6.4 b")[
+    Prove in $lambda C$ that $M$ is inhabited in context $Gamma$.
+]
+#solution[
+    A shorthand derivation is given below:
+    #proof(ded-nat(arr: (
+        (0, $S : *, Q : S -> S -> *$, ""),
+        (1, $h : Pi x,y : S. (Q x y -> Q y x -> bot)$, ""),
+        (2, $z : S$, ""),
+        (3, $a : Q z z$, ""),
+        (4, $alpha : *$, ""),
+        (5, $h z : Pi y : S. (Q z y -> Q y z -> bot)$, "2,3 App"),
+        (5, $h z z : Q z z -> Q z z -> bot$, "6,3 App"),
+        (5, $h z z a : Q z z -> bot$, "7,4 App"),
+        (5, $h z z a a : Pi alpha : *. alpha$, "8,4 App"),
+        (5, $h z z a a alpha : alpha$, "9,5 App"),
+        (4, $lambda alpha : *. h z z a a alpha : Pi alpha : *. alpha$, "10 Abst"),
+        (3, $lambda a : Q z z lambda alpha : *. h z z a a alpha : Q z z -> bot$, "11 Abst"),
+        (2, $lambda z : S. lambda a : Q z z lambda alpha : *. h z z a a alpha : Pi z : S. Q z z -> bot$, "12 Abst"),
+        (
+            1,
+            $
+                & lambda h : Pi x,y : S. (Q x y -> Q y x -> bot) \
+                & quad lambda z : S. lambda a : Q z z lambda alpha : *. h z z a a alpha \
+                & quad : Pi x,y : S. (Q x y -> Q y x -> bot) ->Pi z : S. Q z z -> bot
+            $,
+            "13 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 6.4 (c)
+#problem(source: "6.4 c")[
+    We may consier $Q$ to be a relation on set $S$. Moreover by PAT we may see $A -> bot$ as the negation $not A$ of prop $A$. How can $M$ then be interpreted by the PAT paradigm?
+]
+#solution[
+    By a direct type-to-proposition translation we have
+    $ M equiv forall x, y in S, (Q (x, y) => not Q(y, x)) => forall z in S, (not Q(z,z)) $
+    It expresses the fact if $Q$ is asymmetric then it is irreflective.
+]
