@@ -26,7 +26,7 @@
 #let mark(content) = text(content, fill: accent)
 
 // Scripts for correctly spacing juxtaposed applications
-#let operators = ($exists$.body, $lambda$.body, $forall$.body, $($.body, $)$.body)
+#let operators = ($exists$.body, $lambda$.body, $forall$.body)
 #let isalpha(x) = x.match(regex("[A-Za-z]+")) != none
 #let set-symbol(x) = {
     if isalpha(x.text) {
@@ -603,3 +603,85 @@
     (1, $v (f x) (g x) (u x) : P (f (f x))$, "10,7 App"),
     (0, $lambda x : S. v (f x) (g x) (u x) : S -> P (f (f x))$, "11 Abst"),
 )))
+
+// MARK: Q. 5.11
+#problem(source: "5.11")[
+    Let $S$ be a set, with $Q$ and $R$ relations on $S times S$, and let $f$ and $g$ be functions from $S$ to $S$. Assume
+    $
+        forall x,y in S (Q(x, f(y)) => Q(g(x), y))\
+        forall x,y in S (Q(x, f(y)) => R(x, y)) \
+        forall x in S (Q(x, f(f(x))))
+    $
+    Prove that
+    $
+        forall x in S, R(g(g(x)), g(x))
+    $
+    By giving a context $Gamma$ and finding a term $M$ such that
+    $ Gamma tack M : Pi x: S. R (g (g x)) (g x) $
+]
+#solution[
+    Context $Gamma$ is as follows:
+    $
+        Gamma equiv & S : *, f : S -> S, g : S -> S \
+                    & Q : S -> S -> *, R : S -> S -> * \
+                    & A : Pi x,y : S. (Q x (f y) -> Q (g x) y), \
+                    & B : Pi x,y : S. (Q x (f y) -> R x y) \
+                    & C : Pi x : S. Q x (f (f x))
+    $
+    #proof(prompt: "Derivation", ded-nat(arr: (
+        (0, $S : *, f : S -> S, g : S -> S$, ""),
+        (1, $Q : S -> S -> *, R : S -> S -> *$, ""),
+        (2, $A : Pi x,y : S. (Q x (f y) -> Q (g x) y)$, ""),
+        (3, $B : Pi x,y : S. (Q x (f y) -> R x y)$, ""),
+        (4, $C : Pi x : S. Q x (f (f x))$, ""),
+        (5, $x : S$, ""),
+        (6, $g x : S$, "1,6 App"),
+        (6, $C (g x) : Q (g x) (f (f (g x)))$, "5,7 App"),
+        (6, $f (g x) : S$, "1,7 App"),
+        (6, $A (g x) : Pi y : S. (Q (g x) (f y)) -> (Q (g (g x)) y)$, "3,7 App"),
+        (
+            6,
+            $
+                & A (g x) ( f (g x)) \
+                & quad : (Q (g x) (f (f (g x)))) \
+                & quad quad -> (Q (g (g x)) (f (g x)))
+            $,
+            "10,9 App",
+        ),
+        (6, $ A (g x) (f (g x)) (C (g x)) \ : (Q (g (g x)) (f (g x))) $, "11,8 App"),
+        (6, $g (g x) : S$, "1,7 App"),
+        (
+            6,
+            $
+                & B (g (g x)) \
+                & quad : Pi y : S. (Q (g (g x)) (f y) \
+                & quad quad -> R (g (g x)) y)
+            $,
+            "4,13 App",
+        ),
+        (
+            6,
+            $
+                & B (g (g x)) (g x) \
+                & quad : (Q (g (g x)) (f (g x))) -> (R (g (g x)) (g x))
+            $,
+            "14,7 App",
+        ),
+        (
+            6,
+            $
+                & B (g (g x)) (g x) (A (g x) (f (g x)) (C (g x))) \
+                & quad : (R (g (g x)) (g x))
+            $,
+            "15,12 App",
+        ),
+        (
+            5,
+            $
+                & lambda x : S. B (g (g x)) (g x) (A (g x) (f (g x)) (C (g x))) \
+                & quad : Pi x : S. (R (g (g x)) (g x))
+            $,
+            "17 Abst",
+        ),
+    )))
+]
