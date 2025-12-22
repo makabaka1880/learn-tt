@@ -188,3 +188,44 @@
         ),
     )))
 ]
+
+// MARK: Q. 6.3 (a)
+#problem(source: "6.3 a")[
+    Let $cal(J)$ be a judgement
+    $ cal(J) equiv S : *, P : S -> * tack lambda x : S. (P x -> bot) : S -> * $
+    Derive $cal(J)$ in $lambda C$ with shorthand flag notation.
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $S : *, P : S -> *$, ""),
+        (1, $x : S$, ""),
+        (2, $P x : *$, "1,2 App"),
+        (2, $bot : *$, "Weak from 6.1 a"),
+        (2, $P x -> bot : *$, "3,4 Form"),
+        (1, $lambda x : S. P x -> bot : S -> *$, "5 Abst"),
+    ))
+]
+
+// MARK: Q. 6.3 (b)
+#problem(source: "6.3 b")[
+    Deternmine the $(s_1, s_2)$ pairs corresponding to all $Pi$ abstractions occuring in $cal(J)$.
+]
+#solution[
+    #table(
+        columns: (.6fr, .4fr, .2fr),
+        stroke: none,
+        [*Abstraction*], [*Line Number*], [*$(s_1, s_2)$*],
+        $P : S -> *$, [1], $(*, sort)$,
+        $bot equiv Pi alpha : *. alpha$, [4], $(sort, *)$,
+        $P x -> bot$, [5], $(sort, *)$,
+        $lambda x : S. P x -> bot : S -> *$, [6], $(*, sort)$,
+    )
+]
+
+// MARK: Q. 6.3 (c)
+#problem(source: "6.3 c")[
+    What is the 'smallest' system in the $lambda$-cube to which $cal(J)$ belongs?
+]
+#solution[
+    There are  $(*, *)$ -- $lambda ->$ pairs, $(*, sort)$ -- $lambda P$ pairs, and $(sort, *)$ -- $lambda 2$. Therefore the minimal system $cal(J)$ belongs to is $lambda "P"2$.
+]
