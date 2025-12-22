@@ -26,7 +26,7 @@
 #let mark(content) = text(content, fill: accent)
 
 // Scripts for correctly spacing juxtaposed applications
-#let operators = ($exists$.body, $lambda$.body)
+#let operators = ($exists$.body, $lambda$.body, $forall$.body, $($.body, $)$.body)
 #let isalpha(x) = x.match(regex("[A-Za-z]+")) != none
 #let set-symbol(x) = {
     if isalpha(x.text) {
@@ -488,4 +488,91 @@
         (1, $P(a) => (Q(a) => P(a))$, [2,5 $=>$I]),
         (0, $forall a in S, P(a) => (Q(a) => P(a))$, [1,6 $forall$I]),
     )))
+]
+
+// MARK: Q. 5.9 (a)
+#problem(source: "5.9 a")[
+    Give proof for $ (forall x in S, Q(x)) => (forall y in S, P(y) => Q(y)) $ by natural deduction and a $lambda P$ derivation.
+]
+#solution[
+    #proof(prompt: "Natural Deduction", {
+        ded-nat(arr: (
+            (0, [Assume $forall x in S, Q(x)$], ""),
+            (1, [Let $y in S$], ""),
+            (2, [Assume $P(y)$], ""),
+            (3, $Q(y)$, [1,2 $forall$E]),
+            (2, $P(y) => Q(y)$, [3,4 $=>$I]),
+            (1, $forall y in S, P(y) => Q(y)$, [2,5 $forall$I]),
+            (0, $(forall x in S, Q(x) => (forall y in S, P(y) => Q(y))$, [1,6 $=>$I]),
+        ))
+    })
+    #proof(prompt: [$lambda$P Derivation])[
+        Corresponding type is $ S : *, P : S -> *, Q : S -> * tack (Pi x : S. Q x) -> (Pi y : S. P y -> Q y) $
+        #ded-nat(arr: (
+            (0, $S : *$, ""),
+            (1, $P : S -> *$, ""),
+            (2, $Q : S -> *$, ""),
+            (3, $a : Pi x : S. Q x$, ""),
+            (4, $y : S$, ""),
+            (5, $z : P y$, ""),
+            (6, $a y : Q y$, "4,5 App"),
+            (5, $lambda z : P y. a y : P y -> Q y$, "7 Abst"),
+            (4, $lambda y : S. lambda z : P y. a y : Pi y : S. P y -> Q y$, "7 Abst"),
+            (
+                3,
+                $
+                    lambda a : Pi x : S. Q x. lambda y : S. lambda z : P y. a y \ : (Pi x : S. Q x) -> (Pi y : S. P y -> Q y)
+                $,
+                "7 Abst",
+            ),
+        ))
+    ]
+]
+
+// MARK: Q. 5.9 (b)
+#problem(source: "5.9 b")[
+    Give proof for
+    $ forall x in S, (P(x) => Q(x)) => ((forall y in S, P(y)) => (forall z in S, Q(z))) $
+    by natural deduction and a $lambda P$ derivation
+]
+
+#solution[
+    #proof(prompt: "Natural Deduction", ded-nat(arr: (
+        (0, [Assume $forall x in S, (P(x) => Q(x))$], ""),
+        (1, [Assume $forall y in S, P(y)$], ""),
+        (2, [Let $z in S$], ""),
+        (3, $P(z)$, [2,3 $forall$E]),
+        (3, $P(z) => Q(z)$, [1,3 $forall$E]),
+        (3, $Q(z)$, [5,4 $=>$E]),
+        (2, $forall z in S, Q(z)$, [3,6 $forall$I]),
+        (1, $forall y in S, P(y) => (forall z in S, Q(z))$, [2,7 $forall$I]),
+        (0, $forall x in S, (P(x) => Q(x)) => ((forall y in S, P(y)) => (forall z in S, Q(z)))$, [1,8 $forall$I]),
+    )))
+    #proof(prompt: [$lambda P$ Derivation])[
+        Corresponding type is
+        $ S : *, P : S -> *, Q : S -> * \ tack (Pi x : S. P x -> Q x) -> (Pi y : S. P y) -> (Pi z : S. Q z) $
+        #ded-nat(arr: (
+            (0, $S : *$, ""),
+            (1, $P : S -> *$, ""),
+            (2, $Q : S -> *$, ""),
+            (3, $a : Pi x : S. P x -> Q x$, ""),
+            (4, $b : Pi y : S. P y$, ""),
+            (5, $z : S$, ""),
+            (6, $b z : P z$, "5,6 App"),
+            (6, $a z : P z -> Q z$, "4,6 App"),
+            (6, $a z (b z) : Q z$, "8,7 App"),
+            (5, $lambda z : S. a z (b z) : Pi z: S. Q z$, "9 Abst"),
+            (4, $ lambda b : (Pi y : S. P y). lambda z : S. a z (b z) \ : (Pi y : S. P y) -> Pi z: S. Q z $, "10 Abst"),
+            (
+                3,
+                $
+                    & lambda a : (Pi x : S. P x -> Q x) . lambda b : (Pi y : S. P y). \
+                    & quad lambda z : S. a z (b z) \
+                    & quad quad : (Pi x : S. P x -> Q x) -> \
+                    & quad quad quad quad (Pi y : S. P y) -> Pi z: S. Q z
+                $,
+                "10 Abst",
+            ),
+        ))
+    ]
 ]
