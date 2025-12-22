@@ -630,17 +630,17 @@
     $
     #proof(prompt: "Derivation", ded-nat(arr: (
         (0, $S : *, f : S -> S, g : S -> S$, ""),
-        (1, $Q : S -> S -> *, R : S -> S -> *$, ""),
-        (2, $A : Pi x,y : S. (Q x (f y) -> Q (g x) y)$, ""),
-        (3, $B : Pi x,y : S. (Q x (f y) -> R x y)$, ""),
-        (4, $C : Pi x : S. Q x (f (f x))$, ""),
-        (5, $x : S$, ""),
-        (6, $g x : S$, "1,6 App"),
-        (6, $C (g x) : Q (g x) (f (f (g x)))$, "5,7 App"),
-        (6, $f (g x) : S$, "1,7 App"),
-        (6, $A (g x) : Pi y : S. (Q (g x) (f y)) -> (Q (g (g x)) y)$, "3,7 App"),
+        (0, $Q : S -> S -> *, R : S -> S -> *$, ""),
+        (0, $A : Pi x,y : S. (Q x (f y) -> Q (g x) y)$, ""),
+        (0, $B : Pi x,y : S. (Q x (f y) -> R x y)$, ""),
+        (0, $C : Pi x : S. Q x (f (f x))$, ""),
+        (0, $x : S$, ""),
+        (1, $g x : S$, "1,6 App"),
+        (1, $C (g x) : Q (g x) (f (f (g x)))$, "5,7 App"),
+        (1, $f (g x) : S$, "1,7 App"),
+        (1, $A (g x) : Pi y : S. (Q (g x) (f y)) -> (Q (g (g x)) y)$, "3,7 App"),
         (
-            6,
+            1,
             $
                 & A (g x) ( f (g x)) \
                 & quad : (Q (g x) (f (f (g x)))) \
@@ -648,10 +648,10 @@
             $,
             "10,9 App",
         ),
-        (6, $ A (g x) (f (g x)) (C (g x)) \ : (Q (g (g x)) (f (g x))) $, "11,8 App"),
-        (6, $g (g x) : S$, "1,7 App"),
+        (1, $ A (g x) (f (g x)) (C (g x)) \ : (Q (g (g x)) (f (g x))) $, "11,8 App"),
+        (1, $g (g x) : S$, "1,7 App"),
         (
-            6,
+            1,
             $
                 & B (g (g x)) \
                 & quad : Pi y : S. (Q (g (g x)) (f y) \
@@ -660,7 +660,7 @@
             "4,13 App",
         ),
         (
-            6,
+            1,
             $
                 & B (g (g x)) (g x) \
                 & quad : (Q (g (g x)) (f (g x))) -> (R (g (g x)) (g x))
@@ -668,7 +668,7 @@
             "14,7 App",
         ),
         (
-            6,
+            1,
             $
                 & B (g (g x)) (g x) (A (g x) (f (g x)) (C (g x))) \
                 & quad : (R (g (g x)) (g x))
@@ -676,7 +676,7 @@
             "15,12 App",
         ),
         (
-            5,
+            0,
             $
                 & lambda x : S. B (g (g x)) (g x) (A (g x) (f (g x)) (C (g x))) \
                 & quad : Pi x : S. (R (g (g x)) (g x))
@@ -685,3 +685,107 @@
         ),
     )))
 ]
+
+// MARK: Q. 5.12 (a)
+#problem(source: "5.12 a")[
+    In $lambda P$, consider the context
+    $
+        Gamma equiv & S : *, R : S -> S -> *, \
+                    & u : Pi x,y : S. R x y -> R y x \
+                    & v : Pi x,y,z : S. R x y -> R x z -> R y z
+    $
+    Show that $R$ is reflexive over $S times S$. That is, construct $M$ such that
+    $ Gamma tack M : Pi x,y : S. R x y -> R x x $
+]
+#solution[
+    #proof(ded-nat(arr: (
+        (0, $S: *, R : S -> S -> *$, ""),
+        (0, $A : Pi u,v : S. R u v -> R v u$, ""),
+        (0, $B : Pi u,v,w : S. R u v -> R u w -> R v w$, ""),
+        (1, $x : S$, ""),
+        (2, $y : S$, ""),
+        (3, $h : R x y$, ""),
+        (4, $B x : Pi v,w : S. R x v -> R v w -> R x w$, "3,4 App"),
+        (4, $B x y : Pi w : S. R x y -> R y w -> R x w$, "7,5 App"),
+        (4, $B x y x : R x y -> R y x -> R x x$, "7,5 App"),
+        (4, $A x : Pi v : R x v -> R v x$, "2,4 App"),
+        (4, $A x y : R x y -> R y x$, "10,5 App"),
+        (4, $A x y h : R y x$, "11,6 App"),
+        (4, $B x y x h : R y x -> R x x$, "9,6 App"),
+        (4, $B x y x h (A x y h): R x x$, "13,12 App"),
+        (3, $lambda h : R x y. B x y x h (A x y h) : R x y -> R x x$, "14 Abst"),
+        (
+            2,
+            $
+                & lambda y : S. lambda h : R x y. B x y x h (A x y h) \
+                & quad : Pi y : S. R x y -> R x x
+            $,
+            "15 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda x,y : S. lambda h : R x y. B x y x h (A x y h) \
+                & quad : Pi x,y : S. R x y -> R x x
+            $,
+            "16 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 5.12 (b)
+#problem(source: "5.12 b")[
+    Given the context $Gamma$ in 5.12 a, prove transitivity of $R$ by constructing $M$ such that
+    $ Gamma tack M : Pi x,y,z : S. R x y -> R y z -> R x z $
+]
+#solution(proof(ded-nat(arr: (
+    (0, $S: *, R : S -> S -> *$, ""),
+    (0, $A : Pi u,v : S. R u v -> R v u$, ""),
+    (0, $B : Pi u,v,w : S. R u v -> R u w -> R v w$, ""),
+    (1, $x : S$, ""),
+    (2, $y : S$, ""),
+    (3, $z : S$, ""),
+    (4, $h : R x y$, ""),
+    (5, $r : R y z$, ""),
+    (6, $A x : Pi v : S. R x v -> R v x$, "2,4 App"),
+    (6, $A x y : R x y -> R y x$, "9,5 App"),
+    (6, $A x y h : R y x$, "10,7 App"),
+    (6, $B y : Pi v,w : S. R y v -> R y w -> R v w$, "3,5 App"),
+    (6, $B y x : Pi w : S. R y x -> R y w -> R x w$, "12,4 App"),
+    (6, $B y x z : R y x -> R y z -> R x z$, "12,4 App"),
+    (6, $B y x z (A x y h) : R y z -> R x z$, "14,11 App"),
+    (6, $B y x z (A x y h) r : R x z$, "15,8 App"),
+    (5, $lambda r : R y z. B y x z (A x y h) r : R y z -> R x z$, "16 Abst"),
+    (
+        4,
+        $
+            & lambda h : R x y. lambda r : R y z. B y x z (A x y h) r \
+            & quad : R x y -> R y z -> R x z
+        $,
+        "17 Abst",
+    ),
+    (
+        3,
+        $
+            & lambda z : S. lambda h : R x y. lambda r : R y z. B y x z (A x y h) r \
+            & quad : Pi z : S. R x y -> R y z -> R x z
+        $,
+        "18 Abst",
+    ),
+    (
+        2,
+        $
+            & lambda y,z : S. lambda h : R x y. lambda r : R y z. B y x z (A x y h) r \
+            & quad : Pi y,z : S. R x y -> R y z -> R x z
+        $,
+        "19 Abst",
+    ),
+    (
+        1,
+        $
+            & lambda x,y,z : S. lambda h : R x y. lambda r : R y z. B y x z (A x y h) r \
+            & quad : Pi x,y,z : S. R x y -> R y z -> R x z
+        $,
+        "20 Abst",
+    ),
+))))
