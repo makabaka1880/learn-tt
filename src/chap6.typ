@@ -15,8 +15,8 @@
 
 
 #show: cyan-report.with(
-    title: "Excercises",
-    subtitle: "Chapter 5",
+    title: "Exercises",
+    subtitle: "Chapter 6",
     authors: (
         (name: "Sean Li", affiliation: "Reducted"),
     ),
@@ -170,7 +170,7 @@
 ]
 
 // MARK: Q. 6.1 (b)
-#problem(source: "6.1 a")[
+#problem(source: "6.1 b")[
     Give a complete derivation in tree format showing that $bot -> bot$ is legal in $lambda C$ where
     $ bot equiv Pi alpha : *. alpha $
 ]
@@ -249,7 +249,7 @@
 
 // MARK: Q. 6.3 (b)
 #problem(source: "6.3 b")[
-    Deternmine the $(s_1, s_2)$ pairs corresponding to all $Pi$ abstractions occuring in $cal(J)$.
+    Determine the $(s_1, s_2)$ pairs corresponding to all $Pi$ abstractions occurring in $cal(J)$.
 ]
 #solution[
     #table(
@@ -275,7 +275,7 @@
 #problem(source: "6.4 a")[
     Let $Gamma equiv S : *, Q : S -> S -> *$ and
     $ M equiv (Pi x, y : S. (Q x y -> Q y x -> bot)) -> Pi z : S. (Q z z -> bot) $
-    Derive $Gamma tack M : *$ and determine the smallest subsystemm to which this judgement belongs.
+    Derive $Gamma tack M : *$ and determine the smallest subsystem to which this judgement belongs.
 ]
 #pagebreak()
 #solution[
@@ -332,7 +332,7 @@
         [23],
         $(*, *)$,
     )
-    There are $(*, *)$ -- $lambda ->$ pairs, $(*, sort)$ -- $lambda P$ pairs, and $(sort, *)$ -- $lambda 2$ pairs. Therefore the mimimal system available is $lambda "P2"$.
+    There are $(*, *)$ -- $lambda ->$ pairs, $(*, sort)$ -- $lambda P$ pairs, and $(sort, *)$ -- $lambda 2$ pairs. Therefore the minimal system available is $lambda "P2"$.
 ]
 
 // MARK: Q. 6.4 (b)
@@ -378,7 +378,7 @@
 ]
 
 // MARK: Q. 6.5 (a)
-#problem(source: "5.6 a")[
+#problem(source: "6.5 a")[
     Let
     $ cal(J) equiv S : * tack lambda Q : S -> S -> *. lambda x : S. Q x x : (S -> S -> *) -> S -> * $
     Give a shorthand derivation of $cal(J)$ and determine the smallest subsystem to which $cal(J)$ belongs.
@@ -432,7 +432,7 @@
         (3, $a : P x$, ""),
         (4, $bot : *$, "Weak from 6.1 a"),
         (3, $P x -> bot : *$, "8,10 Form"),
-        (2, $lambda x : S. P x -> bot : S ->*$, "11,5 Abst"),
+        (2, $lambda x : S. P x -> bot : S -> *$, "11,5 Abst"),
         (2, $S -> * : sort$, "5,5 Weak"),
         (1, $(S -> *) -> S -> *:sort$, "5,13 Form"),
         (1, $lambda P : S -> *.lambda x : S. P x -> bot : (S -> *) -> S -> *$, "12,5 Abst"),
@@ -935,7 +935,7 @@
 
 // MARK: Q. 6.11 (a)
 #problem(source: "6.11 a")[
-    Let $Gamma equiv x_1 : A_1, ... x_n : A_n$ in be a well-formed context in $lambda C$. Prove $x_1, ..., x_n$ distinct.
+    Let $Gamma equiv x_1 : A_1, ... x_n : A_n$ be a well-formed context in $lambda C$. Prove $x_1, ..., x_n$ distinct.
 ]
 #solution[
     We prove by induction over $n$.
