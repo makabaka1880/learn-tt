@@ -679,3 +679,76 @@
 #solution[
     $ N equiv (exists x in S, P(x)) => not (forall x in S, not P(x)) $
 ]
+
+// MARK: Q. 6.9
+#problem(source: "6.9")[
+    Given $S : *, P : S -> *$ and $f : S -> S$, we define in $lambda C$ the expression
+    $ M equiv lambda x : S. Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q x $
+    Give a term of type $Pi a : S. (M a -> M (f a))$ and a (shortened) derivation proving this.
+]
+#solution[
+    By $beta$-reduction
+    $
+                & Pi a : S. (M a -> M (f a)) \
+          equiv & Pi a : S. ((lambda x : S. Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q x) a -> M (f a)) \
+        ->_beta & Pi a : S. (Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a -> M (f a)) \
+          equiv & Pi a : S. (Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a \
+                & quad -> (lambda x : S. Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q x) (f a)) \
+        ->_beta & Pi a : S. (Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a) \
+                & quad -> Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q (f a) \
+    $
+    One such term
+    $
+        M equiv & lambda a : S. lambda h : Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a. \
+                & quad lambda Q : S -> *. lambda b : (Pi z : S. (Q z -> Q (f z))). \
+                & wide b a (h Q b)
+    $
+    Is an inhabitant of the type above.
+    #proof(ded-nat(arr: (
+        (0, $S : *, P : S -> *, f : S -> S$, ""),
+        (1, $a : S$, ""),
+        (2, $h : Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a$, ""),
+        (3, $Q : S -> *$, ""),
+        (4, $b : Pi z : S. (Q z -> Q (f z))$, ""),
+        (5, $h Q : (Pi z : S. (Q z -> Q (f z))) -> Q a$, "App"),
+        (5, $h Q b : Q a$, "App"),
+        (5, $b a : Q a -> Q (f a)$, "App"),
+        (5, $b a (h Q b) : Q (f a)$, "App"),
+        (
+            4,
+            $
+                & lambda b : Pi z : S. (Q z -> Q (f z)). b a (h Q b) \
+                & quad : (Pi z : S. (Q z -> Q (f z))) -> Q (f a)
+            $,
+            "Abst",
+        ),
+        (
+            3,
+            $
+                & lambda Q : S -> *. lambda b : Pi z : S. (Q z -> Q (f z)). b a (h Q b) \
+                & quad : Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q (f a)
+            $,
+            "Abst",
+        ),
+        (
+            2,
+            $
+                & lambda h : Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a \
+                & quad lambda Q : S -> *. lambda b : Pi z : S. (Q z -> Q (f z)). b a (h Q b) \
+                & wide : (Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a) -> \
+                & wide quad Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q (f a)
+            $,
+            "Abst",
+        ),
+        (
+            1,
+            $
+                & lambda a : S. lambda h : Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a \
+                & quad lambda Q : S -> *. lambda b : Pi z : S. (Q z -> Q (f z)). b a (h Q b) \
+                & wide : Pi a : S. (Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q a) \
+                & wide quad -> Pi Q : S -> *. (Pi z : S. (Q z -> Q (f z))) -> Q (f a)
+            $,
+            "Abst",
+        ),
+    )))
+]
