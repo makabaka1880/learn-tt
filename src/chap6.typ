@@ -412,3 +412,58 @@
     By a informal translation, the term meant "Given a relation $Q$ over set $S$ and an arbitrary element of $S$, return whether if $Q(x, x)$ holds".
 ]
 
+// MARK: Q. 6.6 (a), (b)
+#problem(source: "6.6 a & b")[
+    Let $ M equiv lambda S : *. lambda P : S -> *. lambda x : S. (P x -> bot) $
+    Prove $M$ legal and determine its type.
+    What is the smallest system in which the $lambda$-cube in which $M$ may occur?
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $* : sort$, "Sort"),
+        (0, $S : *$, ""),
+        (1, $a : S$, ""),
+        (2, $* : sort$, ""),
+        (1, $S -> *: sort$, "2,3 Form"),
+        (1, $P : S -> *$, ""),
+        (2, $x : S$, ""),
+        (3, $P x : *$, "6,7 App"),
+        (3, $a : P x$, ""),
+        (4, $bot : *$, "Weak from 6.1 a"),
+        (3, $P x -> bot : *$, "8,10 Form"),
+        (2, $lambda x : S. P x -> bot : S ->*$, "11,5 Abst"),
+        (2, $S -> * : sort$, "5,5 Weak"),
+        (1, $(S -> *) -> S -> *:sort$, "5,13 Form"),
+        (1, $lambda P : S -> *.lambda x : S. P x -> bot : (S -> *) -> S -> *$, "12,5 Abst"),
+        (0, $Pi S : *. (S -> *) -> S -> * : sort$, "1,14 Form"),
+        (
+            0,
+            $
+                & lambda S : *. lambda P : S -> *. lambda x : S. P x -> bot \
+                & quad : Pi S : *. (S -> *) -> S -> *
+            $,
+            "15,16 Abst",
+        ),
+    ))
+    #table(
+        columns: (.7fr, .6fr, .2fr),
+        stroke: gray.lighten(80%),
+        [*Abstraction*], [*Line Number*], [*$(s_1, s_2)$*],
+        $S -> *$, [5 / 12 / 13 / 14 / 15], $(*, sort)$,
+        $bot equiv Pi alpha : *. alpha$, [10 / 11], $(sort, *)$,
+        $P x -> bot$, [11 / 12], $(*, *)$,
+        $(S -> *) -> S -> *$, [14 / 15], $(sort, *)$,
+        $Pi S : *. (S -> *) -> S -> *$, [16 / 17], $(sort, *)$,
+    )
+    The derivation contains $(*, *)$ -- $lambda ->$ pairs, $(*, sort)$ -- $lambda P$ pairs, and $(sort, *)$ -- $lambda 2$ pairs. Therefore the minimal system in which $M$ is legal is $lambda "P2"$.
+]
+
+// MARK: Q. 6.6 (c)
+#problem(source: "6.6 c")[
+    How could you interpret the constructor $M$ from 6.6 a, if $A -> bot$ encodes $not A$?
+]
+#solution[
+    Converting into mathematical function notation,
+    $ M(S,P,x) = not P(x) "where" S in "set", P subset.eq S, x in S $
+    $M$ constructs the negation of a predicate $P$ over a set $S$ applied to $x$, an element of $S$. An inhabitant of $M$ would prove the negation.
+]
