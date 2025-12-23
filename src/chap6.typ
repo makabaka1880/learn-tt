@@ -752,3 +752,182 @@
         ),
     )))
 ]
+
+// MARK: Q. 6.10 (a)
+#problem(source: "6.10 a")[
+    Given $S : *$ and $P_1, P_2 : S -> *$, we define in $lambda C$ the expression
+    $
+        R equiv lambda x : S. Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x
+    $
+    We claim that $R$ codes the intersection of $P_1$ and $P_2$. In order to show this, give inhabitants of
+    $
+        (1) quad & Pi x : S. (P_1 x -> P_2 x -> R x) \
+        (2) quad & Pi x : S. R x -> P_1 x \
+        (3) quad & Pi x : S. R x -> P_2 x
+    $
+    Why do (a), (b), and (c) entail that $R$ is this intersection?
+]
+#solution[
+    By $beta$-reduction
+    $
+        (1) equiv & Pi x : S. (P_1 x -> P_2 x -> R x) \
+            equiv & Pi x : S (P_1 x -> P_2 x -> (lambda x : S. Pi Q : S -> *. \
+                  & quad (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x) x) \
+          ->^beta & Pi x : S (P_1 x -> P_2 x -> (Pi Q : S -> *. \
+                  & quad (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x))
+    $
+    $
+        (2) equiv & Pi x : S . R x -> P_1 x \
+            equiv & Pi x : S.(lambda x : S. Pi Q : S -> *. \
+                  & quad (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x) x -> P_1 x \
+          ->_beta & Pi x : S.(Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x) -> P_1 x
+    $
+    $
+        (3) equiv & Pi x : S . R x -> P_2 x \
+            equiv & Pi x : S.(lambda x : S. Pi Q : S -> *. \
+                  & quad (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x) x -> P_2 x \
+          ->_beta & Pi x : S.(Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x) -> P_2 x
+    $
+    Terms
+    $
+         M_I equiv & lambda x : S. lambda a : P_1 x. lambda b : P_2 x. lambda Q : S -> *. \
+                   & quad lambda h : Pi y : S. (P_1 y -> P_2 y -> Q y). \
+                   & wide h x a b \
+        pi_1 equiv & lambda x : S. lambda h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x. \
+                   & quad h P_1 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. a) \
+        pi_2 equiv & lambda x : S. lambda h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x. \
+                   & quad h P_2 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. b) \
+    $
+    inhabits (1), (2) and (3) respectively.
+    #proof(prompt: "Proof 1", ded-nat(arr: (
+        (0, $S : *, P_1, P_2 : S -> *$, ""),
+        (1, $x : S$, ""),
+        (2, $a : P_1 x$, ""),
+        (3, $b : P_2 x$, ""),
+        (4, $Q : S -> *$, ""),
+        (5, $h : Pi y : S. (P_1 y -> P_2 y -> Q y)$, ""),
+        (6, $h x : P_1 x -> P_2 x -> Q x$, ""),
+        (6, $h x a : P_2 x -> Q x$, ""),
+        (6, $h x a b : Q x$, ""),
+        (
+            5,
+            $
+                & lambda h : Pi y : S. (P_1 y -> P_2 y -> Q y). h x a b \
+                & quad : (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x
+            $,
+            "Abst",
+        ),
+        (
+            4,
+            $
+                & lambda Q : S -> *. lambda h : Pi y : S. (P_1 y -> P_2 y -> Q y). h x a b \
+                & quad : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x
+            $,
+            "Abst",
+        ),
+        (
+            3,
+            $
+                & lambda b : P_2 x. lambda Q : S -> *. \
+                & quad lambda h : Pi y : S. (P_1 y -> P_2 y -> Q y). h x a b \
+                & wide : P_2 x -> Pi Q : S -> *. \
+                & wide quad (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x
+            $,
+            "Abst",
+        ),
+        (
+            2,
+            $
+                & lambda a : P_1 x. lambda b : P_2 x. lambda Q : S -> *. \
+                & quad lambda h : Pi y : S. (P_1 y -> P_2 y -> Q y). h x a b \
+                & wide : P_1 x -> P_2 x -> Pi Q : S -> *. \
+                & wide quad (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x
+            $,
+            "Abst",
+        ),
+        (
+            1,
+            $
+                & lambda x : S.lambda a : P_1 x. lambda b : P_2 x. lambda Q : S -> *. \
+                & quad lambda h : Pi y : S. (P_1 y -> P_2 y -> Q y). h x a b \
+                & wide : Pi x : S. P_1 x -> P_2 x -> Pi Q : S -> *. \
+                & wide quad (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x
+            $,
+            "Abst",
+        ),
+    )))
+    #proof(prompt: "Proof 2.", ded-nat(arr: (
+        (0, $S : *, P_1, P_2 : S -> *$, ""),
+        (1, $x : S$, ""),
+        (2, $h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x$, ""),
+        (3, $y : S$, ""),
+        (4, $a : P_1 y$, ""),
+        (5, $b : P_2 y$, ""),
+        (6, $a : P_1 y$, "Weak"),
+        (5, $lambda b : P_2 y. a : P_2 y -> P_1 y$, "Abst"),
+        (4, $lambda a : P_1 y. lambda b : P_2 y. a : P_1 y -> P_2 y -> P_1 y$, "Abst"),
+        (3, $lambda y : S.lambda a : P_1 y. lambda b : P_2 y. a : Pi y : S. P_1 y -> P_2 y -> P_1 y$, "Abst"),
+        (3, $h P_1 : (Pi y : S. P_1 y -> P_2 y -> P_1 y) -> P_1 x$, "App"),
+        (3, $h P_1 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. a) : P_1 x$, "App"),
+        (
+            2,
+            $
+                & lambda h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x \
+                & quad h P_1 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. a) : \
+                & wide (Pi Q : S -> *. (Pi y : S. \
+                & wide quad (P_1 y -> P_2 y -> Q y)) -> Q x) -> P_1 x
+            $,
+            "Abst",
+        ),
+        (
+            1,
+            $
+                & lambda x : S. lambda h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x \
+                & quad h P_1 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. a) : \
+                & wide Pi x : S. (Pi Q : S -> *. (Pi y : S. \
+                & wide quad (P_1 y -> P_2 y -> Q y)) -> Q x) -> P_1 x
+            $,
+            "Abst",
+        ),
+    )))
+    #proof(prompt: "Proof 3.", ded-nat(arr: (
+        (0, $S : *, P_1, P_2 : S -> *$, ""),
+        (1, $x : S$, ""),
+        (2, $h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x$, ""),
+        (3, $y : S$, ""),
+        (4, $a : P_1 y$, ""),
+        (5, $b : P_2 y$, ""),
+        (6, $b : P_2 y$, "Weak"),
+        (5, $lambda b : P_2 y. b : P_2 y -> P_2 y$, "Abst"),
+        (4, $lambda a : P_1 y. lambda b : P_2 y. b : P_1 y -> P_2 y -> P_2 y$, "Abst"),
+        (3, $lambda y : S.lambda a : P_1 y. lambda b : P_2 y. b : Pi y : S. P_1 y -> P_2 y -> P_2 y$, "Abst"),
+        (3, $h P_2 : (Pi y : S. P_1 y -> P_2 y -> P_2 y) -> P_2 x$, "App"),
+        (3, $h P_2 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. b) : P_2 x$, "App"),
+        (
+            2,
+            $
+                & lambda h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x \
+                & quad h P_2 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. b) : \
+                & wide (Pi Q : S -> *. (Pi y : S. \
+                & wide quad (P_1 y -> P_2 y -> Q y)) -> Q x) -> P_2 x
+            $,
+            "Abst",
+        ),
+        (
+            1,
+            $
+                & lambda x : S. lambda h : Pi Q : S -> *. (Pi y : S. (P_1 y -> P_2 y -> Q y)) -> Q x \
+                & quad h P_2 (lambda y : S. lambda a : P_1 y. lambda b : P_2 y. b) : \
+                & wide Pi x : S. (Pi Q : S -> *. (Pi y : S. \
+                & wide quad (P_1 y -> P_2 y -> Q y)) -> Q x) -> P_2 x
+            $,
+            "Abst",
+        ),
+    )))
+    The three terms correspond to the three rules of conjunction in predicate logic.
+    $
+         M_I & equiv forall x in S, P_1(x) => P_2(x) => P_1(x) and P_2(x) \
+        pi_1 & equiv forall x in S, P_1(x) and P_2(x) => P_1(x) \
+        pi_2 & equiv forall x in S, P_1(x) and P_2(x) => P_2(x)
+    $
+]
