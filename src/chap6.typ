@@ -27,7 +27,7 @@
 #let mark(content) = text(content, fill: accent)
 
 // Scripts for correctly spacing juxtaposed applications
-#let operators = ($exists$.body, $lambda$.body, $forall$.body)
+#let operators = ($exists$.body, $lambda$.body, $forall$.body, $Pi$.body)
 #let isalpha(x) = x.match(regex("[A-Za-z]+")) != none
 #let set-symbol(x) = {
     if isalpha(x.text) {
@@ -466,4 +466,148 @@
     Converting into mathematical function notation,
     $ M(S,P,x) = not P(x) "where" S in "set", P subset.eq S, x in S $
     $M$ constructs the negation of a predicate $P$ over a set $S$ applied to $x$, an element of $S$. An inhabitant of $M$ would prove the negation.
+]
+
+// MARK: Q. 6.7 (a)
+#problem(source: "6.7 a")[
+    Given
+    $ Gamma equiv S : *, Q : S -> S -> * $
+    We define under $Gamma$ terms
+    $
+        M_1 equiv & lambda x,y : S. Pi R : S -> S -> *. ((Pi z : S. R z z) -> R x y) \
+        M_2 equiv & lambda x,y : S. Pi R : S -> S -> *. \
+                  & quad ((Pi u,v : S. (Q u v -> R u v)) -> R x y)
+    $
+    Give an inhabitant of $Pi a : S. M_1 a a$ and a shorthand derivation proving your answer.
+]
+#solution[
+    By $beta$-reduction
+    $
+                 & Pi a : S. M_1 a a \
+           equiv & Pi a : S. (lambda x,y : S. Pi R : S -> S -> *. ((Pi z : S. R z z) -> R x y)) a a \
+        ->>_beta & Pi a : S. Pi R : S -> S -> *. ((Pi z : S. R z z) -> R a a)
+    $
+    One such term
+    $ M equiv lambda a : S. lambda R : S -> S -> *. (lambda h : (Pi z : S. R z z). h a ) $
+    Is an inhabitant.
+    #proof(ded-nat(arr: (
+        (0, $S : *, Q : S -> S -> *$, ""),
+        (1, $a : S$, ""),
+        (2, $b : S$, ""),
+        (3, $c : S$, ""),
+        (4, $* : sort$, "Sort"),
+        (3, $S -> * : sort$, "1,5 Form"),
+        (2, $S -> S -> * : sort$, "1,6 Form"),
+        (2, $R : S -> S -> *$, ""),
+        (3, $z : S$, ""),
+        (4, $R z : S -> *$, "8,9 App"),
+        (4, $R z z : *$, "10,9 App"),
+        (3, $Pi z : S. R z z : *$, "1,11 Form"),
+        (3, $h : Pi z : S. R z z$, ""),
+        (4, $R a : S -> *$, "8,2 App"),
+        (4, $R a a : *$, "14,2 App"),
+        (4, $h a : R a a$, "13,2 App"),
+        (3, $Pi z : S. R z z -> R a a : *$, "12,15 Form"),
+        (3, $lambda h : Pi z : S. R z z. h a : (Pi z : S. R z z) -> R a a$, "16,17 Abst"),
+        (2, $Pi R : S -> S -> *.(Pi z : S. R z z) -> R a a : *$, "7,17 Form"),
+        (
+            2,
+            $
+                & lambda R : S -> S -> *.lambda h : Pi z : S. R z z. h a \
+                & quad : Pi R : S -> S -> *.(Pi z : S. R z z) -> R a a
+            $,
+            "18,19 Abst",
+        ),
+        (1, $Pi a : S. Pi R : S -> S -> *.(Pi z : S. R z z) -> R a a : *$, "1,19 Form"),
+        (
+            1,
+            $
+                & lambda a : S. lambda R : S -> S -> *.lambda h : Pi z : S. R z z. h a \
+                & quad : Pi a : S. Pi R : S -> S -> *.(Pi z : S. R z z) -> R a a
+            $,
+            "20,21 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 6.7 (b)
+#problem(source: "6.7 b")[
+    Under $Gamma$ of 6.7 a, give an inhabitant of $Pi a,b : S. (Q a b -> M_2 a b)$ and a shorthand derivation proving your answer.
+]
+#solution[
+    By $beta$-reduction
+    $
+                 & Pi a,b : S. (Q a b -> M_2 a b) \
+           equiv & Pi a,b : S. Q a b -> (lambda x,y : S. Pi R : S -> S -> *. \
+                 & quad (Pi u,v : S. (Q u v -> R u v)) -> R x y) a b \
+        ->>_beta & Pi a,b : S. Q a b -> (Pi R : S -> S -> *.
+                       Pi u, v: S. (Q u v -> R u v) -> R a b)
+    $
+    One such term
+    $
+        M equiv & lambda a,b : S. lambda h : Q a b. lambda R : S -> S -> *. lambda r : (Pi u,v : S. Q u v -> R u v). \
+                & quad r a b h
+    $
+    is an inhabitant.
+
+    _Note:_ this proof would be too long with all formation rules included. For now, legality of abstraction types is assumed. Since we are omitting many lines, line labels are also removed from rule labels.
+    #proof(ded-nat(arr: (
+        (0, $S : *, Q : S -> S -> *$, ""),
+        (1, $a : S$, ""),
+        (2, $b : S$, ""),
+        (3, $h : Q a b$, ""),
+        (4, $R : S -> S -> *$, ""),
+        (5, $r : Pi u,v : S. Q u v -> R u v$, ""),
+        (6, $r a : Pi v : S. Q a v -> R a v$, "App"),
+        (6, $r a b : Q a b -> R a b$, "App"),
+        (6, $r a b h : R a b$, "App"),
+        (
+            5,
+            $
+                & lambda r : Pi u,v : S. Q u v -> R u v. r a b h \
+                & quad : (Pi u,v : S. Q u v -> R u v) -> R a b
+            $,
+            "Abst",
+        ),
+        (
+            4,
+            $
+                & lambda R : S -> S -> *. \
+                & quad lambda r : Pi u,v : S. Q u v -> R u v. r a b h \
+                & quad quad : Pi R : S -> S -> *. \
+                & quad (Pi u,v : S. Q u v -> R u v) -> R a b
+            $,
+            "Abst",
+        ),
+        (
+            3,
+            $
+                & lambda h : Q a b. lambda R : S -> S -> *. \
+                & quad lambda r : Pi u,v : S. Q u v -> R u v. r a b h \
+                & quad quad : Q a b -> Pi R : S -> S -> *. \
+                & wide quad (Pi u,v : S. Q u v -> R u v) -> R a b
+            $,
+            "Abst",
+        ),
+        (
+            2,
+            $
+                & lambda b : S. lambda h : Q a b. lambda R : S -> S -> *. \
+                & quad lambda r : Pi u,v : S. Q u v -> R u v. r a b h \
+                & quad quad : Pi b : S.Q a b -> Pi R : S -> S -> *. \
+                & wide quad (Pi u,v : S. Q u v -> R u v) -> R a b
+            $,
+            "Abst",
+        ),
+        (
+            1,
+            $
+                & lambda a,b : S. lambda h : Q a b. lambda R : S -> S -> *. \
+                & quad lambda r : Pi u,v : S. Q u v -> R u v. r a b h \
+                & quad quad : Pi a,b : S.Q a b -> Pi R : S -> S -> *. \
+                & wide quad (Pi u,v : S. Q u v -> R u v) -> R a b
+            $,
+            "Abst",
+        ),
+    )))
 ]
