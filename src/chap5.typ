@@ -381,7 +381,7 @@
         (5, $a : A$, ""),
         (6, $x a : B$, "4,6 App"),
         (6, $y (x a) : C$, "5,7 App"),
-        (5, $lambda a : A. y (x z) : A -> C$, "8 Abst"),
+        (5, $lambda a : A. y (x a) : A -> C$, "8 Abst"),
         (4, $lambda y : B -> C. lambda a : A. y (x z) : (B -> C) -> A -> C$, "9 Abst"),
         (
             2,

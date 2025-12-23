@@ -334,7 +334,7 @@
                     ),
                     $Gamma, x : (alpha -> beta) -> alpha tack (x (lambda z : alpha. y)) : alpha$,
                 ),
-                $Gamma tack lambda x : ((alpha -> beta) -> alpha). x (lambda z : alpha. y) : ((alpha -> beta) -> beta) -> alpha$,
+                $Gamma tack lambda x : ((alpha -> beta) -> alpha). x (lambda z : alpha. y) : ((alpha -> beta) -> alpha) -> alpha$,
             ),
         )
         A valid type could be given to the term. Therefore, the term is typable under an existing context.
@@ -349,7 +349,7 @@
         (1, $x (lambda z: alpha. y) : beta$, "5,4 T-App"),
         (
             0,
-            $ lambda x : ((alpha -> beta) -> beta). x (lambda z: alpha. y) \ : (alpha -> beta) -> beta -> alpha $,
+            $ lambda x : ((alpha -> beta) -> beta). x (lambda z: alpha. y) \ : (alpha -> beta) -> alpha -> alpha $,
             "6 T-Abst",
         ),
     ))
@@ -462,48 +462,51 @@
 
 // MARK: Q. 2.8 (b)
 #problem(source: "2.8 b")[Give a derivation in tree format]
-#solution(move(prooftree(
-    rule(
-        name: "T-Abst",
-        label: "(viii)",
+#solution(move(
+    prooftree(
         rule(
             name: "T-Abst",
-            label: "(vii)",
+            label: "(viii)",
             rule(
-                name: "T-App",
-                label: "(vi)",
+                name: "T-Abst",
+                label: "(vii)",
                 rule(
-                    label: "(v)",
-                    $y : ((gamma -> beta) -> beta)$,
-                ),
-                rule(
-                    name: "T-Abst",
-                    label: "(iv)",
+                    name: "T-App",
+                    label: "(vi)",
                     rule(
-                        name: "T-App",
-                        label: "(iii)",
-                        rule(
-                            label: "(i)",
-                            $x : (gamma -> beta)$,
-                        ),
-                        rule(
-                            label: "(ii)",
-                            $y : (gamma -> beta) -> beta$,
-                        ),
-                        $x : (gamma -> beta), y : ((gamma -> beta) -> beta), z : gamma tack y x : beta$,
+                        label: "(v)",
+                        $y : ((gamma -> beta) -> beta)$,
                     ),
-                    $x : (gamma -> beta), y : ((gamma -> beta) -> beta)tack lambda z : gamma . y x : gamma -> beta$,
+                    rule(
+                        name: "T-Abst",
+                        label: "(iv)",
+                        rule(
+                            name: "T-App",
+                            label: "(iii)",
+                            rule(
+                                label: "(i)",
+                                $x : (gamma -> beta)$,
+                            ),
+                            rule(
+                                label: "(ii)",
+                                $y : (gamma -> beta) -> beta$,
+                            ),
+                            $x : (gamma -> beta), y : ((gamma -> beta) -> beta), z : gamma tack y x : beta$,
+                        ),
+                        $x : (gamma -> beta), y : ((gamma -> beta) -> beta)tack lambda z : gamma . y x : gamma -> beta$,
+                    ),
+                    $x : (gamma -> beta), y : ((gamma -> beta) -> beta) tack y(lambda z. gamma. y x) : beta$,
                 ),
-                $x : (gamma -> beta), y : ((gamma -> beta) -> beta) tack y(lambda z. gamma. y x) : beta$,
+                $x : (gamma -> beta) tack lambda y : ((gamma -> beta) -> beta). y(lambda z : gamma. y x) : ((gamma -> beta) -> beta) -> beta$,
             ),
-            $x : (gamma -> beta) tack lambda y : ((gamma -> beta) -> beta). y(lambda z : gamma. y x) : ((gamma -> beta) -> beta) -> beta$,
+            $
+                (lambda x : (gamma -> beta) . y : ((gamma -> beta) -> beta). y (lambda z: gamma. y x))
+                : (gamma -> beta) -> ((gamma -> beta) -> beta) -> beta
+            $,
         ),
-        $
-            (lambda x : (gamma -> beta) . y : ((gamma -> beta) -> beta). y (lambda z: gamma. y x))
-            : (gamma -> beta) -> ((gamma -> beta) -> beta) -> beta
-        $,
     ),
-), dx: -30pt))
+    dx: -30pt,
+))
 
 // MARK: Q. 2.8 (c)
 #problem(source: "2.8 c")[Sketch a diagram of tree structure of derivation]

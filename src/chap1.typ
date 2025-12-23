@@ -103,10 +103,10 @@
     $
         "Sub" & U = \
               & {(lambda z. z x z) ((lambda y. x y) x), (lambda z. z x z), ((lambda y. x y) x)} union \
-              & {(lambda y. x y), (y), (lambda z. x z), (x)} union \
-              & {(lambda y. x), (y)} union {(lambda z. x), (z)} union {(y), (x)} \
-            = & {(lambda z. z x z) (lambda y . x y) x, (lambda z. z x z), (lambda y . x y) x , \
-               & (lambda y . x y), (lambda z . x z), (lambda y. x), (lambda z . x), y, x}
+              & {(lambda y. x y), z x z, z x, x y} union \
+              & {z, x, y} \
+            = & {(lambda z. z x z) ((lambda y . x y) x), (lambda z. z x z), ((lambda y . x y) x), \
+               & (lambda y . x y), z x z, z x, x y, z, x, y}
     $
 ]
 
@@ -312,8 +312,9 @@
         $
         $
             not_lambda (not_lambda bot_lambda) & = not_lambda ((lambda a. a bot_lambda top_lambda) (lambda x y. y)) \
-                                               & ->>_beta not_lambda ((lambda x y. x) bot_lambda top_lambda) \
-                                               & ->>_beta (lambda a. a bot_lambda top_lambda) top_lambda \
+                                               & ->>_beta not_lambda ((lambda x y. y) bot_lambda top_lambda) \
+                                               & ->>_beta not_lambda top_lambda \
+                                               & ->>_beta (lambda a. a bot_lambda top_lambda) (lambda x y. x) \
                                                & ->>_beta (lambda x y. x) bot_lambda top_lambda \
                                                & ->>_beta bot_lambda
         $
