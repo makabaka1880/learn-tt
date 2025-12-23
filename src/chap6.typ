@@ -611,3 +611,71 @@
         ),
     )))
 ]
+
+// MARK: Q. 6.8 (a)
+#problem(source: "6.8 a")[
+    Let $Gamma equiv S : *, P : S -> *$. Find an inhabitant of
+    $
+        N equiv & [Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha)] -> \
+                & quad [Pi x : S. (P x -> bot)] -> bot
+    $
+    Under $Gamma$ by means of a shortened derivation.
+]
+#solution[
+    One such term
+    $
+        M equiv & lambda a : Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha) \
+                & quad lambda b : Pi x :S. (P x -> bot). \
+                & quad quad a bot b
+    $
+    is an inhabitant.
+    #proof(ded-nat(arr: (
+        (0, $S : *, P : S -> *$, ""),
+        (1, $a : Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha)$, ""),
+        (2, $b : Pi x : S. (P x -> bot)$, ""),
+        (3, $a bot : (Pi x : S. P x -> bot) -> bot$, "App"),
+        (3, $a bot b : bot$, "App"),
+        (2, $lambda b : Pi x : S. (P x -> bot). a bot b : [Pi x : S. (P x -> bot)] -> bot$, "Abst"),
+        (
+            1,
+            $
+                & lambda a : Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha) \
+                & quad lambda b : Pi x : S. (P x -> bot). a bot b : \
+                & wide [Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha)] -> \
+                & wide quad [Pi x : S. (P x -> bot)] -> bot
+            $,
+            "Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 6.8 (b)
+#problem(source: "6.8 b")[
+    What is the smallest system in the $lambda$-cube in which the derivation in 6.8 a may be executed?
+]
+#solution[
+    #table(
+        columns: (.7fr, .2fr),
+        stroke: gray.lighten(80%),
+        [*Abstraction*], [*$(s_1, s_2)$*],
+        $S -> *$, $(*, sort)$,
+        $P x -> alpha$, $(*, *)$,
+        $Pi x : S. (P x -> alpha)$, $(*, *)$,
+        $(Pi x : S. (P x -> alpha)) -> alpha$, $(*, *)$,
+        $Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha)$, $(sort, *)$,
+        $P x -> bot$, $(*, *)$,
+        $Pi x : S. (P x -> bot)$, $(*, *)$,
+        $[Pi x : S. (P x -> bot)] -> bot$, $(*, *)$,
+        $N$, $(*, *)$,
+        $bot equiv Pi alpha : *. alpha$, $(sort, *)$,
+    )
+    The derivation contains $(*, *)$ -- $lambda ->$ pairs, $(*, sort)$ -- $lambda P$ pairs, and $(sort, *)$ -- $lambda 2$ pairs. Therefore the minimal system in which the derivation may be executed is $lambda "P2"$.
+]
+
+// MARK: Q. 6.8 (c)
+#problem(source: "6.8 c")[
+    The expression $Pi alpha : *.(Pi x :S. (P x -> alpha)) -> alpha$ maybe consider as an encoding of $exists x in S, P(x)$ under the PAT paradigm. With $A -> bot equiv not A$ in mind, how can we interpret the content of the expression $N$?
+]
+#solution[
+    $ N equiv (exists x in S, P(x)) => not (forall x in S, not P(x)) $
+]
