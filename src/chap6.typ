@@ -1069,3 +1069,7 @@
         Therefore $"FV" A_i subset.eq {x_1, ..., x_(i-1)} subset.eq {x_j : 1 <= j <= n}$.
     ]
 ]
+
+---
+
+Completed Dec 24 1:36 am.
