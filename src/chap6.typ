@@ -57,6 +57,7 @@
             rule(
                 name: "Var",
                 $Gamma tack A : s$,
+                $x in.not "dom" Gamma$,
                 $Gamma, x : A tack x : A$,
             ),
         ),
@@ -930,4 +931,141 @@
         pi_1 & equiv forall x in S, P_1(x) and P_2(x) => P_1(x) \
         pi_2 & equiv forall x in S, P_1(x) and P_2(x) => P_2(x)
     $
+]
+
+// MARK: Q. 6.11 (a)
+#problem(source: "6.11 a")[
+    Let $Gamma equiv x_1 : A_1, ... x_n : A_n$ in be a well-formed context in $lambda C$. Prove $x_1, ..., x_n$ distinct.
+]
+#solution[
+    We prove by induction over $n$.
+    #proof(prompt: "Base Case")[
+        When $n = 1$, only one variable $x_1$ exists, which is trivially distinct.
+    ]
+    #proof(prompt: "Inductive Step")[
+        Assume $x_1, ..., x_n$ are distinct. We show $x_(n+1)$ is distinct from all of them. By the Var rule:
+        #align(center, prooftree(rule(
+            name: "Var",
+            rule(
+                $...$,
+                $x_1 : A_1, ..., x_n : A_n tack A_(n + 1) : s$,
+            ),
+            $x_(n + 1) in.not {x_1, x_2, ..., x_n }$,
+            $x_1 : A_1, ..., x_n : A_n, x_(n + 1) : A_(n + 1) tack x_(n + 1) : A_(n + 1)$,
+        )))
+        The side condition of the Var rule requires $x_(n + 1) in.not "dom"(Gamma)$, i.e., $x_(n + 1) in.not {x_1, ..., x_n}$. Thus $x_1, ..., x_(n+1)$ are distinct.
+    ]
+    By the principle of mathematical induction, $x_1, ..., x_n$ are distinct for any $n$.
+]
+
+// MARK: Q. 6.11 (b)
+#problem(source: "6.11 b")[
+    Prove the Free Variables Lemma for $lambda C$.
+]
+#solution[
+    #lemma[
+        _Free Variables Lemma_.
+        If $Gamma tack A : B$, then $"FV" A union "FV" B subset.eq "dom" Gamma$.
+    ]
+    We prove by structural induction over the inference rule that derived $Gamma tack A : B$.
+    #proof(prompt: "Base Case - Sort Axiom")[
+        $"FV" * union "FV" sort = emptyset subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "Var Rule")[
+        Then there exists $Gamma'$ and variable $x$ s.t. $Gamma', x : B equiv Gamma$. Therefore $"dom" Gamma' subset.eq "dom" Gamma$. The inference rule is
+        #align(center, prooftree(rule(
+            $Gamma' tack B : s$,
+            $x in.not "dom" Gamma'$,
+            $Gamma', x : B tack x : B$,
+        )))
+        By the inductive hypothesis on the first premise, $"FV" B subset.eq "dom" Gamma'$, thus $"FV" B subset.eq "dom" Gamma$ since $"dom" Gamma' subset.eq "dom" Gamma$. Since $A equiv x$ and $x in "dom" Gamma$ by construction, we have $"FV" A = {x} subset.eq "dom" Gamma$. Therefore $"FV" A union "FV" B subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "Weak Rule")[
+        Then there exists $Gamma'$ s.t. $Gamma', x : C equiv Gamma$ for some $C$ legal under $Gamma'$. The rule is
+        #align(center, prooftree(rule(
+            $Gamma' tack A : B$,
+            $Gamma' tack C : s$,
+            $Gamma', x : C tack A : B$,
+        )))
+        By the inductive hypothesis, $"FV" A union "FV" B subset.eq "dom" Gamma'$. Since $"dom" Gamma' subset.eq "dom" Gamma$, we have $"FV" A union "FV" B subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "Form Rule")[
+        Then $A equiv Pi x : C. D$ and $B equiv s_2$ for some sort $s_2$. The rule is
+        #align(center, prooftree(rule(
+            $Gamma tack C : s_1$,
+            $Gamma, x : C tack D : s_2$,
+            $Gamma tack Pi x : C. D : s_2$,
+        )))
+        Since $B$ is a sort, $"FV" B = emptyset$. By the definition of FV, $"FV" A = "FV" C union ("FV" D \\ {x})$.
+
+        By the inductive hypothesis on the first premise, $"FV" C subset.eq "dom" Gamma$. By the inductive hypothesis on the second premise, $"FV" D subset.eq "dom" (Gamma, x : C) = "dom" Gamma union {x}$. Thus $"FV" D \\ {x} subset.eq "dom" Gamma$.
+
+        Therefore $"FV" A = "FV" C union ("FV" D \\ {x}) subset.eq "dom" Gamma$, and $"FV" A union "FV" B subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "App Rule")[
+        Then $A equiv M N$ and $B equiv D[x := N]$. The rule is
+        #align(center, prooftree(rule(
+            $Gamma tack M : Pi x : C. D$,
+            $Gamma tack N : C$,
+            $Gamma tack M N : D[x := N]$,
+        )))
+        By definition, $"FV" A = "FV" M union "FV" N$ and $"FV" B = "FV" D[x := N] subset.eq ("FV" D \\ {x}) union "FV" N$.
+
+        By the inductive hypothesis on the first premise, $"FV" M union "FV" (Pi x : C. D) subset.eq "dom" Gamma$. Since $"FV" (Pi x : C. D) = "FV" C union ("FV" D \\ {x})$, we have $"FV" D \\ {x} subset.eq "dom" Gamma$.
+
+        By the inductive hypothesis on the second premise, $"FV" N subset.eq "dom" Gamma$.
+
+        Therefore $"FV" A union "FV" B subset.eq "FV" M union "FV" N union ("FV" D \\ {x}) subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "Abst Rule")[
+        Then $A equiv lambda x : C. M$ and $B equiv Pi x : C. D$. The rule is
+        #align(center, prooftree(rule(
+            $Gamma, x : C tack M : D$,
+            $Gamma tack Pi x : C. D : s$,
+            $Gamma tack lambda x : C. M : Pi x : C. D$,
+        )))
+        By definition, $"FV" A = "FV" C union ("FV" M \\ {x})$ and $"FV" B = "FV" C union ("FV" D \\ {x})$.
+
+        By the inductive hypothesis on the first premise, $"FV" M union "FV" D subset.eq "dom" (Gamma, x : C) = "dom" Gamma union {x}$. Thus $"FV" M \\ {x} subset.eq "dom" Gamma$ and $"FV" D \\ {x} subset.eq "dom" Gamma$.
+
+        By the inductive hypothesis on the second premise, $"FV" (Pi x : C. D) subset.eq "dom" Gamma$, so $"FV" C subset.eq "dom" Gamma$.
+
+        Therefore $"FV" A union "FV" B = "FV" C union ("FV" M \\ {x}) union ("FV" D \\ {x}) subset.eq "dom" Gamma$.
+    ]
+    #proof(prompt: "Conv Rule")[
+        Then $B =_beta B'$ for some $B'$. The rule is
+        #align(center, prooftree(rule(
+            $Gamma tack A : B'$,
+            $Gamma tack B : s$,
+            $B =_beta B'$,
+            $Gamma tack A : B$,
+        )))
+        By the inductive hypothesis on the first premise, $"FV" A subset.eq "dom" Gamma$. By the inductive hypothesis on the second premise, $"FV" B subset.eq "dom" Gamma$. Therefore $"FV" A union "FV" B subset.eq "dom" Gamma$.
+    ]
+    By the principle of structural induction, for any derivation of $Gamma tack A : B$, we have $"FV" A union "FV" B subset.eq "dom" Gamma$.
+]
+
+// MARK: Q. 6.11 (c)
+#problem(source: "6.11 c")[
+    Take $Gamma equiv x_1 : A_1 , ..., x_n : A_n$ from 6.11 a. Prove
+    $ forall i < n, "FV" A_i subset.eq {x_j : 1 <= j <= n} $
+]
+#solution[
+    We first need a lemma $ "dom" Gamma = {x_i : 1 <= i <= n} $
+    Proof by induction on $n$.
+    #proof(prompt: "Base Case")[Only declaration in $Gamma$, trivial.]
+    #proof(prompt: "Inductive Step")[
+        We assume a $Gamma' equiv Gamma, x_(n + 1) : A_(n + 1)$. Then
+        $
+            "dom" Gamma' & equiv "dom" Gamma union {x_(n + 1)} \
+                         & equiv {x_1, ..., x_n} union {x_(n + 1)} & equiv {x_i : 1 <= i <= n + 1}
+        $
+    ]
+    #proof(prompt: "Main Proof")[
+        Let $Gamma' equiv x_1 : A_1, ..., x_(i-1) : A_(i-1)$ be the prefix of $Gamma$ before the $i$-th declaration. By the Var rule, for $x_i : A_i$ to extend $Gamma'$, we require $Gamma' tack A_i : s$ for some sort $s$.
+
+        By the Free Variables Lemma (6.11 b), $"FV" A_i subset.eq "dom" Gamma'$. By the lemma above, $"dom" Gamma' = {x_1, ..., x_(i-1)}$.
+
+        Therefore $"FV" A_i subset.eq {x_1, ..., x_(i-1)} subset.eq {x_j : 1 <= j <= n}$.
+    ]
 ]
