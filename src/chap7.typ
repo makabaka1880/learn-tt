@@ -435,3 +435,35 @@
         ),
     )))
 ]
+
+// MARK: Q. 7.4
+#problem(source: "7.4")[
+    Derive *$and$-EL* and *$and$-ER* in $lambda C$.
+]
+#solution[
+    The derivation is the same as proving
+    $
+        M : Pi C. (A -> B -> C) -> C tack N_1 : A \
+        M : Pi C. (A -> B -> C) -> C tack N_2 : B
+    $
+    #proof(prompt: "Left Projection", ded-nat(arr: (
+        (0, $M : Pi C. (A -> B -> C) -> C$, ""),
+        (1, $M A : (A -> B -> A) -> A$, ""),
+        (1, $x : A$, ""),
+        (2, $b : B$, ""),
+        (3, $x : A$, "Weak"),
+        (2, $lambda b : B. x : B -> A$, "5 Abst"),
+        (1, $lambda x : A. lambda b : B. x : A -> B -> A$, "6 Abst"),
+        (1, $N_1 equiv M A (lambda x : A. lambda b : B. x) : A$, "2,7 App"),
+    )))
+    #proof(prompt: "Right Projection", ded-nat(arr: (
+        (0, $M : Pi C. (A -> B -> C) -> C$, ""),
+        (1, $M B : (A -> B -> B) -> B$, ""),
+        (1, $x : A$, ""),
+        (2, $b : B$, ""),
+        (3, $b : B$, "Weak"),
+        (2, $lambda b : B. b : B -> B$, "5 Abst"),
+        (1, $lambda x : A. lambda b : B. b : A -> B -> B$, "6 Abst"),
+        (1, $N_2 equiv M B (lambda x : A. lambda b : B. b) : B$, "2,7 App"),
+    )))
+]
