@@ -325,3 +325,113 @@
         ))
     ]
 ]
+
+// MARK: Q. 7.3 (a)
+#problem(source: "7.3 a")[
+    Prove the following tautology in classical logic using $lambda C$
+    $ (A => B) => (not B => not A) $
+]
+#solution[
+    Assume context $Gamma equiv A : *, B : *$. It suffices the proof to find an inhabitant of type $ (A -> B) -> (not B -> not A) $
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *$, ""),
+        (1, $h : A -> B$, ""),
+        (2, $b : not B$, ""),
+        (3, $a : A$, ""),
+        (4, $h a : B$, "5,2 App"),
+        (4, $b (h a) : bot$, "6,3 App (Contradiction)"),
+        (4, $b (h a) (not A) : not A$, "7,5 App (Ex Falso)"),
+        (3, $lambda a : A. b (h a) (not A) : A -> not A$, "7 Abst"),
+        (3, $a : not A$, ""),
+        (4, $a : not A$, "Var"),
+        (3, $lambda a: not A. a : (not A -> not A)$, "10 Abst"),
+        (3, $"ET" A : A or not A$, "App (Axiom ET)"),
+        (
+            3,
+            $
+                & "ET" A (not A) : (A -> not A) -> \
+                & quad (not A -> not A) -> not A
+            $,
+            "12 App",
+        ),
+        (
+            3,
+            $
+                & "ET" A (not A) (lambda a : A. b (h a) (not A)) : \
+                & quad (not A -> not A) -> not A
+            $,
+            "13,8 App",
+        ),
+        (
+            3,
+            $
+                & "ET" A (not A) \
+                & quad (lambda a : A. b (h a) (not A)) \
+                & quad (lambda a : not A . a ) : not A
+            $,
+            "14,11 App",
+        ),
+        (
+            2,
+            $
+                & lambda b : not B. "ET" A (not A) \
+                & quad (lambda a : A. b (h a) (not A)) \
+                & quad (lambda a : not A . a ) : not B -> not A
+            $,
+            "15 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : A -> B. lambda b : not B. "ET" A (not A) \
+                & quad (lambda a : A. b (h a) (not A)) \
+                & quad (lambda a : not A . a ) : \
+                & wide (A -> B) -> not B -> not A
+            $,
+            "16 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 7.3 (b)
+#problem(source: "7.3 b")[
+    Prove the following tautology in classical logic using $lambda C$
+    $ (not B => not A) => (A => B) $
+]
+#solution[
+    Assume context $Gamma equiv A : *, B : *$. It suffices the proof to find an inhabitant of type $ (not B -> not A) -> A -> B $
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *$, ""),
+        (1, $h : not B -> not A$, ""),
+        (2, $a : A$, ""),
+        (3, $b : B$, ""),
+        (4, $b : B$, "Weak"),
+        (3, $lambda b : B. b : B -> B$, ""),
+        (3, $b : not B$, ""),
+        (4, $h b : not A$, "2,7 App"),
+        (4, $h b a : bot$, "8,2 App (Neg Elim)"),
+        (4, $h b a B : B$, "9 App (Ex Falso)"),
+        (3, $lambda b : not B. h b a B : not B -> B$, "10 Abst"),
+        (3, $"ET" B : B or not B$, "1 App (Axiom ET)"),
+        (3, $"ET" B B : (B -> B) -> (not B -> B) -> B$, "12,1 App"),
+        (3, $"ET" B B (lambda b : B. b) : (not B -> B) -> B$, "13,6 App"),
+        (3, $"ET" B B (lambda b : B. b) (lambda b : not B. h b a B ) : B$, "14,11 App"),
+        (
+            2,
+            $
+                & lambda a : A."ET" B B (lambda b : B. b) \
+                & quad (lambda b : not B. h b a B) : A -> B
+            $,
+            "15 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : not B -> not A. lambda a : A. \
+                & quad "ET" B B (lambda b : B. b) (lambda b : not B. h b a B) \
+                & wide : (not B -> not A) -> A -> B
+            $,
+            "16 Abst",
+        ),
+    )))
+]
