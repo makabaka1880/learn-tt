@@ -19,7 +19,7 @@
     title: "Exercises",
     subtitle: "Chapter 7",
     authors: (
-        (name: "Sean Li", affiliation: "Reducted"),
+        (name: "Sean Li", affiliation: "Redacted"),
     ),
     accent: accent,
 );

@@ -15,7 +15,7 @@
     title: "Excercises",
     subtitle: "Chapter 1",
     authors: (
-        (name: "Sean Li", affiliation: "Reducted"),
+        (name: "Sean Li", affiliation: "Redacted"),
     ),
     accent: accent,
 );

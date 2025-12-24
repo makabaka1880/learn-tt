@@ -7,7 +7,7 @@
     title: "Excercises",
     subtitle: "Chapter 2",
     authors: (
-        (name: "Makabaka1880", affiliation: "Reducted for privacy"),
+        (name: "Makabaka1880", affiliation: "Redacted for privacy"),
     ),
     accent: accent, // Note that the accent color defaults to (50, 150, 150) if not set.
 );
