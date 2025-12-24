@@ -131,6 +131,14 @@
             $forall x in S, P(x)$,
             $P(a)$,
         )),
+        prooftree(rule(
+            name: "DN (Classical)",
+            $not not A => A$,
+        )),
+        prooftree(rule(
+            name: "ET (Classical)",
+            $A or not A$,
+        )),
     ))
 ]
 
@@ -260,8 +268,8 @@
         (3, $B$, ""),
         (2, $A => B$, [3,4 $=>$I]),
         (2, $bot$, [5,1 $bot$I]),
-        (2, $not B$, [6 $bot$E]),
-        (1, $not (A => B) => not B$, [1,7 $=>$I]),
+        (1, $not B$, [6 $not$I]),
+        (0, $not (A => B) => not B$, [1,7 $=>$I]),
     )))
     #proof(prompt: $lambda C$)[
         Assuming context $Gamma equiv A : *, B : *$. The proof should be equivalent to an inhabitant of $((A -> B) -> bot) -> B -> bot$.
@@ -269,7 +277,7 @@
             (0, $n : not (A -> B)$, ""),
             (1, $b : B$, ""),
             (2, $a : A$, ""),
-            (3, $b : A$, "Weak"),
+            (3, $b : B$, "Weak"),
             (2, $lambda a : A. b : A -> B$, "4 Abst"),
             (2, $n (lambda a : A. b) : bot$, "1,5 App (Neg Elim)"),
             (1, $lambda b : B. n (lambda a : A. b) : not B$, "6 Abst (Neg Intro)"),
@@ -280,6 +288,39 @@
                     & quad : not (A -> B) -> not B
                 $,
                 "7 Abst",
+            ),
+        ))
+    ]
+]
+
+// MARK: Q. 7.2
+#problem(source: "7.2")[
+    Formulate the double negation law as an axiom in $lambda C$, and prove the following tautology in $lambda C$ with DN.
+    $ (not A => A) => A $
+]
+#solution[
+    The rule
+    #align(center, prooftree(rule(name: "DN-E", $not not A => A$)))
+    Could be translated into lambda calculus as
+    $ Pi A : *. ((A -> bot) -> bot) -> A $
+    #proof[
+        Assume context $Gamma equiv A : *.$
+        #ded-nat(arr: (
+            (0, $A : *$, ""),
+            (1, $h : not A -> A$, ""),
+            (2, $x : not A$, ""),
+            (3, $h x : A$, "2,3 App"),
+            (3, $x (h x) : bot$, "3,4 App (Contradiction)"),
+            (2, $lambda x : not A. x (h x) : not not A$, "5 Abst (Neg Intro)"),
+            (2, $"DN" A : not not A -> A$, "1,1 App"),
+            (2, $"DN" A (lambda x : not A. x (h x)) : A$, "App (Axiom DN)"),
+            (
+                1,
+                $
+                    & lambda h : not A -> A. "DN" A (lambda x : not A. x (h x)) \
+                    & quad : (not A -> A) -> A
+                $,
+                "8 Abst",
             ),
         ))
     ]
