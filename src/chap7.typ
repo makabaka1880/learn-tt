@@ -724,3 +724,64 @@
         (1, $lambda h : A and not A. h bot (lambda a : A. lambda n : not A. n a) : A and not A -> bot$, "9 Abst"),
     )))
 ]
+
+// MARK: Q. 7.7
+#problem(source: "7.7")[
+    Derive *$or$-IL* and *$or$-IR*.
+]
+
+#solution[
+    The derivation is the same as proving
+    $ m : A, B : * tack N : Pi C. (A -> C) -> (B -> C) -> C $
+    $ m : B, A : * tack N : Pi C. (A -> C) -> (B -> C) -> C $
+    #let hl = $italic("hl")$
+    #let hr = $italic("hr")$
+    #proof(prompt: "Left Introduction", ded-nat(arr: (
+        (0, $m : A, B : *$, ""),
+        (1, $C : *$, ""),
+        (2, $hl : A -> C$, ""),
+        (3, $hr : B -> C$, ""),
+        (4, $hl m : C$, "3,1 App"),
+        (3, $lambda hr : B -> C. hl m : (B -> C) -> C$, "5 Abst"),
+        (
+            2,
+            $
+                & lambda hl : A -> C. lambda hr : B -> C. hl m \
+                & quad : (A -> C) -> (B -> C) -> C
+            $,
+            "6 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda C : *. lambda hl : A -> C. lambda hr : B -> C. hl m \
+                & quad : Pi C : *. (A -> C) -> (B -> C) -> C
+            $,
+            "7 Abst",
+        ),
+    )))
+    #proof(prompt: "Right Introduction", ded-nat(arr: (
+        (0, $m : B, A : *$, ""),
+        (1, $C : *$, ""),
+        (2, $hl : A -> C$, ""),
+        (3, $hr : B -> C$, ""),
+        (4, $hr m : C$, "4,1 App"),
+        (3, $lambda hr : B -> C. hr m : (B -> C) -> C$, "5 Abst"),
+        (
+            2,
+            $
+                & lambda hl : A -> C. lambda hr : B -> C. hr m \
+                & quad : (A -> C) -> (B -> C) -> C
+            $,
+            "6 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda C : *. lambda hl : A -> C. lambda hr : B -> C. hr m \
+                & quad : Pi C : *. (A -> C) -> (B -> C) -> C
+            $,
+            "7 Abst",
+        ),
+    )))
+]
