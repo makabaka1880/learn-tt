@@ -650,3 +650,77 @@
         ),
     )))
 ]
+
+// MARK: Q. 7.6 (a)
+#problem(source: "7.6 a")[
+    Verify that the following expressions is a tautology in constructive logic
+    $
+        not A => not (A and B)
+    $
+]
+#solution[
+    Suppose context $A : *, B : *$. The proof suffices to give a inhabitant of type
+    $
+        not A -> not (A and B) equiv
+        (A -> bot) -> (Pi C : *. (A -> B -> C) -> C) -> bot
+    $
+    #let na = $italic("na")$
+    #let ha = $italic("ha")$
+    #let hb = $italic("hb")$
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *$, ""),
+        (1, $na : not A$, ""),
+        (2, $h : Pi C : *. (A -> B -> C) -> C$, ""),
+        (3, $h A : (A -> B -> A) -> A$, "3,1 App"),
+        (3, $ha : A$, ""),
+        (4, $hb : B$, ""),
+        (5, $ha : A$, ""),
+        (4, $lambda hb : B. ha : B -> A$, "7 Abst"),
+        (3, $lambda ha : A. lambda hb : B. ha : A -> B -> A$, "8 Abst"),
+        (3, $h A (lambda ha : A. lambda hb : B. ha) : A$, "4,9 App"),
+        (3, $na (h A (lambda ha : A. lambda hb : B. ha)) : bot$, "2,10 App (Contradiction)"),
+        (
+            2,
+            $
+                & lambda h : A and B. \
+                & quad na (h A (lambda ha : A. lambda hb : B. ha)) \
+                & wide : A and B -> bot
+            $,
+            "11 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda na : not A. lambda h : A and B. \
+                & quad na (h A (lambda ha : A. lambda hb : B. ha)) \
+                & wide : not A -> not (A and B)
+            $,
+            "12 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 7.6 (b)
+#problem(source: "7.6 b")[
+    Verify that the following expressions is a tautology in constructive logic
+    $
+        not (A and not A)
+    $
+]
+#solution[
+    Suppose context $A : *, B : *$. The proof suffices to give a inhabitant of type
+    $ (Pi S : *. (A -> (A -> bot) -> S) -> S) -> bot $
+
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *, bot : sort$, ""),
+        (1, $h : Pi S : *. (A -> not A -> S) -> S$, ""),
+        (2, $h bot : (A -> not A -> bot) -> bot$, "2,1 App"),
+        (2, $a : A$, ""),
+        (3, $n : not A$, ""),
+        (4, $n a : bot$, "5,4 App"),
+        (3, $lambda n : not A. n a : not A -> bot$, "6 Abst"),
+        (2, $lambda a : A. lambda n : not A. n a : A -> not A -> bot$, "7 Abst"),
+        (2, $h bot (lambda a : A. lambda n : not A. n a) : bot$, "3,8 App"),
+        (1, $lambda h : A and not A. h bot (lambda a : A. lambda n : not A. n a) : A and not A -> bot$, "9 Abst"),
+    )))
+]
