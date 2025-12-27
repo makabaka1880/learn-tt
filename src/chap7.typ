@@ -467,3 +467,186 @@
         (1, $N_2 equiv M B (lambda x : A. lambda b : B. b) : B$, "2,7 App"),
     )))
 ]
+
+// MARK: Q. 7.5 (a)
+#problem(source: "7.5 a")[
+    Prove tautology under classical logic $ not (A => B) => A $
+]
+
+#solution[
+    Assume context $Gamma equiv A : *, B : *$. Therefore the proof suffices to find an inhabitant of $ ((A -> B) -> bot) -> A $
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *$, ""),
+        (1, $h : not (A -> B)$, ""),
+        (2, $a : A$, ""),
+        (3, $a : A$, "Weak"),
+        (2, $lambda a : A. a : A -> A$, "4 Abst"),
+        (2, $a : not A$, ""),
+        (3, $n : A$, ""),
+        (4, $a n : bot$, "6,7 App (Contradiction)"),
+        (4, $a n B : B$, "8 App (Ex Falso)"),
+        (3, $lambda n : A. a n B : A -> B$, "9 Abst"),
+        (3, $h (lambda n : A. a n B) : bot$, "10,2 App (Contra.)"),
+        (3, $h (lambda n : A. a n B) A : A$, "11 App (Ex Falso)"),
+        (
+            2,
+            $
+                & lambda a : not A. h (lambda n : A. a n B) A \
+                & quad : not A -> A
+            $,
+            "12 Abst",
+        ),
+        (2, $"ET" : Pi S : *. S or not S$, "Axiom ET"),
+        (2, $"ET" A : A or not A$, "14,1 App"),
+        (2, $"ET" A A : (A -> A) -> (not A -> A) -> A$, "15,1 App"),
+        (
+            2,
+            $
+                & "ET" A A (lambda a : A. a) \
+                & quad : (not A -> A) -> A
+            $,
+            "16,5 App",
+        ),
+        (
+            2,
+            $
+                & "ET" A A (lambda a : A. a) \
+                & quad (lambda a : not A. h (lambda n : A. a n B) A) : A
+            $,
+            "17,13 App",
+        ),
+        (
+            1,
+            $
+                & lambda h : not (A -> B). "ET" A A (lambda a : A. a) \
+                & quad (lambda a : not A. h (lambda n : A. a n B) A) \
+                & wide : not (A -> B) -> A
+            $,
+            "18 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 7.5 (b)
+#problem(source: "7.5 b")[
+    Prove tautology under classical logic
+    $ not (A => B) => (A and not B) $
+]
+#solution[
+    Assume context $Gamma equiv A : *, B : *$. Therefore the proof suffices to find an inhabitant of
+    $ ((A -> B) -> bot) -> Pi C: *. ((A -> (B -> bot) -> C) -> C) $
+    #let ha = $italic("ha")$
+    #let hb = $italic("hb")$
+    #let hc = $italic("hc")$
+    #let hna = $italic("hna")$
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *$, ""),
+        (1, $p : not (A -> B)$, ""),
+        (2, $C : *$, ""),
+        (3, $h : A -> not B -> C$, ""),
+        (4, $hb : B$, ""),
+        (5, $ha : A$, ""),
+        (6, $hb : B$, "Weak"),
+        (5, $lambda ha : A. hb : A -> B$, "7 Abst"),
+        (5, $p (lambda ha : A. hb) : bot$, "2,8 App (Contra.)"),
+        (4, $lambda hb : B. p (lambda ha : A. hb) : not B$, "9 Abst (Neg Intro)"),
+        (4, $hna : not A$, ""),
+        (5, $ha' : A$, ""),
+        (6, $hna ha' : bot$, "11,12 App (Contra.)"),
+        (6, $hna ha' B : B$, "13,1 App (Ex Falso)"),
+        (5, $lambda ha' : A. hna ha' B : A -> B$, "14 Abst"),
+        (5, $p (lambda ha' : A. hna ha' B) : bot$, "2,15 App (Contra.)"),
+        (5, $p (lambda ha' : A. hna ha' B) A : A$, "2,15 App (Contra.)"),
+        (
+            4,
+            $
+                & lambda hna : not A. p \
+                & quad (lambda ha' : A. hna ha' B) A \
+                & wide : not A -> A
+            $,
+            "17 Abst",
+        ),
+        (4, $ha'' : A$, ""),
+        (5, $ha'' : A$, "Var"),
+        (4, $lambda ha'' : A. ha'' : A -> A$, "20 Abst"),
+        (4, $"ET" : Pi S : *. S or not S$, "Axiom ET"),
+        (4, $"ET" A : A or not A$, "22,1 App"),
+        (4, $"ET" A A : (A -> A) -> (not A -> A) -> A$, "23,1 App"),
+        (
+            4,
+            $
+                & "ET" A A \
+                & quad (lambda ha'' : A. ha'') \
+                & wide : (not A -> A) -> A \
+            $,
+            "24,21 App",
+        ),
+        (
+            4,
+            $
+                & "ET" A A \
+                & quad (lambda ha'' : A. ha'') \
+                & quad (lambda hna : not A. p \
+                & wide (lambda ha' : A. hna ha' B) A) : A \
+            $,
+            "25,18 App",
+        ),
+        (
+            4,
+            $
+                & h ("ET" A A \
+                & quad (lambda ha'' : A. ha'') \
+                & quad (lambda hna : not A. p \
+                & wide (lambda ha' : A. hna ha' B) A)) \
+                & wide quad : not B -> C
+            $,
+            "4,26 App",
+        ),
+        (
+            4,
+            $
+                & h ("ET" A A \
+                & quad (lambda ha'' : A. ha'') \
+                & quad (lambda hna : not A. p \
+                & wide (lambda ha' : A. hna ha' B) A)) \
+                & quad (lambda hb : B. p (lambda ha : A. hb)) : C \
+            $,
+            "27,10 App",
+        ),
+        (
+            3,
+            $
+                & lambda h : A -> not B -> C. h ("ET" A A \
+                & quad (lambda ha'' : A. ha'') \
+                & quad (lambda hna : not A. p (lambda ha' : A. hna ha' B) A)) \
+                & quad (lambda hb : B. p (lambda ha : A. hb)) \
+                & wide : (A -> not B -> C) -> C
+            $,
+            "28 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda C : *. lambda h : A -> not B -> C. \
+                & quad h ("ET" A A \
+                & wide (lambda ha'' : A. ha'') \
+                & wide (lambda hna : not A. p (lambda ha' : A. hna ha' B) A)) \
+                & wide (lambda hb : B. p (lambda ha : A. hb)) : A and not B
+            $,
+            "29 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda p : not (A -> B). \
+                & quad lambda C : *. lambda h : A -> not B -> C. \
+                & wide h ("ET" A A \
+                & wide quad (lambda ha'' : A. ha'') \
+                & wide quad (lambda hna : not A. p (lambda ha' : A. hna ha' B) A)) \
+                & wide quad (lambda hb : B. p (lambda ha : A. hb)) \
+                & wide wide : not (A -> B) -> (A and not B)
+            $,
+            "30 Abst",
+        ),
+    )))
+]

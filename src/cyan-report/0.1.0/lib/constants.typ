@@ -1,7 +1,7 @@
 
 #let page-config = (
   paper: "a4",
-  margin: (left: 2in, top: 2in, right: 1in),
+  margin: (left: 1.5in, top: 2in, right: 1in),
   numbering: "1.",
 );
 #let accent-darkeren = it => it.darken(70%).saturate(40%);
