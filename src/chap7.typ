@@ -785,3 +785,219 @@
         ),
     )))
 ]
+
+// MARK: Q. 7.8 (a)
+#problem(source: "7.8 a")[
+    Give $lambda C$ derivations verifying the intuitionistic tautology below
+    $ (A or B) => (B or A) $
+]
+#solution[
+    #let ha = $italic("ha")$
+    #let hb = $italic("hb")$
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *$, ""),
+        (1, $h : A or B$, ""),
+        (2, $C : *$, ""),
+        (3, $hb : B -> C$, ""),
+        (4, $ha : A -> C$, ""),
+        (5, $h C : (A -> C) -> (B -> C) -> C$, "2,3 App"),
+        (5, $h C ha : (B -> C) -> C$, "6,5 App"),
+        (5, $h C ha hb : C$, "7,4 App"),
+        (4, $lambda ha : A -> C. h C ha hb : (A -> C) -> C$, "8 Abst"),
+        (
+            3,
+            $
+                & lambda hb : B -> C. lambda ha : A -> C. \
+                & quad h C ha hb : (B -> C) -> (A -> C) -> C
+            $,
+            "9 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda C : *. lambda hb : B -> C. lambda ha : A -> C. \
+                & quad h C ha hb : Pi C : *. (B -> C) -> (A -> C) -> C
+            $,
+            "10 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : A or B. lambda C : *. lambda hb : B -> C. lambda ha : A -> C \
+                & quad h C ha hb : A or B -> B or A
+            $,
+            "11 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 7.8 (b)
+#problem(source: "7.8 b")[
+    Give $lambda C$ derivations verifying the intuitionistic tautology below
+    $ not (A or B) => (not A and not B) $
+]
+#pagebreak()
+#solution[
+    #let ha = $italic("ha")$
+    #let hb = $italic("hb")$
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *, bot : sort$, ""),
+        (1, $h : not (Pi S : *. (A -> S) -> (B -> S) -> S)$, ""),
+        (2, $C : *$, ""),
+        (3, $p : (not A -> not B -> C)$, ""),
+        (4, $a : A$, ""),
+        (5, $C : *$, ""),
+        (6, $ha : A -> C$, ""),
+        (7, $hb : B -> C$, ""),
+        (8, $ha a : C$, "7,5 App"),
+        (7, $lambda hb : B -> C. ha a : (B -> C) -> C$, "9 Abst"),
+        (
+            6,
+            $
+                & lambda ha : A -> C. lambda hb : B -> C. ha a \
+                & quad : (A -> C) -> (B -> C) -> C
+            $,
+            "10 Abst",
+        ),
+        (
+            5,
+            $
+                & lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a \
+                & quad : Pi C : *. (A -> C) -> (B -> C) -> C
+            $,
+            "11 Abst",
+        ),
+        (
+            5,
+            $h (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a) : bot$,
+            "2,12 App (Contr.)",
+        ),
+        (
+            4,
+            $
+                & lambda a : A. h \
+                & quad (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a) : not A
+            $,
+            "13 Abst (Neg I)",
+        ),
+        (4, $b : B$, ""),
+        (5, $C : *$, ""),
+        (6, $ha : A -> C$, ""),
+        (7, $hb : B -> C$, ""),
+        (8, $hb b : C$, "18,15 App"),
+        (7, $lambda hb : B -> C. hb b : (B -> C) -> C$, "19 Abst"),
+        (
+            6,
+            $
+                & lambda ha : A -> C. lambda hb : B -> C. hb b \
+                & quad : (A -> C) -> (B -> C) -> C
+            $,
+            "20 Abst",
+        ),
+        (
+            5,
+            $
+                & lambda C : *. lambda ha : A -> C. lambda hb : B -> C. hb b \
+                & quad : Pi C : *. (A -> C) -> (B -> C) -> C
+            $,
+            "21 Abst",
+        ),
+        (
+            5,
+            $h (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. hb b) : bot$,
+            "2,22 App (Contr.)",
+        ),
+        (
+            4,
+            $
+                & lambda b : B. h \
+                & quad (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. hb b) : not B
+            $,
+            "23 Abst (Neg I)",
+        ),
+        (
+            4,
+            $
+                & p (lambda a : A. h \
+                & quad (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a)) \
+                & wide : not B -> C
+            $,
+            "4,14 App",
+        ),
+        (
+            4,
+            $
+                & p (lambda a : A. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a)) \
+                & quad (lambda b : B. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. hb b)) : C
+            $,
+            "25,24 App",
+        ),
+        (
+            3,
+            $
+                & lambda p : not A -> not B -> C. p \
+                & quad (lambda a : A. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a)) \
+                & quad (lambda b : B. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. hb b)) \
+                & wide quad : (not A -> not B -> C) ->C
+            $,
+            "26 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda C : *. lambda p : not A -> not B -> C. p \
+                & quad (lambda a : A. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a)) \
+                & quad (lambda b : B. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. hb b)) \
+                & wide quad : Pi C : *. (not A -> not B -> C) ->C
+            $,
+            "27 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : not (A or B). lambda C : *. lambda p : not A -> not B -> C. p \
+                & quad (lambda a : A. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. ha a)) \
+                & quad (lambda b : B. h \
+                & wide (lambda C : *. lambda ha : A -> C. lambda hb : B -> C. hb b)) \
+                & wide quad : not (A or B) -> (not A and not B)
+            $,
+            "28 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 7.8 (c)
+#problem(source: "7.8 c")[
+    Give $lambda C$ derivations verifying the intuitionistic tautology below
+    $ (not A and not B) => not (A or B) $
+]
+#solution[
+    #let ha = $italic("ha")$
+    #let hb = $italic("hb")$
+    #let hna = $italic("hna")$
+    #let hnb = $italic("hnb")$
+    #proof(ded-nat(arr: (
+        (0, $A : *, B : *, bot : sort$, ""),
+        (1, $h : Pi C : *. (not A -> not B -> C) -> C$, ""),
+        (2, $p : Pi S : *. (A -> S) -> (B -> S) -> S$, ""),
+        (3, $h bot : not (not A -> not B -> bot)$, "2,1 App"),
+        (3, $p bot : (A -> bot) -> (B -> bot) -> bot$, "3,1 App"),
+        (3, $h bot (p bot) : bot$, "4,5 App (Cont.)"),
+        (2, $lambda p : A or B. h bot (p bot) : not (A or B)$, "6 Abst"),
+        (
+            1,
+            $
+                & lambda h : not A and not B. lambda p : A or B. h bot (p bot) \
+                & quad : not A and not B -> not (A or B)
+            $,
+            "7 Abst",
+        ),
+    )))
+]
