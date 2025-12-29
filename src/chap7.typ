@@ -836,7 +836,6 @@
     Give $lambda C$ derivations verifying the intuitionistic tautology below
     $ not (A or B) => (not A and not B) $
 ]
-#pagebreak()
 #solution[
     #let ha = $italic("ha")$
     #let hb = $italic("hb")$
@@ -998,6 +997,124 @@
                 & quad : not A and not B -> not (A or B)
             $,
             "7 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 7.9 (a)
+#problem(source: "7.9 a")[
+    Verify that the following expression is a tautology in constructive logic by giving a proof in first-order natural deduction and a flag styled derivation.
+    $ forall x in S, (not P (x) => (P (x) => Q (x) and R(x))) $
+]
+#solution[
+    #proof(prompt: "Natural Deduction", ded-nat(arr: (
+        (0, $x in S$, ""),
+        (1, $not P(x)$, ""),
+        (2, $P(x)$, ""),
+        (3, $bot$, [3,2 $bot$I]),
+        (3, $Q(x) and R(x)$, [4 $bot$E]),
+        (2, $P(x) => Q(x) and R(x)$, [5 $=>$I]),
+        (1, $not P(x) => (P(x) => Q (x) and R(x))$, [6 $=>$I]),
+        (0, $forall x in S, (not P(x) => (P(x) => Q (x) and R(x)))$, [7 $forall$I]),
+    )))
+    #let nhp = $italic("nhp")$
+    #let hp = $italic("hp")$
+    #proof(prompt: [$lambda C$], ded-nat(arr: (
+        (0, $S : *, P : S -> *, Q : S -> *, R : S -> *$, ""),
+        (1, $x : S$, ""),
+        (2, $nhp : not (P x)$, ""),
+        (3, $hp : P x$, ""),
+        (4, $nhp hp : bot$, "3,4 App (Contradiction)"),
+        (4, $Q x and R x : *$, "Form"),
+        (4, $nhp hp (Q x and R x) : Q x and R x$, "5,6 App (Ex Falso)"),
+        (
+            3,
+            $
+                & lambda hp : P x. nhp hp (Q x and R x) \
+                & quad : P x -> Q x and R x
+            $,
+            "7 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda nhp : not P x. lambda hp : P x. nhp hp (Q x and R x) \
+                & quad : not P x -> P x -> Q x and R x
+            $,
+            "8 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda x : S. lambda nhp : not P x. lambda hp : P x. \
+                & quad nhp hp (Q x and R x) \
+                & wide : Pi x : S. not P x -> P x -> Q x and R x
+            $,
+            "9 Abst",
+        ),
+    )))
+]
+
+// MARK: Q 7.9 (b)
+#problem(source: "7.9 b")[
+    Verify that the following expression is a tautology in constructive logic by giving a proof in first-order natural deduction and a flag styled derivation.
+    $ forall x in S, P(x) => forall y in S, P(y) or Q(y) $
+]
+#solution[
+    #proof(prompt: "Natural Deduction", ded-nat(arr: (
+        (0, $forall x in S, P(x)$, ""),
+        (1, $y : S$, ""),
+        (2, $P(y)$, [2,1 $forall$E]),
+        (2, $P(y) or Q(y)$, [3 $or$I]),
+        (1, $forall y : S, (P(y) or Q(y))$, [4 $forall$I]),
+        (0, $forall x in S, P(x) => forall y : S, (P(y) or Q(y))$, [5 $=>$I]),
+    )))
+    #let hp = $italic("hp")$
+    #let hq = $italic("hq")$
+    #proof(prompt: $lambda C$, ded-nat(arr: (
+        (0, $S : *, P : S -> *, Q : S -> *$, ""),
+        (1, $h : Pi x : S. P x$, ""),
+        (2, $y : S$, ""),
+        (3, $h y : P y$, "2,3 App"),
+        (3, $C : *$, ""),
+        (4, $hp : P y -> C$, ""),
+        (5, $hq : Q y -> C$, ""),
+        (6, $hp (h y) : C$, "6,4 App"),
+        (5, $lambda hq : Q y -> C. hp (h y) : (Q y -> C) -> C$, "8 Abst"),
+        (
+            4,
+            $
+                & lambda hp : P y -> C. lambda hq : Q y -> C. hp (h y) \
+                & quad : (P y -> C) -> (Q y -> C) -> C
+            $,
+            "9 Abst",
+        ),
+        (
+            3,
+            $
+                & lambda C : *. lambda hp : P y -> C. lambda hq : Q y -> C. hp (h y) \
+                & quad : Pi C : *. (P y -> C) -> (Q y -> C) -> C
+            $,
+            "10 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda y : S. lambda C : *. \
+                & quad lambda hp : P y -> C. lambda hq : Q y -> C. hp (h y) \
+                & wide : Pi y : S. P y or Q y
+            $,
+            "11 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : Pi x : S. P x. \
+                & quad lambda y : S. lambda C : *. \
+                & wide lambda hp : P y -> C. lambda hq : Q y -> C. hp (h y) \
+                & wide quad : (Pi x : S. P x) -> Pi y : S. P y or Q y
+            $,
+            "12 Abst",
         ),
     )))
 ]
