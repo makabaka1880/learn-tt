@@ -226,9 +226,9 @@
             (3, $not B$, [1,3 $=>$E]),
             (3, $B$, [2,3 $=>$E]),
             (3, $bot$, [5,4 $bot$I]),
-            (2, $not A$, [3,6 $not$I]),
-            (1, $(A => B) => not A$, [2,7 $=>$I]),
-            (0, $(A => not B) => ((A => B) => not A)$, [1,8 $=>$I]),
+            (2, $not A$, [3-6 $not$I]),
+            (1, $(A => B) => not A$, [2-7 $=>$I]),
+            (0, $(A => not B) => ((A => B) => not A)$, [1-8 $=>$I]),
         ))
     ]
     #proof(prompt: $lambda C$)[
@@ -266,10 +266,10 @@
         (1, $B$, ""),
         (2, $A$, ""),
         (3, $B$, ""),
-        (2, $A => B$, [3,4 $=>$I]),
+        (2, $A => B$, [3-4 $=>$I]),
         (2, $bot$, [5,1 $bot$I]),
-        (1, $not B$, [6 $not$I]),
-        (0, $not (A => B) => not B$, [1,7 $=>$I]),
+        (1, $not B$, [2-6 $not$I]),
+        (0, $not (A => B) => not B$, [1-7 $=>$I]),
     )))
     #proof(prompt: $lambda C$)[
         Assuming context $Gamma equiv A : *, B : *$. The proof should be equivalent to an inhabitant of $((A -> B) -> bot) -> B -> bot$.
@@ -1013,9 +1013,9 @@
         (2, $P(x)$, ""),
         (3, $bot$, [3,2 $bot$I]),
         (3, $Q(x) and R(x)$, [4 $bot$E]),
-        (2, $P(x) => Q(x) and R(x)$, [5 $=>$I]),
-        (1, $not P(x) => (P(x) => Q (x) and R(x))$, [6 $=>$I]),
-        (0, $forall x in S, (not P(x) => (P(x) => Q (x) and R(x)))$, [7 $forall$I]),
+        (2, $P(x) => Q(x) and R(x)$, [3-5 $=>$I]),
+        (1, $not P(x) => (P(x) => Q (x) and R(x))$, [2-6 $=>$I]),
+        (0, $forall x in S, (not P(x) => (P(x) => Q (x) and R(x)))$, [1-7 $forall$I]),
     )))
     #let nhp = $italic("nhp")$
     #let hp = $italic("hp")$
@@ -1066,8 +1066,8 @@
         (1, $y : S$, ""),
         (2, $P(y)$, [2,1 $forall$E]),
         (2, $P(y) or Q(y)$, [3 $or$I]),
-        (1, $forall y : S, (P(y) or Q(y))$, [4 $forall$I]),
-        (0, $forall x in S, P(x) => forall y : S, (P(y) or Q(y))$, [5 $=>$I]),
+        (1, $forall y : S, (P(y) or Q(y))$, [2-4 $forall$I]),
+        (0, $forall x in S, P(x) => forall y : S, (P(y) or Q(y))$, [1-5 $=>$I]),
     )))
     #let hp = $italic("hp")$
     #let hq = $italic("hq")$
@@ -1115,6 +1115,121 @@
                 & wide quad : (Pi x : S. P x) -> Pi y : S. P y or Q y
             $,
             "12 Abst",
+        ),
+    )))
+]
+
+// MARK: Q. 7.10
+#problem(source: "7.10")[
+    Verify that the following expression is a tautology in constructive logic by giving a proof in first-order natural deduction and a flag styled derivation.
+    $
+        & forall x in S, (P(x) => Q(x)) => \
+        & quad forall y in S, (P(y) => R(y)) => \
+        & wide forall z in S, (P(z) => (Q(z) and R(z)))
+    $
+]
+#solution[
+    #proof(prompt: "Natural Deduction", ded-nat(arr: (
+        (0, $forall x in S (P(x) => Q(x))$, ""),
+        (1, $forall y in S (P(y) => R(y))$, ""),
+        (2, $z in S$, ""),
+        (3, $P(z)$, ""),
+        (4, $P(z) => Q(z)$, [3,1 $forall E$]),
+        (4, $Q(z)$, [5,4 $=>$E]),
+        (4, $P(z) => R(z)$, [3,2 $forall$E]),
+        (4, $R(z)$, [7,4 $forall$E]),
+        (4, $Q(z) and R(z)$, [6,8 $and$I]),
+        (3, $P(z) => Q(z) and R(z)$, [4-9 $=>$I]),
+        (2, $forall z in S, (P(z) => Q(z) and R(z))$, [3-10 $forall$I]),
+        (
+            1,
+            $
+                & forall y in S, (P (y) => R(y)) => \
+                & quad forall z in S, (P(z) => Q(z) and R(z))
+            $,
+            [2-11 $=>$I],
+        ),
+        (
+            0,
+            $
+                & forall x in S, (P(x) => Q(x)) => \
+                & quad forall y in S, (P(y) => R(y)) => \
+                & wide forall z in S, (P(z) => Q(z) and R(z))
+            $,
+            [1-12 $=>$I],
+        ),
+    )))
+    #proof(prompt: [$lambda C$], ded-nat(arr: (
+        (0, $S : *, P : S -> *, Q : S -> *, R : S -> *$, ""),
+        (1, $h : Pi x : S. P x -> Q x$, ""),
+        (2, $p : Pi y : S. P y -> R y$, ""),
+        (3, $z : S$, ""),
+        (4, $r : P z$, ""),
+        (5, $h z : P z -> Q z$, "2,4 App"),
+        (5, $h z r : Q z$, "6,5 App"),
+        (5, $p z : P z -> R z$, "3,4 App"),
+        (5, $p z r : R z$, "8,5 App"),
+        (5, $C : *$, ""),
+        (6, $t : Q z -> R z -> C$, ""),
+        (7, $t (h z r) : R z -> C$, "11,7 App"),
+        (7, $t (h z r) (p z r) : C$, "12,9 App"),
+        (
+            6,
+            $
+                & lambda t : Q z -> R z -> C.t (h z r) (p z r) \
+                & quad : (Q z -> R z -> C) -> C
+            $,
+            "13 Abst",
+        ),
+        (
+            5,
+            $
+                & lambda C : *. lambda t : Q z -> R z -> C.t (h z r) (p z r) \
+                & quad : Pi C : *. (Q z -> R z -> C) -> C
+            $,
+            "14 Abst",
+        ),
+        (
+            4,
+            $
+                & lambda r : P z. lambda C : *. lambda t : Q z -> R z -> C. \
+                & quad t (h z r) (p z r) \
+                & wide : P z -> Q z and R z
+            $,
+            "15 Abst",
+        ),
+        (
+            3,
+            $
+                & lambda z : S. lambda r : P z. lambda C : *. lambda t : Q z -> R z -> C. \
+                & quad t (h z r) (p z r) \
+                & wide : Pi z : S. P z -> Q z and R z
+            $,
+            "16 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda p : Pi y : S. P y -> R y. \
+                & quad lambda z : S. lambda r : P z. lambda C : *. \
+                & wide lambda t : Q z -> R z -> C. \
+                & wide quad t (h z r) (p z r) \
+                & wide wide : Pi y : S. P y -> R y \
+                & wide wide quad -> Pi z : S. P z -> Q z and R z
+            $,
+            "17 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : Pi x : S. P x -> Q x. lambda p : Pi y : S. P y -> R y. \
+                & quad lambda z : S. lambda r : P z. lambda C : *. \
+                & wide lambda t : Q z -> R z -> C. \
+                & wide quad t (h z r) (p z r) \
+                & wide wide : (Pi x : S. P x -> Q x) -> (Pi y : S. P y -> R y) \
+                & wide wide quad -> Pi z : S. P z -> Q z and R z
+            $,
+            "18 Abst",
         ),
     )))
 ]
