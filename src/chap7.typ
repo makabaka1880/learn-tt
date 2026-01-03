@@ -1233,3 +1233,22 @@
         ),
     )))
 ]
+
+// MARK: Q. 7.11
+#problem(source: "7.11")[
+    Let $S : *$ and $P, Q : S -> *$. Let
+    $ & y : Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha) \
+    & z : Pi x : S. (P x -> Q x) $
+    and $x : S$. Find a correct type for $y (Q x)$, and prove the application $y (Q x) z$ invalid. Also, check that it follows Remark 7.5.2
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $S : *$, ""),
+        (1, $P,Q : S -> *$, ""),
+        (2, $y : Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha)$, ""),
+        (3, $x : S$, ""),
+        (4, $Q x : *$, ""),
+        (4, $y (Q x) : Pi x : S. (P x -> Q x) -> Q x$, "3,5 App"),
+    ))
+    Here any application _to_ $y(Q x)$ requries that value to be of type $S$. It certainly is not true for $z$. Remark 7.5.2 basically forbids name clashing of free variables and bound variables in an application or beta reduction.
+]
