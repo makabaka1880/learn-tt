@@ -1376,3 +1376,72 @@
         ),
     )))
 ]
+
+// MARK: Q. 7.13
+#problem(source: "7.13")[
+    Prove this a tautology in constructive logic by a $lambda C$ derivation:
+    $ (exists x in S, P(x)) => (forall y in S, P(y) => Q(y)) => (exists z in S, Q(z)) $
+]
+#solution[
+    The corresponding term is
+    $
+        & (Pi alpha : *. (Pi x : S. P x -> alpha) -> alpha) -> \
+        & quad (Pi y : S. P y -> Q y) -> \
+        & quad (Pi beta : *. (Pi z : S. Q z -> beta) -> beta)
+    $
+    #proof(ded-nat(arr: (
+        (0, $S : *, P : S -> *, Q : S -> *$, ""),
+        (1, $h : exists x : S. P x$, ""),
+        (2, $p : Pi y : S. P y -> Q y$, ""),
+        (3, $beta : *$, ""),
+        (4, $r : Pi z : S. Q z -> beta$, ""),
+        (5, $h beta : (Pi x : S. P x -> beta) -> beta$, "2,4 App"),
+        (5, $a : S$, ""),
+        (6, $n : P a$, ""),
+        (7, $p a : P a -> Q a$, "3,7 App"),
+        (7, $p a n : Q a$, "9,8 App"),
+        (7, $r a : Q a -> beta$, "5,7 App"),
+        (7, $r a (p a n) : beta$, "11,10 App"),
+        (6, $lambda n : P a. r a (p a n) : P a -> beta$, "12 Abst"),
+        (5, $lambda a : S. lambda n : P a. r a (p a n) : Pi a. P a -> beta$, "13 Abst"),
+        (5, $h beta (lambda a : S. lambda n : P a. r a (p a n)) : beta$, "6,14 App"),
+        (
+            4,
+            $
+                & lambda r : Pi z : S. Q z -> beta. \
+                & quad h beta (lambda a : S. lambda n : P a. r a (p a n)) \
+                & wide: (Pi z : S. Q z -> beta) -> beta
+            $,
+            "15 Abst",
+        ),
+        (
+            3,
+            $
+                & lambda beta : *. lambda r : Pi z : S. Q z -> beta. \
+                & quad h beta (lambda a : S. lambda n : P a. r a (p a n)) \
+                & wide: exists z : S. P z
+            $,
+            "16 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda p : Pi y : S. P y -> Q y. \
+                & quad lambda beta : *. lambda r : Pi z : S. Q z -> beta. \
+                & wide h beta (lambda a : S. lambda n : P a. r a (p a n)) \
+                & wide quad: (Pi y : S. P y -> Q y) -> exists z : S. P z
+            $,
+            "17 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : exists x : S. P x. lambda p : Pi y : S. P y -> Q y. \
+                & quad lambda beta : *. lambda r : Pi z : S. Q z -> beta. \
+                & wide h beta (lambda a : S. lambda n : P a. r a (p a n)) \
+                & wide quad: (exists x : S. P x) -> (Pi y : S. P y -> Q y) -> exists z : S. P z
+            $,
+            "18 Abst",
+        ),
+    )))
+]
