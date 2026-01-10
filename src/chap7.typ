@@ -1529,3 +1529,7 @@
     This encodes the tautology that for any set $S$ and predicates $P$ and $Q$ over them, the existence of a witness in $S$ satisfying both $P$ and $Q$ implies the existence of a witness satisfying $P$. That is,
     $ (exists x in S, P(x) and Q(x)) => (exists x in S, P(x)) $
 ]
+
+---
+
+Completed Jan 10 2:34 am.
