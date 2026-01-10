@@ -1445,3 +1445,87 @@
         ),
     )))
 ]
+
+
+// MARK: Q. 7.14
+#problem(source: "7.14")[
+    Let $Gamma equiv S : *, P : S -> *, Q : S -> *$. Consider the following term
+    $
+        M & equiv lambda u : (exists x : S. P x and Q x). lambda alpha : *. lambda v : (Pi x : S. P x -> alpha). \
+          & u alpha (lambda y : S. lambda w : (P y and Q y). v y (w (P y) (lambda s : P y. lambda t : Q y. s)))
+    $
+    Type $M$ by a derivation and give the corresponding proposition proved by $M$.
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $S : *, P: S -> *, Q : S -> *$, ""),
+        (1, $u : exists x : S. P x and Q x$, ""),
+        (2, $alpha : *$, ""),
+        (3, $v : Pi x : S. P x -> alpha$, ""),
+        (4, $u alpha : (Pi x : S. (P x and Q x) -> alpha) -> alpha$, "2,3 App"),
+        (4, $y : S$, ""),
+        (5, $w : P y and Q y$, ""),
+        (6, $v y : P y -> alpha$, "4,6 App"),
+        (6, $P y : *$, "1,6 App"),
+        (6, $w (P y) : (P y -> Q y -> P y) -> P y$, "7,9 App"),
+        (6, $s: P y$, ""),
+        (7, $t : Q y$, ""),
+        (8, $s : P y$, ""),
+        (7, $lambda t : Q y. s : Q y -> P y$, "13 Abst"),
+        (6, $lambda s : P y. lambda t : Q y. s : P y -> Q y -> P y$, "14 Abst"),
+        (6, $w (P y) (lambda s : P y. lambda t : Q y. s) : P y$, "10,15 App"),
+        (
+            5,
+            $
+                & lambda w : P y and Q y. w (P y) (lambda s : P y. lambda t : Q y. s) \
+                & quad : P y and Q y -> P y
+            $,
+            "16 Abst",
+        ),
+        (
+            4,
+            $
+                & lambda y : S. lambda w : P y and Q y. w (P y) (lambda s : P y. lambda t : Q y. s) \
+                & quad : Pi y : S. P y and Q y -> P y
+            $,
+            "17 Abst",
+        ),
+        (
+            4,
+            $
+                & u alpha (lambda y : S. lambda w : P y and Q y. w (P y) (lambda s : P y. lambda t : Q y. s)) \
+                & quad : alpha
+            $,
+            "5,18 App",
+        ),
+        (
+            3,
+            $
+                & lambda v : Pi x : S. P x -> alpha. \
+                & quad u alpha (lambda y : S. lambda w : P y and Q y. w (P y) (lambda s : P y. lambda t : Q y. s)) \
+                & wide : (Pi x : S. P x -> alpha) -> alpha
+            $,
+            "19 Abst",
+        ),
+        (
+            2,
+            $
+                & lambda alpha : *. lambda v : Pi x : S. P x -> alpha. \
+                & quad u alpha (lambda y : S. lambda w : P y and Q y. w (P y) (lambda s : P y. lambda t : Q y. s)) \
+                & wide : exists x : S. P x
+            $,
+            "20 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda u : exists x : S. P x and Q x. lambda alpha : *. lambda v : Pi x : S. P x -> alpha. \
+                & quad u alpha (lambda y : S. lambda w : P y and Q y. w (P y) (lambda s : P y. lambda t : Q y. s)) \
+                & wide : exists x : P x and Q x -> exists x : S. P x
+            $,
+            "21 Abst",
+        ),
+    ))
+    This encodes the tautology that for any set $S$ and predicates $P$ and $Q$ over them, the existence of a witness in $S$ satisfying both $P$ and $Q$ implies the existence of a witness satisfying $P$. That is,
+    $ (exists x in S, P(x) and Q(x)) => (exists x in S, P(x)) $
+]
