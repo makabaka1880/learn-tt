@@ -1237,8 +1237,10 @@
 // MARK: Q. 7.11
 #problem(source: "7.11")[
     Let $S : *$ and $P, Q : S -> *$. Let
-    $ & y : Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha) \
-    & z : Pi x : S. (P x -> Q x) $
+    $
+        & y : Pi alpha : *. ((Pi x : S. (P x -> alpha)) -> alpha) \
+        & z : Pi x : S. (P x -> Q x)
+    $
     and $x : S$. Find a correct type for $y (Q x)$, and prove the application $y (Q x) z$ invalid. Also, check that it follows Remark 7.5.2
 ]
 #solution[
@@ -1251,4 +1253,126 @@
         (4, $y (Q x) : Pi x : S. (P x -> Q x) -> Q x$, "3,5 App"),
     ))
     Here any application _to_ $y(Q x)$ requries that value to be of type $S$. It certainly is not true for $z$. Remark 7.5.2 basically forbids name clashing of free variables and bound variables in an application or beta reduction.
+]
+
+// MARK: Q. 7.12 (a)
+#problem(source: "7.12 a")[
+    Derive *$exists "I"$* under $lambda C$.
+]
+#solution[
+    The rule translated into $lambda C$ is as follows: in context
+    $ Gamma tack a : S, P : S -> *, h : P a $
+    We can derive a term
+    $ Gamma tack h : Pi alpha : *. (Pi x : S. P x -> alpha) -> alpha $
+    One derivation is as follows
+    #ded-nat(arr: (
+        (0, $a : S, P : S -> *, h : P a$, ""),
+        (1, $alpha : *$, ""),
+        (2, $p : Pi x: S. P x -> alpha$, ""),
+        (3, $p a : P a -> alpha$, "3,1 App"),
+        (3, $p a h : alpha$, "4,1 App"),
+        (
+            2,
+            $
+                & lambda p : Pi x : S. P x -> alpha. p a h \
+                & quad : (Pi x : S. P x -> alpha) -> alpha
+            $,
+            "5 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda alpha : *.lambda p : Pi x : S. P x -> alpha. p a h \
+                & quad : Pi alpha : *. (Pi x : S. P x -> alpha) -> alpha
+            $,
+            "6 Abst",
+        ),
+    ))
+]
+
+// MARK: Q. 7.12 (b)
+#problem(source: "7.12 b")[
+    Give a flag styled derivation in $lambda C$ verifying the following tautology in classical logic:
+    $
+        not exists x in S, (not P (x)) => forall y in S, (P (y))
+    $
+]
+#solution[
+    The proof term should have type
+    $
+        ((Pi alpha : *. (Pi x : S. (P x -> bot) -> alpha) -> alpha) -> bot) -> (Pi y : S. P y)
+    $
+    #let ny = $italic("ny")$
+    #proof(ded-nat(arr: (
+        (0, $S : *, P : S -> *$, ""),
+        (1, $h : not (exists x : S. not P x)$, ""),
+        (2, $y : S$, ""),
+        // Term Building
+        // you'll want negation here
+        (3, $v : not P y$, ""),
+        (4, $alpha : *$, ""),
+        (5, $p : Pi x : S. (P x -> bot) -> alpha$, ""),
+        (6, $p y : not P y -> alpha$, "6,3 App"),
+        (6, $p y v: alpha$, "7,4 App"),
+        (
+            5,
+            $
+                & lambda h : Pi x : S. (not P x) -> alpha. p y v \
+                & quad : (Pi x : S. not P x -> alpha) -> alpha
+            $,
+            "8 Abst",
+        ),
+        (
+            4,
+            $
+                & lambda alpha : *. lambda p : Pi x : S. (not P x) -> alpha. p y v \
+                & quad : exists x : S. not P x
+            $,
+            "9 Abst",
+        ),
+        (
+            4,
+            $
+                & h (lambda alpha : *. lambda p : Pi x : S. (not P x) -> alpha. \
+                & quad p y v) : bot
+            $,
+            "2,10 App",
+        ),
+        (
+            3,
+            $
+                & lambda v : not P y. \
+                & quad h (lambda alpha : *. lambda p : Pi x : S. (not P x) -> alpha. p y v) \
+                & wide : not not P y
+            $,
+            "11 Abst",
+        ),
+        (
+            3,
+            $
+                & "DN" (lambda v : not P y. \
+                & quad h (lambda alpha : *. lambda p : Pi x : S. (not P x) -> alpha. p y v)) \
+                & wide : P y
+            $,
+            "App (Ax. DN)",
+        ),
+        (
+            2,
+            $
+                & lambda y : S. "DN" (lambda v : not P y. \
+                & quad h (lambda alpha : *. lambda p : Pi x : S. (not P x) -> alpha. p y v)) \
+                & wide : Pi y : S. P y
+            $,
+            "13 Abst",
+        ),
+        (
+            1,
+            $
+                & lambda h : not (exists x : S. not P x). lambda y : S. \
+                & quad "DN" (lambda v : not P y. p (lambda alpha : *. lambda h : Pi x : S. (not P x) -> alpha. p y v)) \
+                & wide : not (exists x : S, not P x) -> Pi y : S. P y
+            $,
+            "14 Abst",
+        ),
+    )))
 ]
