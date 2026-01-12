@@ -47,10 +47,6 @@
 #let defs = $gt.tri$
 #let sorry = `sorry`
 
-#definition[
-    We use an informal definition of definitions in $lambda C$. Formal derivation rules will be given in chapter 9, where $lambda D$ will be more formally introduced.
-]
-
 // MARK: Q. 8.1
 #let coprime = "coprime"
 #problem(source: "8.1")[
@@ -322,7 +318,6 @@
 
         Every natural number is rational. The number $0.75$ is rational, but $sqrt(2)$ is irrational.
     ]
-    Use the set constructor notation ${x : RR | P x}$.
 ]
 #solution[
     #ded-nat(arr: (
@@ -392,3 +387,8 @@
         (2, $h_"exists" := sorry : "congr-exist"underbrace((tm(k), am(l), ym(m), km(h)))$, ""),
     ))
 ]
+
+
+---
+
+Completed Jan 13 2:04 am.
