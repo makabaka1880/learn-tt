@@ -1,7 +1,7 @@
 #import "constants.typ": *
 #let theorem-cnt = state("theorem-cnt", 1)
 #let lemma-cnt = state("lemma-cnt", 1)
-#let collary-cnt = state("collary-cnt", 1)
+#let corollary-cnt = state("collary-cnt", 1)
 #let theorem(content) = context {
     theorem-cnt.update(it => it + 1)
     v(box-vspace)
@@ -26,8 +26,8 @@
     v(box-vspace)
 }
 
-#let collary(content) = context {
-    collary-cnt.update(it => it + 1)
+#let corollary(content) = context {
+    corollary-cnt.update(it => it + 1)
     v(box-vspace)
     block(
         [
@@ -37,8 +37,8 @@
                 dx: -70pt,
                 [
                     #block([
-                        _Collary #collary-cnt.get()._
-                        #label("collary" + str(collary-cnt.get()))
+                        _Corollary #corollary-cnt.get()._
+                        #label("cor." + str(corollary-cnt.get()))
                     ])],
             )
             #content
