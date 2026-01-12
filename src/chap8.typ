@@ -59,7 +59,7 @@
         Gamma equiv & ZZ : *_s, NN^+ : *_s \
                defs & p(m, n, u) := sorry : exists x,y : ZZ. (m x + n y = 1) \
                defs & coprime(m, n) := sorry : *_p \
-               defs & q(m, n) := sorry : coprime(m, n) -> coprime(n, s) \
+               defs & q(m, n) := sorry : coprime(m, n) -> coprime(n, m) \
               equiv & n : NN^+, m : NN^+, u : coprime(m, n) \
     $
     Prove $exists x,y : ZZ. (n x + m y = 1)$ in $Gamma$.
@@ -97,7 +97,7 @@
         (0, $p_7 := sorry : "bounded-from-above"(S, p_6)$, ""),
         (0, $p_8 := sorry : "least-upper-bound"(S, p_7, 1)$, ""),
     )))
-    Translate the proof into a more usual format. Note $exists^1$ denotes unique existence, that is, $ exists^1 n : alpha. P(n) := exists n : alpha. (P(n) and not (exists k : alpha. (P(n) and k != n))) $
+    Translate the proof into a more usual format. Note $exists^1$ denotes unique existence, that is, $ exists^1 n : alpha. P(n) := exists n : alpha. (P(n) and not (exists k : alpha. (P(k) and k != n))) $
     Which lines are formalized definitions? Which of them are formalized mathematical statements?
 
     Which constants have been introduced before the text and which are introduced within?
@@ -114,7 +114,7 @@
 
             For $s in RR$ #super[(4)] to *be the upper bound of $V$* #super[(5)], it means that any real $x$ being an element of $V$ implies that $x <= s$.
 
-            For $s in RR$ to be the *least upper bound of $V$* #super[(6)], it means that $s$ is a upper bound of $V$ and any real number $x in RR$ such that $x <= s$ is not a upper bound of $V$.
+            For $s in RR$ to be the *least upper bound of $V$* #super[(6)], it means that $s$ is a upper bound of $V$ and any real number $x in RR$ such that $x < s$ is not a upper bound of $V$.
         ]
         #corollary[
             Any non-empty set $V subset.eq RR$ bounded from above has one and only one least upper bound.
@@ -164,7 +164,7 @@
     ))
     In instantiation 1 on line 5, $(V, u, s)$ states the proposition that $s$ is an upper bound of $V$ in order to proof that $s$ is the least upper bound of $V$.
 
-    In instantiation 2 on line 6, $(V, u, x)$ states that the proposition of $x$ being an upper bound of $V$, which later on eventual leads to contradiction. This proves that no such $x$ required exists.
+    In instantiation 2 on line 6, $(V, u, x)$ states that the proposition of $x$ being an upper bound of $V$, which eventual leads to contradiction. This proves that no such $x$ exists.
 
     In instantiation 3 on line 8, $(V, u)$ construct a proposition of $V$ being bounded from above.
 
@@ -226,7 +226,7 @@
     #ded-nat(arr: (
         (0, $S : *_s$, ""),
         (1, $op : S -> S -> S$, ""),
-        (2, $"semigroup"(S, op) := forall x, y, z : S. (op x (op y x) = op (op x y) z) : *_p$, ""),
+        (2, $"semigroup"(S, op) := forall x, y, z : S. (op x (op y z) = op (op x y) z) : *_p$, ""),
         (2, $u : "semigroup"(S, op)$, ""),
         (3, $e : S$, ""),
         (4, $"unit"(S, op, u, e) := forall x : S. (op x e = x and op e x = x) : *_p$, ""),
@@ -275,7 +275,7 @@
         (1, $rm(op) : bm(underline(S)) -> bm(underline(S)) -> bm(underline(S))$, ""),
         (
             2,
-            $tm("semigroup")(bm(underline(S)), rm(underline(op))) := forall x, y, z : bm(underline(S)). (rm(underline(op)) x (rm(underline(op)) y x) = rm(underline(op)) (rm(underline(op)) x y) z) : *_p$,
+            $tm("semigroup")(bm(underline(S)), rm(underline(op))) := forall x, y, z : bm(underline(S)). (rm(underline(op)) x (rm(underline(op)) y z) = rm(underline(op)) (rm(underline(op)) x y) z) : *_p$,
             "",
         ),
         (2, $gm(u) : tm(underline("semigroup"))(bm(underline(S)), rm(underline(op)))$, ""),
@@ -304,7 +304,7 @@
     The definitions could be rewritten as follows:
     $
         & S : *_s, op : S -> S -> S defs \
-        & quad "semigroup"(S, op) := forall x, y, z : S. (op x (op y x)) = op (op x y) z \
+        & quad "semigroup"(S, op) := forall x, y, z : S. (op x (op y z)) = op (op x y) z \
         & S : *_s, op : S -> S -> S, u : "semigroup"(S, op), e : S defs \
         & quad "unit"(S, op, u, e) := forall x : S. (op x e = x and op e x = x)
     $
@@ -327,11 +327,68 @@
 #solution[
     #ded-nat(arr: (
         (0, $r : RR$, ""),
-        (1, $ "rational"(r) := exists p, q : ZZ. (q != 0 and p / q = r) : *_p $, ""),
-        (1, $ "irrational"(r) := not "rational"(p) : *_p $, ""),
+        (1, $ "rational"(r) := exists p, q : ZZ. (q != 0 and r = p / q) : *_p $, ""),
+        (1, $ "irrational"(r) := not "rational"(r) : *_p $, ""),
         (0, $QQ := {x : RR | "rational"(x)}$, ""),
         (0, $"all-nat-rational" := sorry : forall n : NN. "rational"(n)$, ""),
         (0, $"p75-rational" := sorry : "rational"(0.75)$, ""),
         (0, $"sqrt2-irrational" := sorry : "irrational"(sqrt(2))$, ""),
+    ))
+]
+
+// MARK: Q. 8.6
+#problem(source: "8.6")[
+    Consider the following mathematical text from number theory:
+    #definition[
+        If $k$, $l$, and $m$ are integers, $m$ being positive, then one says that $k$ is *congruent* to $l$ modulo $m$ if $m$ divides $k - l$.
+
+        We write $k equiv l (mod m)$ to indicate that $k$ is congruent to $l$ modulo $m$.
+
+        Hence $-3 equiv 17 (mod 5)$, but not $-3 equiv -17 (mod 5)$.
+
+        If $k equiv l (mod m)$, then also $l equiv k (mod m)$.
+
+        $k equiv l (mod m)$ iff there is an integer $u$ s.t. $k = l + m u$.
+    ]
+    Formalize the definitions, indicate the scope of all variables and constants introduced in the text.
+
+    Identify all instantiations in the formal text and check that the type conditions are respected.
+]
+#solution[
+    Different variables have been colored the same, with the binders underlined. All instantiations have been underlined.
+    #let bm = it => text(fill: blue, it)
+    #let rm = it => text(fill: red, it)
+    #let gm = it => text(fill: green, it)
+    #let om = it => text(fill: orange, it)
+    #let pm = it => text(fill: purple, it)
+    #let tm = it => text(fill: rgb("#19a6a8"), it)
+    #let am = it => text(fill: rgb("#2638c3"), it)
+    #let ym = it => text(fill: rgb("#e19833"), it)
+    #let km = it => text(fill: rgb("#ff38fc"), it)
+    #ded-nat(arr: (
+        (0, $underline(bm(k)), underline(rm(l)), underline(gm(m)) : ZZ$, ""),
+        (1, $underline(om(h)) : gm(m) > 0$, ""),
+        (2, $"congr-mod"(bm(k), rm(l), gm(m), om(h)) := gm(m) divides bm(k) - rm(l) : *_p$, ""),
+        (0, $underline(pm(u)) := sorry : 5 > 0$, ""),
+        (0, $p_1 := sorry : "congr-mod"underbrace((-3, 17, 5, pm(u)))$, ""),
+        (0, $p_2 := sorry : not "congr-mod"underbrace((-3, -17, 5, pm(u)))$, ""),
+        (0, $underline(tm(k)), underline(am(l)), underline(ym(m)) : ZZ$, ""),
+        (1, $underline(km(h)) : ym(m) > 0$, ""),
+        (
+            2,
+            $
+                underline("congr-sym")(tm(k), am(l), ym(m), km(h)) := "congr-mod"underbrace((tm(k), am(l), ym(m), km(h))) => "congr-mod"underbrace((am(l), tm(k), ym(m), km(h))) : *_p
+            $,
+            "",
+        ),
+        (
+            2,
+            $
+                underline("congr-exist")(tm(k), am(l), ym(m), km(h)) := "congr-mod"underbrace((tm(k), am(l), ym(m), km(h))) <=> exists u : ZZ. (tm(k) = am(l) + ym(m) u) : *_p
+            $,
+            "",
+        ),
+        (2, $h_"trans" := sorry : "congr-sym"underbrace((tm(k), am(l), ym(m), km(h)))$, ""),
+        (2, $h_"exists" := sorry : "congr-exist"underbrace((tm(k), am(l), ym(m), km(h)))$, ""),
     ))
 ]
