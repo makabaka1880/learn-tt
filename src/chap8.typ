@@ -2,6 +2,7 @@
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
 #import "@preview/derive-it:1.1.0": *;
 #import "@preview/cetz:0.4.2" as cc: *;
+#import "@preview/fletcher:0.5.8": *;
 #import "@preview/tdtr:0.4.3": *;
 
 #let accent = rgb(50, 150, 150)
@@ -47,10 +48,13 @@
 #let defs = $gt.tri$
 #let sorry = `sorry`
 
+#definition[
+    We use an informal definition of definitions in $lambda C$. Formal derivation rules will be given in chapter 9, where $lambda D$ will be more formally introduced.
+]
 
 // MARK: Q. 8.1
 #let coprime = "coprime"
-#problem(source: "Q 8.1")[
+#problem(source: "8.1")[
     Let
     $
         Gamma equiv & ZZ : *_s, NN^+ : *_s \
@@ -70,7 +74,7 @@
 ]
 
 // MARK: Q. 8.2
-#problem(source: "Q 8.2")[
+#problem(source: "8.2")[
     Consider the following formal proof in analysis.
     #proof(ded-nat(arr: (
         (0, $V : *_s$, ""),
@@ -172,4 +176,47 @@
     In instantiation 6 on line 13, $(S, p_7, 1)$ constructed a proposition that $S$ has $1$ as the least upper bound, and is proven by $p_8$.
 
     All of this is is correct because the types match: by the PAT paradigm it means that each evidence provided suffices to construct each next step of the proof.
+]
+
+#pagebreak()
+// MARK: Q. 8.3
+#problem(source: "8.3")[
+    Consider the formal proof in 8.2. State the partial order representing the dependencies between the definitions given in this text.
+]
+#solution[
+    Denote the set of definitions as $S$ and dependency as $<=$.
+
+    The Hasse Diagram of $(S, <=)$ is
+
+    #diagram(
+        node-stroke: 1pt,
+        node((1, 2), [
+            *bounded-from-above*
+            $ exists y : RR. forall x : RR. x in V => x <= y : *_p $
+        ]),
+        node((0, 1), [
+            *upper-bound*
+            $ forall x in RR. x in V => x <= s : *_p $ ]),
+        node((0, 2), [
+            *least-upper-bound*
+            $
+                "upper-bound"(V, u, s) and \
+                forall x : RR (x < s => not "upper-bound"(V, u, x)) : *_p
+            $
+        ]),
+        node((1, 1), [$ p_4 \ sorry : exists^1 s : RR. "least-upper-bound"(V, u, s) $]),
+        edge((0, 1), (0, 2), "->"),
+        edge((1, 2), (1, 1), "->"),
+        edge((0, 1), (1, 1), "->"),
+        node((0, 4), $ S \ {n / (n + 1) | n in NN} : *_s $),
+        node((0, 3), $ p_6 \ sorry : S subset.eq RR $),
+        edge((0, 4), (0, 3), "->"),
+        node((1, 3), $ p_7 \ sorry : "bounded-from-above"(S, p_6) $),
+        edge((1, 2), (1, 3), "->"),
+        edge((0, 4), (1, 3), bend: -15deg, "->"),
+        edge((0, 3), (1, 3), "->"),
+        node((.75, 5), $ p_8 \ sorry : "least-upper-bound"(S, p_7, 1) $),
+        edge((0, 4), (.75, 5), bend: -20deg, "->"),
+        edge((1, 3), (.75, 5), bend: 10deg, "->")
+    )
 ]

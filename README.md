@@ -13,6 +13,7 @@ Written in [Typst](https://typst.app/) v0.14.1 with the following packages:
 | `curryst` | 0.6.0 | Derivation trees and proof trees |
 | `commute` | 0.3.0 | Commutative diagrams |
 | `cetz` | 0.4.2 | Advanced diagrams |
+| `fletcher` | 0.5.8 | Better graphs |
 
 ### Custom Template
 
