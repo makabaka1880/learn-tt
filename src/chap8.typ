@@ -1,8 +1,7 @@
 #import "./cyan-report/0.1.0/lib.typ": *;
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
 #import "@preview/derive-it:1.1.0": *;
-#import "@preview/cetz:0.4.2" as cc: *;
-#import "@preview/fletcher:0.5.8": *;
+#import "@preview/fletcher:0.5.8" as fl: *;
 #import "@preview/tdtr:0.4.3": *;
 
 #let accent = rgb(50, 150, 150)
@@ -188,7 +187,7 @@
 
     The Hasse Diagram of $(S, <=)$ is
 
-    #diagram(
+    #fl.diagram(
         node-stroke: 1pt,
         node((1, 2), [
             *bounded-from-above*
@@ -217,6 +216,96 @@
         edge((0, 3), (1, 3), "->"),
         node((.75, 5), $ p_8 \ sorry : "least-upper-bound"(S, p_7, 1) $),
         edge((0, 4), (.75, 5), bend: -20deg, "->"),
-        edge((1, 3), (.75, 5), bend: 10deg, "->")
+        edge((1, 3), (.75, 5), bend: 10deg, "->"),
     )
+]
+
+// MARK: Q. 8.4
+#problem(source: "8.4")[
+    Consider the following formal text in algebra.
+    #ded-nat(arr: (
+        (0, $S : *_s$, ""),
+        (1, $op : S -> S -> S$, ""),
+        (2, $"semigroup"(S, op) := forall x, y, z : S. (op x (op y x) = op (op x y) z) : *_p$, ""),
+        (2, $u : "semigroup"(S, op)$, ""),
+        (3, $e : S$, ""),
+        (4, $"unit"(S, op, u, e) := forall x : S. (op x e = x and op e x = x) : *_p$, ""),
+        (3, $"monoid"(S,op,u) := exists e : S. "unit"(S, op, u, e) : *_p$, ""),
+        (3, $e_1, e_2 : S$, ""),
+        (
+            4,
+            $
+                & p_4 (S, op, u, e_1, e_2) := \
+                & quad sorry : ("unit"(S, op, u, e_1) and "unit"(S, op, u, e_2)) => e_1 = e_2
+            $,
+            "",
+        ),
+    ))
+    Translate this into a more usual format.
+
+    Underline all variables that are bound to a binding variable introduced in the text.
+
+    Rewrite definition of $"semigroup"$ and $"unit"$ using $Gamma defs a(...) := M : N$ format.
+]
+#solution[
+    #definition[
+        Let $S$ be a set #super[(1)] and $times$ a binary operation closed over $S$ #super[(2)].
+
+        The tuple $chevron.l S, times chevron.r$ forms a *semigroup* #super[(3)] if $times$ is associative over $S$. That is, for any arbitrary elements $x, y, z in S$
+        $ x times (y times z) = (x times y) times z $
+
+        Let $u$ #super[(4)] be the semigroup $chevron.l S, times chevron.r$. The element $e in S$ #super[(5)] is called the *unit* #super[(6)] of $u$ if for any element $x in S$, we have
+        $ x times e = x "and" e times x = x $
+
+        A semigroup is called a *monoid* #super[(7)] if it has an unit.
+
+        Let $e_1, e_2 in S$ #super[(8)]. If both of them are units of $u$, then $e_1 = e_2$, proof by $sorry$ #super[(9)].
+    ]
+    #let bm = it => text(fill: blue, it)
+    #let rm = it => text(fill: red, it)
+    #let gm = it => text(fill: green, it)
+    #let ym = it => text(fill: rgb("#e19833"), it)
+    #let pm = it => text(fill: purple, it)
+    #let om = it => text(fill: orange, it)
+    #let tm = it => text(fill: rgb("#19a6a8"), it)
+    #let am = it => text(fill: rgb("#2638c3"), it)
+    #let op = `op`
+    #ded-nat(arr: (
+        (0, $bm(S) : *_s$, ""),
+        (1, $rm(op) : bm(underline(S)) -> bm(underline(S)) -> bm(underline(S))$, ""),
+        (
+            2,
+            $tm("semigroup")(bm(underline(S)), rm(underline(op))) := forall x, y, z : bm(underline(S)). (rm(underline(op)) x (rm(underline(op)) y x) = rm(underline(op)) (rm(underline(op)) x y) z) : *_p$,
+            "",
+        ),
+        (2, $gm(u) : tm(underline("semigroup"))(bm(underline(S)), rm(underline(op)))$, ""),
+        (3, $ym(e) : bm(underline(S))$, ""),
+        (
+            4,
+            $am("unit")(bm(underline(S)), rm(underline(op)), gm(underline(u)), ym(underline(e))) := forall x : bm(underline(S)). (rm(underline(op)) x ym(underline(e)) = x and rm(underline(op)) e x = x) : *_p$,
+            "",
+        ),
+        (
+            3,
+            $"monoid"(bm(underline(S)),rm(underline(op)),gm(underline(u))) := exists ym(underline(e)) : bm(underline(S)). am(underline("unit"))(bm(underline(S)), rm(underline(op)), gm(underline(u)), ym(underline(e))) : *_p$,
+            "",
+        ),
+        (3, $pm(e_1), om(e_2) : bm(underline(S))$, ""),
+        (
+            4,
+            $
+                & p_4 (bm(underline(S)), rm(underline(op)), gm(underline(u)), pm(underline(e_1)), om(underline(e_2))) := \
+                & quad sorry : (am(underline("unit"))(bm(underline(S)), rm(underline(op)), gm(underline(u)), pm(underline(e_1))) and am(underline("unit"))(S, rm(underline(op)), gm(underline(u)), om(underline(e_2)))) => pm(underline(e_1)) = om(underline(e_2))
+            $,
+            "",
+        ),
+    ))
+
+    The definitions could be rewritten as follows:
+    $
+        & S : *_s, op : S -> S -> S defs \
+        & quad "semigroup"(S, op) := forall x, y, z : S. (op x (op y x)) = op (op x y) z \
+        & S : *_s, op : S -> S -> S, u : "semigroup"(S, op), e : S defs \
+        & quad "unit"(S, op, u, e) := forall x : S. (op x e = x and op e x = x)
+    $
 ]
