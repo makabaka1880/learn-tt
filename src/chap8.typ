@@ -309,3 +309,29 @@
         & quad "unit"(S, op, u, e) := forall x : S. (op x e = x and op e x = x)
     $
 ]
+
+// MARK: Q. 8.5
+#problem(source: "8.5")[
+    Identify the definitions in the following text and rewrite the text in a formal format.
+
+    #definition[
+        The real number $r$ is *rational* if there exist integer numbers $p$ and nonzero $q$
+        such that $r = p/q$.
+
+        A real number that is not rational is called *irrational*. The set of all rational numbers is called $QQ$.
+
+        Every natural number is rational. The number $0.75$ is rational, but $sqrt(2)$ is irrational.
+    ]
+    Use the set constructor notation ${x : RR | P x}$.
+]
+#solution[
+    #ded-nat(arr: (
+        (0, $r : RR$, ""),
+        (1, $ "rational"(r) := exists p, q : ZZ. (q != 0 and p / q = r) : *_p $, ""),
+        (1, $ "irrational"(r) := not "rational"(p) : *_p $, ""),
+        (0, $QQ := {x : RR | "rational"(x)}$, ""),
+        (0, $"all-nat-rational" := sorry : forall n : NN. "rational"(n)$, ""),
+        (0, $"p75-rational" := sorry : "rational"(0.75)$, ""),
+        (0, $"sqrt2-irrational" := sorry : "irrational"(sqrt(2))$, ""),
+    ))
+]
