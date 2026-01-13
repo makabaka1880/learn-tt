@@ -138,3 +138,40 @@
 
     By similar reasoning $b$ could only have appeared in definitions after $cal(D)_j$. Assuming the list sorted by the suffix, then $b$ could only have been in any $cal(D)_k$ where $k > j$.
 ]
+
+// MARK: Q. 9.3
+#problem(source: "9.3")[
+    Recall Q 8.2
+    #ded-nat(arr: (
+        (0, $V : *_s$, ""),
+        (1, $u : V subset.eq RR$, ""),
+        (2, $"bounded-from-above"(V, u) := exists y : R. forall x : RR, (x in V => x <= y) : *_p$, ""),
+        (2, $s : RR$, ""),
+        (3, $"upper-bound"(V, u, s) := forall x in RR. (x in V => x <= s) : *_p$, ""),
+        (
+            3,
+            $
+                & "least-upper-bound"(V, u, s) := "upper-bound"(V, u, s) and \
+                & quad forall x : RR. (x < s => not "upper-bound"(V, u, x)) : *_p
+            $,
+            "",
+        ),
+        (2, $v : V != emptyset$, ""),
+        (3, $w : "bounded-from-above"(V, u)$, ""),
+        (4, $p_4(V, u, w v) := sorry : exists^1 s : RR. "least-upper-bound"(V, u, s)$, ""),
+        (0, $S := {x : RR | exists n : RR. (n in NN and x = n / (n + 1))}$, ""),
+        (0, $p_6 := sorry : S subset.eq RR$, ""),
+        (0, $p_7 := sorry : "bounded-from-above"(S, p_6)$, ""),
+        (0, $p_8 := sorry : "least-upper-bound"(S, p_7, 1)$, ""),
+    ))
+    Write $p_8$ out such that all definitions have been unfolded.
+]
+#solution[
+    $
+        p_8 := & "least-upper-bound"(S, p_7, 1) \
+        =_delta & "upper-bound"(S, p_7, 1) and forall x : RR. (x < 1 => not "upper-bound"(S, p_7, 1)) \
+        =_delta & forall x : RR. (x in S => x <= 1) and forall x : RR. (x < 1 => not (forall y : RR. (y in S => y <= x))) \
+        =_delta & forall x : RR. (x in {x : RR | exists n : RR. (n in NN and x = n / (n + 1))} => x <= 1) and \
+        & quad forall x : RR. (x < 1 => not forall y : RR. (y in {k : RR | exists n : RR. (n in NN and k = n / (n + 1))} => y <= x))
+    $
+]
