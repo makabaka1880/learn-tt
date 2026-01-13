@@ -117,9 +117,24 @@
         edge((0, 0), (1, 0), "->"),
         edge((1, 0), (1, 1), "->"),
     ))
-    The only unordered pair is $(cal(D)_1, cal(D_2))$. Therefore there are two possible linearizations:
+    The only incomparable pair is $(cal(D)_1, cal(D_2))$. Therefore there are two possible linearizations:
     $
         (1) quad & cal(D)_1 <= cal(D)_2 <= cal(D)_3 <= cal(D)_4 \
         (2) quad & cal(D)_2 <= cal(D)_1 <= cal(D)_3 <= cal(D)_4
     $
+]
+
+// MARK: Q. 9.2
+#problem(source: "9.2")[
+    Consider
+    $
+        cal(D)_i equiv overline(x) : overline(A) & defs a(overline(x)) := K : L \
+        cal(D)_j equiv overline(y) : overline(B) & defs b(overline(y)) := M : N \
+    $
+    Let $Delta; Gamma tack U : V$ and assume $cal(D)_i$ and $cal(D)_j$ are elements of list $Delta$, where $cal(D)_i$ precedes $cal(D)_j$. Describe precisesly where constant $a$ may occur in $cal(D)_i$ and $cal(D)_j$ and where constant $b$ may occur in $Delta$.
+]
+#solution[
+    In order for $cal(D)_i$ to be a valid definition, $overline(x) : overline(A) tack K : L$ must be legal. Therefore by the free variable lemma any free variables in $K$ and $L$ must be in $overline(x) : overline(A)$, which by the time, does not yet contain $a$'s definition. Therefore, $a$ could only appear in $cal(D)_j$.
+
+    By similar reasoning $b$ could only have appeared in definitions after $cal(D)_j$. Assuming the list sorted by the suffix, then $b$ could only have been in any $cal(D)_k$ where $k > j$.
 ]
