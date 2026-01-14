@@ -4,6 +4,8 @@
 #import "@preview/fletcher:0.5.8" as fl: *;
 #import "@preview/lovelace:0.3.0": *;
 #import "@preview/tdtr:0.4.3": *;
+#import "@preview/quick-maths:0.2.1": shorthands
+
 
 #let accent = rgb(50, 150, 150)
 #show ref: it => {
@@ -48,36 +50,41 @@
 #let defs = $gt.tri$
 #let sorry = `sorry`
 
+#show: shorthands.with(
+    ($|-$, math.tack),
+    ($|>$, defs), // Replaces '≤'
+)
+
 #definition[
     Extended Rules for $lambda D_0$
     #align(center, rule-set(
         prooftree(rule(
             name: "def",
-            $Delta; Gamma tack K : L$,
-            $Delta; overline(a) : overline(M) tack M : N$,
-            $Delta, (overline(x) : overline(A) defs a(overline(x)) := M : N); Gamma tack K : L$,
+            $Delta; Gamma |- K : L$,
+            $Delta; overline(a) : overline(M) |- M : N$,
+            $Delta, (overline(x) : overline(A) |> a(overline(x)) := M : N); Gamma |- K : L$,
         )),
         prooftree(rule(
             name: "inst",
-            $Delta, cal(D); Gamma tack * : sort$,
-            $Delta, cal(D); Gamma tack overline(U) : overline(A[overline(x) := overline(U)])$,
-            $cal(D) equiv overline(x) : overline(A) defs a(overline(x)) := M : N$,
-            $Delta, cal(D) ; Gamma tack a(overline(U)) : N[overline(x) := overline(U)]$,
+            $Delta, cal(D); Gamma |- * : sort$,
+            $Delta, cal(D); Gamma |- overline(U) : overline(A[overline(x) := overline(U)])$,
+            $cal(D) equiv overline(x) : overline(A) |> a(overline(x)) := M : N$,
+            $Delta, cal(D) ; Gamma |- a(overline(U)) : N[overline(x) := overline(U)]$,
         )),
         prooftree(rule(
             name: "conv",
-            $Delta; Gamma tack x : A$,
-            $Delta; Gamma tack A : s$,
+            $Delta; Gamma |- x : A$,
+            $Delta; Gamma |- A : s$,
             $A =^(Delta, beta) B$,
-            $Delta; Gamma tack x : B$,
+            $Delta; Gamma |- x : B$,
         )),
     ))
     #lemma[
-        Given $cal(D) equiv overline(x) : overline(A) defs a(overline(x)) := M : N$ and $a in.not Delta$
+        Given $cal(D) equiv overline(x) : overline(A) |> a(overline(x)) := M : N$ and $a in.not Delta$
         #align(center, prooftree(rule(
             name: "par",
-            $Delta; overline(x) : overline(A) tack M : N$,
-            $Delta, cal(D); overline(x) : overline(A) tack a(overline(x)) : N$,
+            $Delta; overline(x) : overline(A) |- M : N$,
+            $Delta, cal(D); overline(x) : overline(A) |- a(overline(x)) : N$,
         )))
     ]
 ]
@@ -86,10 +93,10 @@
 #problem(source: "9.1")[
     Given
     $
-        (cal(D)_1) quad x : ZZ, y : ZZ quad defs & quad a(x, y) quad       && := x^2 + y^2           &&&  : ZZ \
-        (cal(D)_2) quad x : ZZ, y : ZZ quad defs & quad b(x, y) quad       && := 2 dot (x dot y)     &&&  : ZZ \
-        (cal(D)_3) quad x : ZZ, y : ZZ quad defs & quad c(x, y) quad       && := a(x, y) + b(x, y)   &&&  : ZZ \
-        (cal(D)_4) quad x : ZZ, y : ZZ quad defs & quad "lemma"(x, y) quad && := c(x, y) = (x + y)^2 &&& : *_p \
+        (cal(D)_1) quad x : ZZ, y : ZZ quad |> & quad a(x, y) quad       && := x^2 + y^2           &&&  : ZZ \
+        (cal(D)_2) quad x : ZZ, y : ZZ quad |> & quad b(x, y) quad       && := 2 dot (x dot y)     &&&  : ZZ \
+        (cal(D)_3) quad x : ZZ, y : ZZ quad |> & quad c(x, y) quad       && := a(x, y) + b(x, y)   &&&  : ZZ \
+        (cal(D)_4) quad x : ZZ, y : ZZ quad |> & quad "lemma"(x, y) quad && := c(x, y) = (x + y)^2 &&& : *_p \
     $
     Consider $Delta equiv cal(D)_1, cal(D)_2, cal(D)_3, cal(D)_4$. Describe the dependencies between the four definitions and give all possible linearizations of the corresponding partial order.
 ]
@@ -129,13 +136,13 @@
 #problem(source: "9.2")[
     Consider
     $
-        cal(D)_i equiv overline(x) : overline(A) & defs a(overline(x)) := K : L \
-        cal(D)_j equiv overline(y) : overline(B) & defs b(overline(y)) := M : N \
+        cal(D)_i equiv overline(x) : overline(A) & |> a(overline(x)) := K : L \
+        cal(D)_j equiv overline(y) : overline(B) & |> b(overline(y)) := M : N \
     $
-    Let $Delta; Gamma tack U : V$ and assume $cal(D)_i$ and $cal(D)_j$ are elements of list $Delta$, where $cal(D)_i$ precedes $cal(D)_j$. Describe precisesly where constant $a$ may occur in $cal(D)_i$ and $cal(D)_j$ and where constant $b$ may occur in $Delta$.
+    Let $Delta; Gamma |- U : V$ and assume $cal(D)_i$ and $cal(D)_j$ are elements of list $Delta$, where $cal(D)_i$ precedes $cal(D)_j$. Describe precisesly where constant $a$ may occur in $cal(D)_i$ and $cal(D)_j$ and where constant $b$ may occur in $Delta$.
 ]
 #solution[
-    In order for $cal(D)_i$ to be a valid definition, $overline(x) : overline(A) tack K : L$ must be legal. Therefore by the free variable lemma any free variables in $K$ and $L$ must be in $overline(x) : overline(A)$, which by the time, does not yet contain $a$'s definition. Therefore, $a$ could only appear in $cal(D)_j$.
+    In order for $cal(D)_i$ to be a valid definition, $overline(x) : overline(A) |- K : L$ must be legal. Therefore by the free variable lemma any free variables in $K$ and $L$ must be in $overline(x) : overline(A)$, which by the time, does not yet contain $a$'s definition. Therefore, $a$ could only appear in $cal(D)_j$.
 
     By similar reasoning $b$ could only have appeared in definitions after $cal(D)_j$. Assuming the list sorted by the suffix, then $b$ could only have been in any $cal(D)_k$ where $k > j$.
 ]
@@ -163,14 +170,14 @@
         (0, $S := {x : RR | exists n : RR. (n in NN and x = n / (n + 1))}$, ""),
         (0, $p_6 := sorry : S subset.eq RR$, ""),
         (0, $p_7 := sorry : "bounded-from-above"(S, p_6)$, ""),
-        (0, $p_8 := sorry : "least-upper-bound"(S, p_7, 1)$, ""),
+        (0, $p_8 := sorry : "least-upper-bound"(S, p_6, 1)$, ""),
     ))
     Write $p_8$ out such that all definitions have been unfolded.
 ]
 #solution[
     $
-        p_8 := & "least-upper-bound"(S, p_7, 1) \
-        =_delta & "upper-bound"(S, p_7, 1) and forall x : RR. (x < 1 => not "upper-bound"(S, p_7, 1)) \
+        p_8 := & "least-upper-bound"(S, p_6, 1) \
+        =_delta & "upper-bound"(S, p_6, 1) and forall x : RR. (x < 1 => not "upper-bound"(S, p_6, 1)) \
         =_delta & forall x : RR. (x in S => x <= 1) and forall x : RR. (x < 1 => not (forall y : RR. (y in S => y <= x))) \
         =_delta & forall x : RR. (x in {x : RR | exists n : RR. (n in NN and x = n / (n + 1))} => x <= 1) and \
         & quad forall x : RR. (x < 1 => not forall y : RR. (y in {k : RR | exists n : RR. (n in NN and k = n / (n + 1))} => y <= x))
@@ -209,3 +216,46 @@
     ]
 ]
 
+// MARK: Q. 9.5
+#problem(source: "9.5")[
+    Check that all instantiations in the 8.2 proof is legal under _inst_ rule.
+]
+#solution[
+    It is trivial that the first (well-formed context and enviroment) and third (definition existence) holds for all instantiations.
+
+    The instantiation on line 6 $..."upper-bound"(V, u, s)...$ requires the following premises after expansion:
+    $
+        Delta; Gamma & |- V : (*_s [V := V, u := u, s := s] "which is" *_s)quad           && checkmark \
+        Delta; Gamma & |- u : (V subset.eq RR [V := V, u := u, s := s] "which is" V) quad && checkmark \
+        Delta; Gamma & |- s : (RR [V := V, u := u, s := s] "which is" RR) quad            && checkmark
+    $
+    The instantiation on line 6 $..."upper-bound"(V, u, x)...$ requires the following premises after expansion:
+    $
+        Delta; Gamma & |- V : (*_s [V := V, u := u, s := x] "which is" *_s)quad           && checkmark \
+        Delta; Gamma & |- u : (V subset.eq RR [V := V, u := u, s := x] "which is" V) quad && checkmark \
+        Delta; Gamma & |- x : (RR [V := V, u := u, s := x] "which is" RR) quad            && checkmark
+    $
+    The instantiation on line 8 $..."bounded-from-above"(V, u)...$ requires the following premises after expansion:
+    $
+        Delta; Gamma & |- V : (*_s [V := V, u := u] "which is" *_s) quad                       && checkmark \
+        Delta; Gamma & |- u : (V subset.eq RR [V := V, u := u] "which is" V subset.eq RR) quad && checkmark \
+    $
+    The instantiation on line 9 $..."least-upper-bound"(V,u,s)...$ requires the following premises after expansion:
+    $
+        Delta; Gamma & |- V : (*_s [V := V, u := u, s := s] "which is" *_s) quad                         && checkmark \
+        Delta; Gamma & |- u : ((V subset.eq RR) [V := V, u := u, s := s] "which is" V subset.eq RR) quad && checkmark \
+        Delta; Gamma & |- s : (RR [V := V, u := u, s := s] "which is" RR) quad                           && checkmark \
+    $
+    The instantiation on line 12 $..."bounded-from-above"(S, p_6)...$  requires the following premises after expansion:
+    $
+        Delta; Gamma & |- S : (*_s [V := S, u := p_6] "which is" *_s) quad                           && checkmark \
+        Delta; Gamma & |- p_6 : ((V subset.eq RR) [V := S, u := p_6] "which is" S subset.eq RR) quad && checkmark \
+    $
+    The instantiation on line 13 $..."least-upper-bound"(S, p_6, 1)...$ requires the following premises after expansion:
+    $
+        Delta; Gamma & |- S : (*_s [V := S, u := p_6, s := 1] "which is" *_s) quad                           && checkmark \
+        Delta; Gamma & |- p_6 : ((V subset.eq RR) [V := S, u := p_6, s := 1] "which is" S subset.eq RR) quad && checkmark \
+        Delta; Gamma & |- 1 : (RR [V := S, u := p_6; s := 1] "which is" RR) quad                             && checkmark
+    $
+    Therefore all of the instantiations are valid.
+]

@@ -6,14 +6,15 @@ Exercise solutions from **Type Theory & Formal Proof: An Introduction**. **These
 
 Written in [Typst](https://typst.app/) v0.14.1 with the following packages:
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `derive-it` | 1.1.0 | Fitch-style natural deduction derivations |
-| `tdtr` | 0.4.2 | Tree structures |
-| `curryst` | 0.6.0 | Derivation trees and proof trees |
-| `commute` | 0.3.0 | Commutative diagrams |
-| `cetz` | 0.4.2 | Advanced diagrams |
-| `fletcher` | 0.5.8 | Better graphs |
+| Package      | Version | Purpose                                   |
+| ------------ | ------- | ----------------------------------------- |
+| `derive-it`  | 1.1.0   | Fitch-style natural deduction derivations |
+| `tdtr`       | 0.4.2   | Tree structures                           |
+| `curryst`    | 0.6.0   | Derivation trees and proof trees          |
+| `commute`    | 0.3.0   | Commutative diagrams                      |
+| `cetz`       | 0.4.2   | Advanced diagrams                         |
+| `fletcher`   | 0.5.8   | Better graphs                             |
+| `quick-math` | 0.2.1   | Macros for symbols                        |
 
 ### Custom Template
 
