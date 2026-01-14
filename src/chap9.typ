@@ -52,7 +52,8 @@
 
 #show: shorthands.with(
     ($|-$, math.tack),
-    ($|>$, defs), // Replaces '≤'
+    ($|>$, defs),
+    ($===$, math.equiv),
 )
 
 #definition[
@@ -68,7 +69,7 @@
             name: "inst",
             $Delta, cal(D); Gamma |- * : sort$,
             $Delta, cal(D); Gamma |- overline(U) : overline(A[overline(x) := overline(U)])$,
-            $cal(D) equiv overline(x) : overline(A) |> a(overline(x)) := M : N$,
+            $cal(D) === overline(x) : overline(A) |> a(overline(x)) := M : N$,
             $Delta, cal(D) ; Gamma |- a(overline(U)) : N[overline(x) := overline(U)]$,
         )),
         prooftree(rule(
@@ -80,7 +81,7 @@
         )),
     ))
     #lemma[
-        Given $cal(D) equiv overline(x) : overline(A) |> a(overline(x)) := M : N$ and $a in.not Delta$
+        Given $cal(D) === overline(x) : overline(A) |> a(overline(x)) := M : N$ and $a in.not Delta$
         #align(center, prooftree(rule(
             name: "par",
             $Delta; overline(x) : overline(A) |- M : N$,
@@ -98,7 +99,7 @@
         (cal(D)_3) quad x : ZZ, y : ZZ quad |> & quad c(x, y) quad       && := a(x, y) + b(x, y)   &&&  : ZZ \
         (cal(D)_4) quad x : ZZ, y : ZZ quad |> & quad "lemma"(x, y) quad && := c(x, y) = (x + y)^2 &&& : *_p \
     $
-    Consider $Delta equiv cal(D)_1, cal(D)_2, cal(D)_3, cal(D)_4$. Describe the dependencies between the four definitions and give all possible linearizations of the corresponding partial order.
+    Consider $Delta === cal(D)_1, cal(D)_2, cal(D)_3, cal(D)_4$. Describe the dependencies between the four definitions and give all possible linearizations of the corresponding partial order.
 ]
 #solution[
     Hasse diagram given below
@@ -136,8 +137,8 @@
 #problem(source: "9.2")[
     Consider
     $
-        cal(D)_i equiv overline(x) : overline(A) & |> a(overline(x)) := K : L \
-        cal(D)_j equiv overline(y) : overline(B) & |> b(overline(y)) := M : N \
+        cal(D)_i === overline(x) : overline(A) & |> a(overline(x)) := K : L \
+        cal(D)_j === overline(y) : overline(B) & |> b(overline(y)) := M : N \
     $
     Let $Delta; Gamma |- U : V$ and assume $cal(D)_i$ and $cal(D)_j$ are elements of list $Delta$, where $cal(D)_i$ precedes $cal(D)_j$. Describe precisesly where constant $a$ may occur in $cal(D)_i$ and $cal(D)_j$ and where constant $b$ may occur in $Delta$.
 ]
@@ -186,7 +187,7 @@
 
 // MARK: Q. 9.4
 #problem(source: "9.4")[
-    Recall $Delta equiv cal(D)_1, cal(D)_2, cal(D)_3, cal(D)_4$ from 9.1. Give a complete $delta$-reduction diagram for
+    Recall $Delta === cal(D)_1, cal(D)_2, cal(D)_3, cal(D)_4$ from 9.1. Give a complete $delta$-reduction diagram for
     $ c(a(u, v), b(w, w)) $
 ]
 #solution[
@@ -258,4 +259,69 @@
         Delta; Gamma & |- 1 : (RR [V := S, u := p_6; s := 1] "which is" RR) quad                             && checkmark
     $
     Therefore all of the instantiations are valid.
+]
+
+// MARK: Q. 9.6 (a)
+#problem(source: "9.6 a")[
+    Consider the following formal enviroment $Delta$ consisting of six definitions, in which we use, for the sake of convenience, some well-known formats such as the summation sigma and infix-notations:
+    $
+        cal(D)_1 & === f : NN -> RR, n : NN |> a_1(f, n) := sum^n_(i = 0) (f i) : RR \
+        cal(D)_2 & === f : NN -> RR, d : RR |> a_2(f, d) := forall_(n : NN) (f (n + 1) - f n = d) : *_p \
+        cal(D)_3 & === f : NN -> RR, d : RR, u : a_2(f, d), n : NN |> \
+                 & quad a_3(f, d, u, n) := sorry : f n = f 0 + n times d \
+        cal(D)_4 & === f : NN -> RR, d : RR, u :a_2(f, d), n : NN |> \
+                 & quad a_4(f, d, u, n) := sorry : a_1(f, n) = (n + 1) times (f 0 + f n) div 2 \
+        cal(D)_5 & === f : NN -> RR, d : RR, u :a_2(f, d), n : NN |> \
+                 & quad a_5(f,d,u,)) := sorry : a_1(f, n) = (f 0)times (n + 1) + n times (n + 1) times d div 2 \
+        cal(D)_6 & === emptyset |> a_6 := sorry : sum^100_(i = 0) i = 5050
+    $
+    Rewrite this in flag notation.
+]
+#solution[
+    All meta-level notations appearing below are assumed to be formally defined. That is we are intentionally not expanding common notational abbreviations into explicit flags. Moreover, all sets -- unless explicitly defined in-text -- and literals denoting elements of them are assumed to be defined earlier.
+    #ded-nat(arr: (
+        (0, $f : NN -> RR$, ""),
+        (1, $n : NN$, ""),
+        (2, $ a_1(f, n) := sum^n_(i = 0) (f i) : RR $, $cal(D)_1$),
+        (1, $d : RR$, ""),
+        (2, $ a_2(f, d) := forall n : NN. (f (n + 1) - f n = d) : *_p $, $cal(D)_2$),
+        (2, $u : a_2(f, d)$, ""),
+        (3, $n : NN$, ""),
+        (4, $a_3(f, d, u, n) := sorry : f n = f 0 + n times d$, $cal(D)_3$),
+        (4, $ a_4(f, d, u, n) := sorry : a_1(f, n) = 1 / 2 (n + 1) times (f 0 + f n) $, $cal(D)_4$),
+        (
+            4,
+            $
+                & a_5(f, d, u, n) := sorry : \
+                & quad a_1(f, n) = (f 0) times (n + 1) + 1 / 2 n times (n + 1) times d
+            $,
+            $cal(D)_5$,
+        ),
+        (0, $ a_6 := sorry : sum^100_(i = 0) i = 5050 $, $cal(D)_6$),
+    ))
+]
+
+// MARK: Q. 9.6 (b)
+#problem(source: "9.6 b")[
+    What is the name of $a_2$ in standard literature?
+]
+#solution[
+    It is obvious that $f$ is a sequence over $RR$. $a_2$ provides a proof that the difference between any two term in $f$ is a constant. Therefore $f$ is an *arithmetic progression*.
+
+    Thus $a_2$ is a *predicate over an sequence $f$ and real $d$ encoding the fact of $f$ being a arithmetic progression with common difference $d$*.
+]
+
+// MARK: Q. 9.6 (c)
+#problem(source: "9.6 c")[
+    Find the $delta$-normal form with respect to $Delta$ of $a_5((lambda x : NN. 2x),2,u,100)$
+    where u is an inhabitant of $a_2((lambda x : N. 2x), 2)$
+]
+#solution[
+    $
+        & a_5((lambda x : NN. 2x),2,u,100) \
+        ->>^Delta & sum^100_(i = 0) ((lambda x : NN. 2x) i) = ((lambda x : NN. 2x) 0) times (100 + 1) + 1/2 100 times (100 + 1) times 2 \
+        ->>^beta & sum^100_(i = 0) (2 times i) = 0 times (100 + 1) + 1/2 100 times (100 + 1) times 2 \
+        =^"arith." & sum^100_(i = 0) 2 times i = 10100
+    $
+    Actually line 2 is already a valid answer. Its just that line 4 looks nicer lol
 ]
