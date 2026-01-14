@@ -4,7 +4,7 @@ Exercise solutions from **Type Theory & Formal Proof: An Introduction**. **These
 
 ## Dependencies
 
-Written in [Typst](https://typst.app/) v0.14.1 with the following packages:
+Written in [Typst](https://typst.app/) v0.14.2 with the following packages:
 
 | Package      | Version | Purpose                                   |
 | ------------ | ------- | ----------------------------------------- |
