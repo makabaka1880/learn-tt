@@ -2,6 +2,7 @@
 #import "@preview/curryst:0.6.0": prooftree, rule, rule-set;
 #import "@preview/derive-it:1.1.0": *;
 #import "@preview/fletcher:0.5.8" as fl: *;
+#import "@preview/lovelace:0.3.0": *;
 #import "@preview/tdtr:0.4.3": *;
 
 #let accent = rgb(50, 150, 150)
@@ -175,3 +176,36 @@
         & quad forall x : RR. (x < 1 => not forall y : RR. (y in {k : RR | exists n : RR. (n in NN and k = n / (n + 1))} => y <= x))
     $
 ]
+
+// MARK: Q. 9.4
+#problem(source: "9.4")[
+    Recall $Delta equiv cal(D)_1, cal(D)_2, cal(D)_3, cal(D)_4$ from 9.1. Give a complete $delta$-reduction diagram for
+    $ c(a(u, v), b(w, w)) $
+]
+#solution[
+    Too long to contain. An algorithm for finding the graph is proposed as below:
+    #pseudocode-list[
+        + *Let* $V := emptyset : #raw("Set") "of type" cal(E)_(lambda D)$
+        + *Let* $E := emptyset : #raw("Set") "of type" (cal(E)_(lambda D) times cal(E)_(lambda D) )$
+        + *Define* _procedure_ $"reduce"(t : cal(E)_(lambda D), Delta : #raw("Env"))$ _do_
+            + *If* $t in V$ *then* _terminate_
+            + *Else*
+                + *Set* $V := V union {t}$
+
+                + *Loop* for each redex $r$ of $t$ _do_
+                    + *Let* $r' := "outermost one-step" delta"-reduction of" r$
+                    + *Let* $t' := t[r := r']$
+                    + *Set* $E := E union {(t, t')}$
+                    + *Execute* $"reduce"(t',Delta)$
+                + *End* _loop_
+            + *End* _if_
+        + *End* _reduce_
+        + *Main*
+            + *Define* $Delta := cal(D)_1, cal(D)_2, cal(D)_3, cal(D)_4$
+            + *Execute* $"reduce"(c(a(u,v), b(w, w)), Delta)$ _and discard result_
+            + *Graph* $(V, E)$
+            + *Terminates*
+        + *End* _main_
+    ]
+]
+
